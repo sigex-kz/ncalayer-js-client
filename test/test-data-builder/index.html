@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>NCALayer JS client test data builder</title>
+
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+
+    <script src="js/ncalayer-client.js"></script>
+    <script src="js/vue.min.js""></script>
+  </head>
+  <body>
+    <div class="container" id="app">
+
+      <div v-if="testData" class="row">
+        <div class="col-md-12">
+          <p>Данные для тестов сформированы:</p>
+          <pre><code>{{testData}}</code></pre>
+        </div>
+      </div>
+
+      <div v-else>
+
+        <div class="row">
+          <div class="col-md-12">
+            <h2>После выполнения серии заданий эта страница сформирует набор данных для тестов.</h2>
+            <p>Осталось выполнить: <strong>{{tasks.length + 1}}</strong></p>
+          </div>
+        </div>
+
+        <hr>
+
+        <div class="row">
+          <div class="col-md-12">
+            <p v-if="task">{{task.text}}</p>
+            <button type="button" class="btn btn-primary" v-on:click="execTask" v-bind:disabled="doingTask">Готов!</button>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+    <script src="js/vue-app.js"></script>
+  </body>
+</html>

@@ -1,0 +1,24 @@
+{
+  "name": "ncalayer-js-client",
+  "version": "1.0.0",
+  "description": "JS клиент для NCALayer стремящийся быть максимально простым в использовании",
+  "author": "sigex-kz",
+  "main": "ncalayer-client.js",
+  "devDependencies": {
+    "eslint": "^7.2.0",
+    "eslint-config-airbnb-base": "^14.2.0",
+    "eslint-plugin-import": "^2.21.2",
+    "http-server": "^0.12.3",
+    "jsdoc-to-markdown": "^6.0.1"
+  },
+  "dependencies": {
+    "ws": "^7.3.0"
+  },
+  "scripts": {
+    "build": "npm run test && npm run lint && npm run build-docs",
+    "test": "node test/index.js",
+    "build-docs": "jsdoc2md --no-cache --partial jsdoc2md-partials/sig-name.hbs --files ncalayer-client.js > API.md",
+    "lint": "eslint --ignore-pattern 'test/test-data-builder/js/vue.min.js' '**/*.js'",
+    "test-data-builder": "http-server ./test/test-data-builder"
+  }
+}

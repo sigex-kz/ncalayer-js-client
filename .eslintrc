@@ -1,0 +1,22 @@
+// Use this file as a starting point for your project's .eslintrc.
+// Copy this file, and add rule overrides as needed.
+{
+  "extends": "airbnb-base",
+  "env": {
+    "browser": true,
+    "mocha": true,
+    "node": true
+  },
+  "rules": {
+    "comma-dangle": [
+      "error",
+      {
+        "arrays": "always-multiline",
+        "objects": "always-multiline",
+        "imports": "always-multiline",
+        "exports": "always-multiline",
+        "functions": "only-multiline"
+      }
+    ]
+  }
+}
