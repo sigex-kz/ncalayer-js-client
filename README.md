@@ -17,8 +17,7 @@ JS клиент для [NCALayer](https://pki.gov.kz/ncalayer/) стремящи
 
 Одним из следующих образов:
 - скопировать себе `ncalayer-client.js` и загрузить его на странице;
-- `npm install git+https://git@github.com/sigex-kz/ncalayer-js-client`;
-- в **npm** пока что не опубликован, в процессе.
+- `npm install ncalayer-js-client`.
 
 ## Пример использования
 

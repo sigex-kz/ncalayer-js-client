@@ -1,8 +1,22 @@
 {
   "name": "ncalayer-js-client",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "JS клиент для NCALayer стремящийся быть максимально простым в использовании",
   "author": "sigex-kz",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sigex-kz/ncalayer-js-client.git"
+  },
+  "keywords": [
+    "ncalayer",
+    "websocket",
+    "client"
+  ],
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/sigex-kz/ncalayer-js-client/issues"
+  },
+  "homepage": "https://github.com/sigex-kz/ncalayer-js-client#readme",
   "main": "ncalayer-client.js",
   "devDependencies": {
     "eslint": "^7.2.0",
