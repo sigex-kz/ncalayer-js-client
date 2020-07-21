@@ -19,14 +19,14 @@
   "homepage": "https://github.com/sigex-kz/ncalayer-js-client#readme",
   "main": "ncalayer-client.js",
   "devDependencies": {
-    "eslint": "^7.2.0",
+    "eslint": "^7.5.0",
     "eslint-config-airbnb-base": "^14.2.0",
     "eslint-plugin-import": "^2.21.2",
     "http-server": "^0.12.3",
     "jsdoc-to-markdown": "^6.0.1"
   },
   "dependencies": {
-    "ws": "^7.3.0"
+    "ws": "^7.3.1"
   },
   "scripts": {
     "build": "npm run test && npm run lint && npm run build-docs",
