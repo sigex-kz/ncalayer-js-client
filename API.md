@@ -110,7 +110,7 @@
 
 ### *(async)* ncaLayerClient.createCMSSignatureFromBase64(storageType, data, [keyType], [attach]) ⇒ <code>String</code>
 Подписать блок данных и сформировать CMS (CAdES) подпись с интегрированной меткой времени
-TSP.
+TSP. **Не рекомендуется использовать, разработчики NCALayer пометили как DEPRECATED (https://forum.pki.gov.kz/t/podpis-s-metkoj-vremeni-na-js/704/7)!**
 
 **Kind**: instance method of [<code>NCALayerClient</code>](#NCALayerClient)  
 **Returns**: <code>String</code> - CMS подпись в виде Base64 строки.  
