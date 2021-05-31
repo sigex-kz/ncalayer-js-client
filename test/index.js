@@ -2,7 +2,7 @@ const assert = require('assert').strict;
 
 const WebSocket = require('ws');
 
-const { NCALayerClient } = require('../ncalayer-client.js');
+const { NCALayerClient } = require('../ncalayer-client');
 
 const testData = require('./test-data.json');
 
