@@ -1,0 +1,11 @@
+name: Lint and test
+on: [push]
+jobs:
+  lint-and-test:
+    runs-on: ubuntu-latest
+    container: node
+    steps:
+      - uses: actions/checkout@v2
+      - run: npm install
+      - run: npm run lint
+      - run: npm run test

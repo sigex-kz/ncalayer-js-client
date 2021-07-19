@@ -1,7 +1,5 @@
 # ncalayer-js-client
 
-[![Build Status](https://travis-ci.org/sigex-kz/ncalayer-js-client.svg?branch=master)](https://travis-ci.org/sigex-kz/ncalayer-js-client)
-
 JS клиент для [NCALayer](https://pki.gov.kz/ncalayer/) стремящийся быть максимально простым в
 использовании.
 
