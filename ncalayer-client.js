@@ -373,6 +373,8 @@
   }
 
   exports.NCALayerClient = NCALayerClient; // eslint-disable-line no-param-reassign
-})(typeof exports === 'undefined' ? this : exports,
+})(
+  typeof exports === 'undefined' ? this : exports,
   typeof WebSocket === 'undefined' ? require('ws') : WebSocket,
-  typeof window === 'undefined' ? { btoa(x) { return x; } } : window); // Заглушка для NodeJS
+  typeof window === 'undefined' ? { btoa(x) { return x; } } : window // eslint-disable-line comma-dangle
+); // Заглушка для NodeJS
