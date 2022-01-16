@@ -15,7 +15,7 @@ function nextTestDataEntry() {
 const wss = new WebSocket.Server({ port: 8080 });
 wss.on('connection', (ws) => {
   ws.on('message', (message) => {
-    assert.strictEqual(message, testDataEntry.request);
+    assert.strictEqual(message.toString(), testDataEntry.request);
     ws.send(testDataEntry.response);
   });
 
@@ -62,4 +62,7 @@ wss.on('connection', (ws) => {
   }
 
   wss.close();
+  for (const ws of wss.clients) { // eslint-disable-line no-restricted-syntax
+    ws.terminate();
+  }
 })();
