@@ -1,6 +1,6 @@
 {
   "name": "ncalayer-js-client",
-  "version": "1.0.9",
+  "version": "1.0.10",
   "description": "JS клиент для NCALayer стремящийся быть максимально простым в использовании",
   "author": "sigex-kz",
   "repository": {
