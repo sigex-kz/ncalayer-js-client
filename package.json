@@ -28,6 +28,9 @@
   "dependencies": {
     "ws": "^8.4.2"
   },
+  "browser": {
+    "ws": false
+  },
   "scripts": {
     "build": "npm run test && npm run lint && npm run build-docs",
     "test": "node test/index.js",
