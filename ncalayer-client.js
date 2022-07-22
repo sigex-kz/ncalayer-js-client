@@ -1,4 +1,16 @@
 ((exports, WebSocket, window) => {
+
+  /**
+   * Класс ошибок NCALayerError.
+   */
+  class NCALayerError extends Error {
+    constructor(message, options) {
+      super(message, options);
+      this.name = "NCALayerError";
+    }
+  }
+
+
   /**
    * Класс клиента NCALayer.
    */
@@ -23,11 +35,11 @@
      *
      * @returns {String} версию NCALayer.
      *
-     * @throws Error
+     * @throws NCALayerError
      */
     async connect() {
       if (this.wsConnection) {
-        throw new Error('Подключение уже выполнено.');
+        throw new NCALayerError('Подключение уже выполнено.');
       }
 
       this.wsConnection = new WebSocket(this.url);
@@ -53,7 +65,7 @@
             return;
           }
 
-          reject(new Error('Ошибка взаимодействия с NCALayer.'));
+          reject(new NCALayerError('Ошибка взаимодействия с NCALayer.'));
         };
       });
     }
@@ -64,7 +76,7 @@
      * @returns {String[]} массив содержащий типы хранилищ экземпляры которых доступны в данный
      * момент.
      *
-     * @throws Error
+     * @throws NCALayerError
      */
     async getActiveTokens() {
       const request = {
@@ -84,7 +96,7 @@
      *
      * @returns {Object} объект с информацией о записи.
      *
-     * @throws Error
+     * @throws NCALayerError
      */
     async getKeyInfo(storageType) {
       const request = {
@@ -116,7 +128,7 @@
      *
      * @returns {String} CMS подпись в виде Base64 строки.
      *
-     * @throws Error
+     * @throws NCALayerError
      */
     async createCAdESFromBase64(storageType, data, keyType = 'SIGNATURE', attach = false) {
       const request = {
@@ -148,7 +160,7 @@
      *
      * @returns {String} CMS подпись в виде Base64 строки.
      *
-     * @throws Error
+     * @throws NCALayerError
      */
     async createCAdESFromBase64Hash(storageType, hash, keyType = 'SIGNATURE') {
       const request = {
@@ -183,7 +195,7 @@
      *
      * @returns {String} CMS подпись в виде Base64 строки.
      *
-     * @throws Error
+     * @throws NCALayerError
      */
     async createCMSSignatureFromBase64(storageType, data, keyType = 'SIGNATURE', attach = false) {
       const request = {
@@ -220,7 +232,7 @@
      *
      * @returns {String} XML документ содержащий XMLDSIG подпись.
      *
-     * @throws Error
+     * @throws NCALayerError
      */
     async signXml(storageType, xml, keyType = 'SIGNATURE', tbsElementXPath = '', signatureParentElementXPath = '') {
       const request = {
@@ -258,7 +270,7 @@
      *
      * @returns {String[]} массив XML документов содержащих XMLDSIG подписи.
      *
-     * @throws Error
+     * @throws NCALayerError
      */
     async signXmls(storageType, xmls, keyType = 'SIGNATURE', tbsElementXPath = '', signatureParentElementXPath = '') {
       const request = {
@@ -283,7 +295,7 @@
      *
      * @param {String} localeId новый идентификатор языка.
      *
-     * @throws Error
+     * @throws NCALayerError
      */
     async changeLocale(localeId) {
       const request = {
@@ -308,7 +320,7 @@
 
     sendRequest(request) {
       if (!this.wsConnection) {
-        throw new Error('Подключение к NCALayer не установлено.');
+        throw new NCALayerError('Подключение к NCALayer не установлено.');
       }
 
       const jsonRequest = JSON.stringify(request);
@@ -322,13 +334,13 @@
     setHandlers(resolve, reject) {
       this.responseProcessed = false;
 
-      this.wsConnection.onerror = () => {
+      this.wsConnection.onNCALayerError = () => {
         if (this.responseProcessed) {
           return;
         }
         this.responseProcessed = true;
 
-        reject(new Error('Ошибка взаимодействия с NCALayer. В том случае, если на вашем компьютере не установлен NCALayer, пожалуйста установите его c портала НУЦ РК (https://pki.gov.kz/ncalayer/). Если же NCALayer установлен, но портал выдает ошибку, свяжитесь, пожалуйста, с нашей технической поддержкой.'));
+        reject(new NCALayerError('Ошибка взаимодействия с NCALayer. В том случае, если на вашем компьютере не установлен NCALayer, пожалуйста установите его c портала НУЦ РК (https://pki.gov.kz/ncalayer/). Если же NCALayer установлен, но портал выдает ошибку, свяжитесь, пожалуйста, с нашей технической поддержкой.'));
       };
 
       this.wsConnection.onclose = () => {
@@ -337,7 +349,7 @@
         }
         this.responseProcessed = true;
 
-        reject(new Error('NCALayer закрыл соединение.'));
+        reject(new NCALayerError('NCALayer закрыл соединение.'));
       };
 
       this.wsConnection.onmessage = (msg) => {
@@ -353,7 +365,7 @@
         const response = JSON.parse(msg.data);
 
         if (response.code !== '200') {
-          reject(new Error(`${response.code}: ${response.message}`));
+          reject(new NCALayerError(`${response.code}: ${response.message}`));
           return;
         }
 
