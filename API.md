@@ -1,3 +1,20 @@
+## Classes
+
+<dl>
+<dt><a href="#NCALayerError">NCALayerError</a></dt>
+<dd><p>Класс ошибок NCALayerError.</p>
+</dd>
+<dt><a href="#NCALayerClient">NCALayerClient</a></dt>
+<dd><p>Класс клиента NCALayer.</p>
+</dd>
+</dl>
+
+<a name="NCALayerError"></a>
+
+## NCALayerError
+Класс ошибок NCALayerError.
+
+**Kind**: global class  
 <a name="NCALayerClient"></a>
 
 ## NCALayerClient
@@ -39,7 +56,7 @@
 **Returns**: <code>String</code> - версию NCALayer.  
 **Throws**:
 
-- Error
+- NCALayerError
 
 <a name="NCALayerClient+getActiveTokens"></a>
 
@@ -51,7 +68,7 @@
 момент.  
 **Throws**:
 
-- Error
+- NCALayerError
 
 <a name="NCALayerClient+getKeyInfo"></a>
 
@@ -62,7 +79,7 @@
 **Returns**: <code>Object</code> - объект с информацией о записи.  
 **Throws**:
 
-- Error
+- NCALayerError
 
 
 | Param | Type | Description |
@@ -78,7 +95,7 @@
 **Returns**: <code>String</code> - CMS подпись в виде Base64 строки.  
 **Throws**:
 
-- Error
+- NCALayerError
 
 
 | Param | Type | Default | Description |
@@ -97,7 +114,7 @@
 **Returns**: <code>String</code> - CMS подпись в виде Base64 строки.  
 **Throws**:
 
-- Error
+- NCALayerError
 
 
 | Param | Type | Default | Description |
@@ -116,7 +133,7 @@ TSP. **Не рекомендуется использовать, разрабо�
 **Returns**: <code>String</code> - CMS подпись в виде Base64 строки.  
 **Throws**:
 
-- Error
+- NCALayerError
 
 
 | Param | Type | Default | Description |
@@ -135,7 +152,7 @@ TSP. **Не рекомендуется использовать, разрабо�
 **Returns**: <code>String</code> - XML документ содержащий XMLDSIG подпись.  
 **Throws**:
 
-- Error
+- NCALayerError
 
 
 | Param | Type | Default | Description |
@@ -155,7 +172,7 @@ TSP. **Не рекомендуется использовать, разрабо�
 **Returns**: <code>Array.&lt;String&gt;</code> - массив XML документов содержащих XMLDSIG подписи.  
 **Throws**:
 
-- Error
+- NCALayerError
 
 
 | Param | Type | Default | Description |
@@ -174,7 +191,7 @@ TSP. **Не рекомендуется использовать, разрабо�
 **Kind**: instance method of [<code>NCALayerClient</code>](#NCALayerClient)  
 **Throws**:
 
-- Error
+- NCALayerError
 
 
 | Param | Type | Description |
