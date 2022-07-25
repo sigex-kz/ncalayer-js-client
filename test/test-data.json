@@ -20,13 +20,13 @@
     "task": "{\"text\":\"Попытка отправки плохого запроса, ничего не отобразится.\",\"exec\":\"getKeyInfo\",\"params\":[]}",
     "request": "{\"module\":\"kz.gov.pki.knca.commonUtils\",\"method\":\"getKeyInfo\",\"args\":[null]}",
     "response": "{\"code\":\"500\",\"message\":\"java.lang.IllegalArgumentException: argument type mismatch. Method: getKeyInfo\"}",
-    "result": "Error: 500: java.lang.IllegalArgumentException: argument type mismatch. Method: getKeyInfo"
+    "result": "NCALayerError: 500: java.lang.IllegalArgumentException: argument type mismatch. Method: getKeyInfo"
   },
   {
     "task": "{\"text\":\"Попытка отправки плохого запроса, ничего не отобразится.\",\"exec\":\"getKeyInfo\",\"params\":[1]}",
     "request": "{\"module\":\"kz.gov.pki.knca.commonUtils\",\"method\":\"getKeyInfo\",\"args\":[1]}",
     "response": "{\"code\":\"500\",\"message\":\"java.lang.IllegalArgumentException: argument type mismatch. Method: getKeyInfo\"}",
-    "result": "Error: 500: java.lang.IllegalArgumentException: argument type mismatch. Method: getKeyInfo"
+    "result": "NCALayerError: 500: java.lang.IllegalArgumentException: argument type mismatch. Method: getKeyInfo"
   },
   {
     "task": "{\"text\":\"NCALyer отобразит окно выбора сертификата, выберите любой.\",\"exec\":\"getKeyInfo\",\"params\":[\"AKKaztokenStore\"]}",
@@ -38,13 +38,13 @@
     "task": "{\"text\":\"NCALyer отобразит окно выбора сертификата, нажмите Отмена.\",\"exec\":\"getKeyInfo\",\"params\":[\"AKKaztokenStore\"]}",
     "request": "{\"module\":\"kz.gov.pki.knca.commonUtils\",\"method\":\"getKeyInfo\",\"args\":[\"AKKaztokenStore\"]}",
     "response": "{\"code\":\"500\",\"message\":\"action.canceled\"}",
-    "result": "Error: 500: action.canceled"
+    "result": "NCALayerError: 500: action.canceled"
   },
   {
     "task": "{\"text\":\"Попытка отправки плохого запроса, ничего не отобразится.\",\"exec\":\"createCAdESFromBase64\",\"params\":[\"AKKaztokenStore\",\"MTEK\",123]}",
     "request": "{\"module\":\"kz.gov.pki.knca.commonUtils\",\"method\":\"createCAdESFromBase64\",\"args\":[\"AKKaztokenStore\",123,\"MTEK\",false]}",
     "response": "{\"code\":\"500\",\"message\":\"java.lang.IllegalArgumentException: argument type mismatch. Method: createCAdESFromBase64\"}",
-    "result": "Error: 500: java.lang.IllegalArgumentException: argument type mismatch. Method: createCAdESFromBase64"
+    "result": "NCALayerError: 500: java.lang.IllegalArgumentException: argument type mismatch. Method: createCAdESFromBase64"
   },
   {
     "task": "{\"text\":\"NCALyer отобразит окно выбора ключа для подписания блока данных, отобразятся все сертификаты, выберите любой.\",\"exec\":\"createCAdESFromBase64\",\"params\":[\"AKKaztokenStore\",\"MTEK\",\"123\"]}",
@@ -74,7 +74,7 @@
     "task": "{\"text\":\"Попытка отправки плохого запроса, ничего не отобразится.\",\"exec\":\"createCAdESFromBase64Hash\",\"params\":[\"AKKaztokenStore\",0,\"123\"]}",
     "request": "{\"module\":\"kz.gov.pki.knca.commonUtils\",\"method\":\"createCAdESFromBase64Hash\",\"args\":[\"AKKaztokenStore\",\"123\",\"\"]}",
     "response": "{\"code\":\"500\"}",
-    "result": "Error: 500: undefined"
+    "result": "NCALayerError: 500: undefined"
   },
   {
     "task": "{\"text\":\"NCALyer отобразит окно выбора ключа для подписания блока данных, отобразятся все сертификаты, выберите любой.\",\"exec\":\"createCAdESFromBase64Hash\",\"params\":[\"AKKaztokenStore\",\"MjVkNGYyYTg2ZGViNWUyNTc0YmIzMjEwYjY3YmIyNGZjYzRhZmIxOWY5M2E3YjY1YTA1N2RhYTg3NGE5ZDE4ZSAgLQo=\",\"123\"]}",
@@ -98,7 +98,7 @@
     "task": "{\"text\":\"Попытка отправки плохого запроса, ничего не отобразится.\",\"exec\":\"createCMSSignatureFromBase64\",\"params\":[\"AKKaztokenStore\",\"MTEK\",[7,7,7]]}",
     "request": "{\"module\":\"kz.gov.pki.knca.commonUtils\",\"method\":\"createCMSSignatureFromBase64\",\"args\":[\"AKKaztokenStore\",[7,7,7],\"MTEK\",false]}",
     "response": "{\"code\":\"500\",\"message\":\"java.lang.IllegalArgumentException: argument type mismatch. Method: createCMSSignatureFromBase64\"}",
-    "result": "Error: 500: java.lang.IllegalArgumentException: argument type mismatch. Method: createCMSSignatureFromBase64"
+    "result": "NCALayerError: 500: java.lang.IllegalArgumentException: argument type mismatch. Method: createCMSSignatureFromBase64"
   },
   {
     "task": "{\"text\":\"NCALyer отобразит окно выбора ключа для подписания блока данных, отобразятся все сертификаты, выберите любой.\",\"exec\":\"createCMSSignatureFromBase64\",\"params\":[\"AKKaztokenStore\",\"MTEK\",\"123\"]}",
@@ -128,13 +128,13 @@
     "task": "{\"text\":\"Попытка отправки плохого запроса, ничего не отобразится.\",\"exec\":\"signXml\",\"params\":[\"AKKaztokenStore\",555,\"123\"]}",
     "request": "{\"module\":\"kz.gov.pki.knca.commonUtils\",\"method\":\"signXml\",\"args\":[\"AKKaztokenStore\",\"123\",555,\"\",\"\"]}",
     "response": "{\"code\":\"500\",\"message\":\"java.lang.IllegalArgumentException: argument type mismatch. Method: signXml\"}",
-    "result": "Error: 500: java.lang.IllegalArgumentException: argument type mismatch. Method: signXml"
+    "result": "NCALayerError: 500: java.lang.IllegalArgumentException: argument type mismatch. Method: signXml"
   },
   {
     "task": "{\"text\":\"Попытка отправки плохого запроса, ничего не отобразится.\",\"exec\":\"signXml\",\"params\":[\"AKKaztokenStore\",\"<this>is not a valid XML\",\"123\"]}",
     "request": "{\"module\":\"kz.gov.pki.knca.commonUtils\",\"method\":\"signXml\",\"args\":[\"AKKaztokenStore\",\"123\",\"<this>is not a valid XML\",\"\",\"\"]}",
     "response": "{\"code\":\"500\",\"message\":\"org.xml.sax.SAXParseException; lineNumber: 1; columnNumber: 25; XML document structures must start and end within the same entity.\"}",
-    "result": "Error: 500: org.xml.sax.SAXParseException; lineNumber: 1; columnNumber: 25; XML document structures must start and end within the same entity."
+    "result": "NCALayerError: 500: org.xml.sax.SAXParseException; lineNumber: 1; columnNumber: 25; XML document structures must start and end within the same entity."
   },
   {
     "task": "{\"text\":\"NCALyer отобразит окно выбора ключа для подписания блока данных, отобразятся все сертификаты, выберите любой.\",\"exec\":\"signXml\",\"params\":[\"AKKaztokenStore\",\"<tag>data</tag>\",\"123\"]}",
@@ -158,7 +158,7 @@
     "task": "{\"text\":\"Попытка отправки плохого запроса, ничего не отобразится.\",\"exec\":\"signXmls\",\"params\":[\"AKKaztokenStore\",\"<tag>data</tag>\",\"123\"]}",
     "request": "{\"module\":\"kz.gov.pki.knca.commonUtils\",\"method\":\"signXmls\",\"args\":[\"AKKaztokenStore\",\"123\",\"<tag>data</tag>\",\"\",\"\"]}",
     "response": "{\"code\":\"500\",\"message\":\"java.lang.IllegalArgumentException: argument type mismatch. Method: signXmls\"}",
-    "result": "Error: 500: java.lang.IllegalArgumentException: argument type mismatch. Method: signXmls"
+    "result": "NCALayerError: 500: java.lang.IllegalArgumentException: argument type mismatch. Method: signXmls"
   },
   {
     "task": "{\"text\":\"NCALyer отобразит окно выбора ключа для подписания блока данных, отобразятся все сертификаты, выберите любой.\",\"exec\":\"signXmls\",\"params\":[\"AKKaztokenStore\",[\"<tag>data</tag>\",\"<tag>data</tag>\"],\"123\"]}",
@@ -182,7 +182,7 @@
     "task": "{\"text\":\"Попытка отправки плохого запроса, ничего не отобразится.\",\"exec\":\"changeLocale\",\"params\":[2]}",
     "request": "{\"module\":\"kz.gov.pki.knca.commonUtils\",\"method\":\"changeLocale\",\"args\":[2]}",
     "response": "{\"code\":\"500\",\"message\":\"java.lang.IllegalArgumentException: argument type mismatch. Method: changeLocale\"}",
-    "result": "Error: 500: java.lang.IllegalArgumentException: argument type mismatch. Method: changeLocale"
+    "result": "NCALayerError: 500: java.lang.IllegalArgumentException: argument type mismatch. Method: changeLocale"
   },
   {
     "task": "{\"text\":\"Мы сменим язык, визуально это никак не отобразится.\",\"exec\":\"changeLocale\",\"params\":[\"en\"]}",
