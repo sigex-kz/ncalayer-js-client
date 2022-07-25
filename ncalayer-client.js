@@ -1,15 +1,13 @@
-((exports, WebSocket, window) => {
-
+((exports, WebSocket, window) => { // eslint-disable-line max-classes-per-file
   /**
    * Класс ошибок NCALayerError.
    */
   class NCALayerError extends Error {
     constructor(message, options) {
       super(message, options);
-      this.name = "NCALayerError";
+      this.name = 'NCALayerError';
     }
   }
-
 
   /**
    * Класс клиента NCALayer.
