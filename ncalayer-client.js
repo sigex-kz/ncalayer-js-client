@@ -334,7 +334,7 @@
     setHandlers(resolve, reject) {
       this.responseProcessed = false;
 
-      this.wsConnection.onNCALayerError = () => {
+      this.wsConnection.onerror = () => {
         if (this.responseProcessed) {
           return;
         }
