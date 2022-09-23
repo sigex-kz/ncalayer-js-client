@@ -68,6 +68,355 @@
       });
     }
 
+    //
+    // Типы хранилищ
+    //
+
+    /**
+     * KAZTOKEN
+     */
+    static get basicsStorageKAZTOKEN() {
+      return ['AKKaztokenStore'];
+    }
+
+    /**
+     * Удостоверение личности
+     */
+    static get basicsStorageIDCard() {
+      return ['AKKZIDCardStore'];
+    }
+
+    /**
+     * eToken 72k
+     */
+    static get basicsStorageEToken72k() {
+      return ['AKEToken72KStore'];
+    }
+
+    /**
+     * eToken 5110
+     */
+    static get basicsStorageEToken5110() {
+      return ['AKEToken5110Store'];
+    }
+
+    /**
+     * JaCarta
+     */
+    static get basicsStorageJaCarta() {
+      return ['AKJaCartaStore'];
+    }
+
+    /**
+     * aKey
+     */
+    static get basicsStorageAKey() {
+      return ['AKAKEYStore'];
+    }
+
+    /**
+     * Файловле хранилище PKCS#12
+     */
+    static get basicsStoragePKCS12() {
+      return ['PKCS12'];
+    }
+
+    /**
+     * Файловле хранилище JKS
+     */
+    static get basicsStorageJKS() {
+      return ['JKS'];
+    }
+
+    /**
+     * Любые хранилища.
+     */
+    static get basicsStoragesAll() {
+      return [];
+    }
+
+    /**
+     * Только аппаратные хранилища.
+     */
+    static get basicsStoragesHardware() {
+      return [
+        'AKKaztokenStore',
+        'AKKZIDCardStore',
+        'AKEToken72KStore',
+        'AKEToken5110Store',
+        'AKAKEYStore',
+      ];
+    }
+
+    //
+    // Параметры подписания
+    //
+
+    /**
+     * Параметры подписания для формирования CMS без вложенных данных из данных в Base64.
+     */
+    static get basicsCMSParamsDetached() {
+      return {
+        decode: true,
+        encapsulate: false,
+        digested: false,
+        tsaProfile: {},
+      };
+    }
+
+    /**
+     * Параметры подписания для формирования CMS без вложенных данных из хеша данных в Base64.
+     */
+    static get basicsCMSParamsDetachedHash() {
+      return {
+        decode: true,
+        encapsulate: false,
+        digested: true,
+        tsaProfile: {},
+      };
+    }
+
+    /**
+     * Параметры подписания для формирования CMS с вложенными данными из данных в Base64.
+     */
+    static get basicsCMSParamsAttached() {
+      return {
+        decode: true,
+        encapsulate: true,
+        digested: false,
+        tsaProfile: {},
+      };
+    }
+
+    /**
+     * Параметры подписания для формирования XML по умолчанию.
+     */
+    static get basicsXMLParams() {
+      return {};
+    }
+
+    //
+    // Параметры выбора сертификата
+    //
+
+    /**
+     * Любой сертификат выпущенный боевым УЦ НУЦ.
+     */
+    static get basicsSignerAny() {
+      return {
+        extKeyUsageOids: [],
+      };
+    }
+
+    /**
+     * Любой сертификат для подписания выпущенный боевым УЦ НУЦ.
+     */
+    static get basicsSignerSignAny() {
+      return {
+        extKeyUsageOids: ['1.3.6.1.5.5.7.3.4'],
+      };
+    }
+
+    /**
+     * Сертификат физического лица для подписания выпущенный боевым УЦ НУЦ.
+     */
+    static get basicsSignerSignPerson() {
+      return {
+        extKeyUsageOids: ['1.3.6.1.5.5.7.3.4', '1.2.398.3.3.4.1.1'],
+      };
+    }
+
+    /**
+     * Сертификат руководителя юридического лица для подписания выпущенный боевым УЦ НУЦ.
+     */
+    static get basicsSignerSignHead() {
+      return {
+        extKeyUsageOids: ['1.3.6.1.5.5.7.3.4', '1.2.398.3.3.4.1.2.1'],
+      };
+    }
+
+    /**
+     * Сертификат лица с правом подписи юридического лица для подписания выпущенный боевым УЦ НУЦ.
+     */
+    static get basicsSignerSignTrusted() {
+      return {
+        extKeyUsageOids: ['1.3.6.1.5.5.7.3.4', '1.2.398.3.3.4.1.2.2'],
+      };
+    }
+
+    /**
+     * Сертификат сотрудника юридического лица для подписания выпущенный боевым УЦ НУЦ.
+     */
+    static get basicsSignerSignEmployee() {
+      return {
+        extKeyUsageOids: ['1.3.6.1.5.5.7.3.4', '1.2.398.3.3.4.1.2.5'],
+      };
+    }
+
+    /**
+     * Любой сертификат для аутентификации выпущенный боевым УЦ НУЦ.
+     */
+    static get basicsSignerAuthAny() {
+      return {
+        extKeyUsageOids: ['1.3.6.1.5.5.7.3.2'],
+      };
+    }
+
+    /**
+     * Сертификат физического лица для аутентификации выпущенный боевым УЦ НУЦ.
+     */
+    static get basicsSignerAuthPerson() {
+      return {
+        extKeyUsageOids: ['1.3.6.1.5.5.7.3.2', '1.2.398.3.3.4.1.1'],
+      };
+    }
+
+    /**
+     * Сертификат руководителя юридического лица для аутентификации выпущенный боевым УЦ НУЦ.
+     */
+    static get basicsSignerAuthHead() {
+      return {
+        extKeyUsageOids: ['1.3.6.1.5.5.7.3.2', '1.2.398.3.3.4.1.2.1'],
+      };
+    }
+
+    /**
+     * Сертификат лица с правом подписи юридического лица для аутентификации выпущенный боевым УЦ
+     * НУЦ.
+     */
+    static get basicsSignerAuthRight() {
+      return {
+        extKeyUsageOids: ['1.3.6.1.5.5.7.3.2', '1.2.398.3.3.4.1.2.2'],
+      };
+    }
+
+    /**
+     * Сертификат сотрудника юридического лица для аутентификации выпущенный боевым УЦ НУЦ.
+     */
+    static get basicsSignerAuthEmployee() {
+      return {
+        extKeyUsageOids: ['1.3.6.1.5.5.7.3.2', '1.2.398.3.3.4.1.2.5'],
+      };
+    }
+
+    /**
+     * Любой сертификат выпущенный боевым или тестовым УЦ НУЦ.
+     */
+    static get basicsSignerTestAny() {
+      return {
+        extKeyUsageOids: [],
+        chain: [],
+      };
+    }
+
+    /**
+     * Вычислить подпись под данными с указанными параметрами. **Новая функция sign 2022 года из
+     * модуля kz.gov.pki.knca.basics (https://github.com/pkigovkz/sdkinfo/wiki/KNCA-Basics-Module)**.
+     * Сигнатура функции сложная, поэтому рекомендуем пользоваться функциями помошниками
+     * basicsSignXLM и basicsSignCMS.
+     *
+     * @param {Array} allowedStorages массив строк с константами допустимых для использования
+     * типов хранилищ (см. константы basicsStorage*).
+     *
+     * @param {String} format тип вычисляемой подписи: 'xml', либо 'cms'.
+     *
+     * @param {String} data подписываемые данные.
+     *
+     * @param {Object} signingParams параметры подписания (см. basicsCMSParams* и basicsXMLParams*).
+     *
+     * @param {Object} signerParams параметры выбора сертификата для подписания (см. константы
+     * basicsSigner*).
+     *
+     * @param {String} locale язык пользовательского интерфейса.
+     *
+     * @returns {String} подпись.
+     *
+     * @throws NCALayerError
+     */
+    async basicsSign(allowedStorages, format, data, signingParams, signerParams, locale) {
+      const request = {
+        module: 'kz.gov.pki.knca.basics',
+        method: 'sign',
+        args: {
+          allowedStorages,
+          format,
+          data,
+          signingParams,
+          signerParams,
+          locale,
+        },
+      };
+
+      this.sendRequest(request);
+
+      return new Promise((resolve, reject) => { this.setHandlers(resolve, reject); });
+    }
+
+    /**
+     * Вычислить CMS подпись под данными с указанными параметрами, это функция-помошник для
+     * упрощения работы с функцией basicsSign.
+     *
+     * @param {Array} allowedStorages массив строк с константами допустимых для использования
+     * типов хранилищ (см. константы basicsStorage*).
+     *
+     * @param {String | ArrayBuffer} data данные, которые нужно подписать, в виде строки Base64 либо
+     * ArrayBuffer.
+     *
+     * @param {Object} signingParams параметры подписания (см basicsCMSParams*).
+     *
+     * @param {Object} signerParams параметры выбора сертификата для подписания (см. константы
+     * basicsSigner*).
+     *
+     * @param {String} [locale = 'ru'] язык пользовательского интерфейса.
+     *
+     * @returns {String} подпись.
+     *
+     * @throws NCALayerError
+     */
+    async basicsSignCMS(allowedStorages, data, signingParams, signerParams, locale = 'ru') {
+      return this.basicsSign(
+        allowedStorages,
+        'cms',
+        (typeof data === 'string') ? data : NCALayerClient.arrayBufferToB64(data),
+        signingParams,
+        signerParams,
+        locale,
+      );
+    }
+
+    /**
+     * Вычислить подпись под данными с указанными параметрами. **Новая функция sign 2022 года из
+     * модуля kz.gov.pki.knca.basics (https://github.com/pkigovkz/sdkinfo/wiki/KNCA-Basics-Module)**.
+     * Сигнатура функции сложная, поэтому рекомендуем пользоваться функциями помошниками
+     * basicsSignXLM и basicsSignCMS.
+     *
+     * @param {Array} allowedStorages массив строк с константами допустимых для использования
+     * типов хранилищ (см. константы basicsStorage*).
+     *
+     * @param {String} data подписываемые данные.
+     *
+     * @param {Object} signingParams параметры подписания (см basicsXMLParams*).
+     *
+     * @param {Object} signerParams параметры выбора сертификата для подписания (см. константы
+     * basicsSigner*).
+     *
+     * @param {String} [locale = 'ru'] язык пользовательского интерфейса.
+     *
+     * @returns {String} подпись.
+     *
+     * @throws NCALayerError
+     */
+    async basicsSignXML(allowedStorages, data, signingParams, signerParams, locale = 'ru') {
+      return this.basicsSign(
+        allowedStorages,
+        'xml',
+        data,
+        signingParams,
+        signerParams,
+        locale,
+      );
+    }
+
     /**
      * Получить список активных типов устройств.
      *

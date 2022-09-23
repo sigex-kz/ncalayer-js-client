@@ -26,6 +26,9 @@
     * [new NCALayerClient([url])](#new_NCALayerClient_new)
     * _instance_
         * [.connect()](#NCALayerClient+connect) ⇒ <code>String</code>
+        * [.basicsSign(allowedStorages, format, data, signingParams, signerParams, locale)](#NCALayerClient+basicsSign) ⇒ <code>String</code>
+        * [.basicsSignCMS(allowedStorages, data, signingParams, signerParams, [locale])](#NCALayerClient+basicsSignCMS) ⇒ <code>String</code>
+        * [.basicsSignXML(allowedStorages, data, signingParams, signerParams, [locale])](#NCALayerClient+basicsSignXML) ⇒ <code>String</code>
         * [.getActiveTokens()](#NCALayerClient+getActiveTokens) ⇒ <code>Array.&lt;String&gt;</code>
         * [.getKeyInfo(storageType)](#NCALayerClient+getKeyInfo) ⇒ <code>Object</code>
         * [.createCAdESFromBase64(storageType, data, [keyType], [attach])](#NCALayerClient+createCAdESFromBase64) ⇒ <code>String</code>
@@ -35,6 +38,32 @@
         * [.signXmls(storageType, xmls, [keyType], [tbsElementXPath], [signatureParentElementXPath])](#NCALayerClient+signXmls) ⇒ <code>Array.&lt;String&gt;</code>
         * [.changeLocale(localeId)](#NCALayerClient+changeLocale)
     * _static_
+        * [.basicsStorageKAZTOKEN](#NCALayerClient.basicsStorageKAZTOKEN)
+        * [.basicsStorageIDCard](#NCALayerClient.basicsStorageIDCard)
+        * [.basicsStorageEToken72k](#NCALayerClient.basicsStorageEToken72k)
+        * [.basicsStorageEToken5110](#NCALayerClient.basicsStorageEToken5110)
+        * [.basicsStorageJaCarta](#NCALayerClient.basicsStorageJaCarta)
+        * [.basicsStorageAKey](#NCALayerClient.basicsStorageAKey)
+        * [.basicsStoragePKCS12](#NCALayerClient.basicsStoragePKCS12)
+        * [.basicsStorageJKS](#NCALayerClient.basicsStorageJKS)
+        * [.basicsStoragesAll](#NCALayerClient.basicsStoragesAll)
+        * [.basicsStoragesHardware](#NCALayerClient.basicsStoragesHardware)
+        * [.basicsCMSParamsDetached](#NCALayerClient.basicsCMSParamsDetached)
+        * [.basicsCMSParamsDetachedHash](#NCALayerClient.basicsCMSParamsDetachedHash)
+        * [.basicsCMSParamsAttached](#NCALayerClient.basicsCMSParamsAttached)
+        * [.basicsXMLParams](#NCALayerClient.basicsXMLParams)
+        * [.basicsSignerAny](#NCALayerClient.basicsSignerAny)
+        * [.basicsSignerSignAny](#NCALayerClient.basicsSignerSignAny)
+        * [.basicsSignerSignPerson](#NCALayerClient.basicsSignerSignPerson)
+        * [.basicsSignerSignHead](#NCALayerClient.basicsSignerSignHead)
+        * [.basicsSignerSignRight](#NCALayerClient.basicsSignerSignRight)
+        * [.basicsSignerSignEmployee](#NCALayerClient.basicsSignerSignEmployee)
+        * [.basicsSignerAuthAny](#NCALayerClient.basicsSignerAuthAny)
+        * [.basicsSignerAuthPerson](#NCALayerClient.basicsSignerAuthPerson)
+        * [.basicsSignerAuthHead](#NCALayerClient.basicsSignerAuthHead)
+        * [.basicsSignerAuthRight](#NCALayerClient.basicsSignerAuthRight)
+        * [.basicsSignerAuthEmployee](#NCALayerClient.basicsSignerAuthEmployee)
+        * [.basicsSignerTestAny](#NCALayerClient.basicsSignerTestAny)
         * [.fileStorageType](#NCALayerClient.fileStorageType)
 
 <a name="new_NCALayerClient_new"></a>
@@ -57,6 +86,74 @@
 **Throws**:
 
 - NCALayerError
+
+<a name="NCALayerClient+basicsSign"></a>
+
+### *(async)* ncaLayerClient.basicsSign(allowedStorages, format, data, signingParams, signerParams, locale) ⇒ <code>String</code>
+Вычислить подпись под данными с указанными параметрами. **Новая функция sign 2022 года из
+модуля kz.gov.pki.knca.basics (https://github.com/pkigovkz/sdkinfo/wiki/KNCA-Basics-Module)**.
+Сигнатура функции сложная, поэтому рекомендуем пользоваться функциями помошниками
+basicsSignXLM и basicsSignCMS.
+
+**Kind**: instance method of [<code>NCALayerClient</code>](#NCALayerClient)  
+**Returns**: <code>String</code> - подпись.  
+**Throws**:
+
+- NCALayerError
+
+
+| Param | Type | Description |
+| --- | --- | --- |
+| allowedStorages | <code>Array</code> | массив строк с константами допустимых для использования типов хранилищ (см. константы basicsStorage*). |
+| format | <code>String</code> | тип вычисляемой подписи: 'xml', либо 'cms'. |
+| data | <code>String</code> | подписываемые данные. |
+| signingParams | <code>Object</code> | параметры подписания (см. basicsCMSParams* и basicsXMLParams*). |
+| signerParams | <code>Object</code> | параметры выбора сертификата для подписания (см. константы basicsSigner*). |
+| locale | <code>String</code> | язык пользовательского интерфейса. |
+
+<a name="NCALayerClient+basicsSignCMS"></a>
+
+### *(async)* ncaLayerClient.basicsSignCMS(allowedStorages, data, signingParams, signerParams, [locale]) ⇒ <code>String</code>
+Вычислить CMS подпись под данными с указанными параметрами, это функция-помошник для
+упрощения работы с функцией basicsSign.
+
+**Kind**: instance method of [<code>NCALayerClient</code>](#NCALayerClient)  
+**Returns**: <code>String</code> - подпись.  
+**Throws**:
+
+- NCALayerError
+
+
+| Param | Type | Default | Description |
+| --- | --- | --- | --- |
+| allowedStorages | <code>Array</code> |  | массив строк с константами допустимых для использования типов хранилищ (см. константы basicsStorage*). |
+| data | <code>String</code> \| <code>ArrayBuffer</code> |  | данные, которые нужно подписать, в виде строки Base64 либо ArrayBuffer. |
+| signingParams | <code>Object</code> |  | параметры подписания (см basicsCMSParams*). |
+| signerParams | <code>Object</code> |  | параметры выбора сертификата для подписания (см. константы basicsSigner*). |
+| [locale] | <code>String</code> | <code>&#x27;ru&#x27;</code> | язык пользовательского интерфейса. |
+
+<a name="NCALayerClient+basicsSignXML"></a>
+
+### *(async)* ncaLayerClient.basicsSignXML(allowedStorages, data, signingParams, signerParams, [locale]) ⇒ <code>String</code>
+Вычислить подпись под данными с указанными параметрами. **Новая функция sign 2022 года из
+модуля kz.gov.pki.knca.basics (https://github.com/pkigovkz/sdkinfo/wiki/KNCA-Basics-Module)**.
+Сигнатура функции сложная, поэтому рекомендуем пользоваться функциями помошниками
+basicsSignXLM и basicsSignCMS.
+
+**Kind**: instance method of [<code>NCALayerClient</code>](#NCALayerClient)  
+**Returns**: <code>String</code> - подпись.  
+**Throws**:
+
+- NCALayerError
+
+
+| Param | Type | Default | Description |
+| --- | --- | --- | --- |
+| allowedStorages | <code>Array</code> |  | массив строк с константами допустимых для использования типов хранилищ (см. константы basicsStorage*). |
+| data | <code>String</code> |  | подписываемые данные. |
+| signingParams | <code>Object</code> |  | параметры подписания (см basicsXMLParams*). |
+| signerParams | <code>Object</code> |  | параметры выбора сертификата для подписания (см. константы basicsSigner*). |
+| [locale] | <code>String</code> | <code>&#x27;ru&#x27;</code> | язык пользовательского интерфейса. |
 
 <a name="NCALayerClient+getActiveTokens"></a>
 
@@ -198,6 +295,163 @@ TSP. **Не рекомендуется использовать, разрабо�
 | --- | --- | --- |
 | localeId | <code>String</code> | новый идентификатор языка. |
 
+<a name="NCALayerClient.basicsStorageKAZTOKEN"></a>
+
+### NCALayerClient.basicsStorageKAZTOKEN
+KAZTOKEN
+
+**Kind**: static property of [<code>NCALayerClient</code>](#NCALayerClient)  
+<a name="NCALayerClient.basicsStorageIDCard"></a>
+
+### NCALayerClient.basicsStorageIDCard
+Удостоверение личности
+
+**Kind**: static property of [<code>NCALayerClient</code>](#NCALayerClient)  
+<a name="NCALayerClient.basicsStorageEToken72k"></a>
+
+### NCALayerClient.basicsStorageEToken72k
+eToken 72k
+
+**Kind**: static property of [<code>NCALayerClient</code>](#NCALayerClient)  
+<a name="NCALayerClient.basicsStorageEToken5110"></a>
+
+### NCALayerClient.basicsStorageEToken5110
+eToken 5110
+
+**Kind**: static property of [<code>NCALayerClient</code>](#NCALayerClient)  
+<a name="NCALayerClient.basicsStorageJaCarta"></a>
+
+### NCALayerClient.basicsStorageJaCarta
+JaCarta
+
+**Kind**: static property of [<code>NCALayerClient</code>](#NCALayerClient)  
+<a name="NCALayerClient.basicsStorageAKey"></a>
+
+### NCALayerClient.basicsStorageAKey
+aKey
+
+**Kind**: static property of [<code>NCALayerClient</code>](#NCALayerClient)  
+<a name="NCALayerClient.basicsStoragePKCS12"></a>
+
+### NCALayerClient.basicsStoragePKCS12
+Файловле хранилище PKCS#12
+
+**Kind**: static property of [<code>NCALayerClient</code>](#NCALayerClient)  
+<a name="NCALayerClient.basicsStorageJKS"></a>
+
+### NCALayerClient.basicsStorageJKS
+Файловле хранилище JKS
+
+**Kind**: static property of [<code>NCALayerClient</code>](#NCALayerClient)  
+<a name="NCALayerClient.basicsStoragesAll"></a>
+
+### NCALayerClient.basicsStoragesAll
+Любые хранилища.
+
+**Kind**: static property of [<code>NCALayerClient</code>](#NCALayerClient)  
+<a name="NCALayerClient.basicsStoragesHardware"></a>
+
+### NCALayerClient.basicsStoragesHardware
+Только аппаратные хранилища.
+
+**Kind**: static property of [<code>NCALayerClient</code>](#NCALayerClient)  
+<a name="NCALayerClient.basicsCMSParamsDetached"></a>
+
+### NCALayerClient.basicsCMSParamsDetached
+Параметры подписания для формирования CMS без вложенных данных из данных в Base64.
+
+**Kind**: static property of [<code>NCALayerClient</code>](#NCALayerClient)  
+<a name="NCALayerClient.basicsCMSParamsDetachedHash"></a>
+
+### NCALayerClient.basicsCMSParamsDetachedHash
+Параметры подписания для формирования CMS без вложенных данных из хеша данных в Base64.
+
+**Kind**: static property of [<code>NCALayerClient</code>](#NCALayerClient)  
+<a name="NCALayerClient.basicsCMSParamsAttached"></a>
+
+### NCALayerClient.basicsCMSParamsAttached
+Параметры подписания для формирования CMS с вложенными данными из данных в Base64.
+
+**Kind**: static property of [<code>NCALayerClient</code>](#NCALayerClient)  
+<a name="NCALayerClient.basicsXMLParams"></a>
+
+### NCALayerClient.basicsXMLParams
+Параметры подписания для формирования XML по умолчанию.
+
+**Kind**: static property of [<code>NCALayerClient</code>](#NCALayerClient)  
+<a name="NCALayerClient.basicsSignerAny"></a>
+
+### NCALayerClient.basicsSignerAny
+Любой сертификат выпущенный боевым УЦ НУЦ.
+
+**Kind**: static property of [<code>NCALayerClient</code>](#NCALayerClient)  
+<a name="NCALayerClient.basicsSignerSignAny"></a>
+
+### NCALayerClient.basicsSignerSignAny
+Любой сертификат для подписания выпущенный боевым УЦ НУЦ.
+
+**Kind**: static property of [<code>NCALayerClient</code>](#NCALayerClient)  
+<a name="NCALayerClient.basicsSignerSignPerson"></a>
+
+### NCALayerClient.basicsSignerSignPerson
+Сертификат физического лица для подписания выпущенный боевым УЦ НУЦ.
+
+**Kind**: static property of [<code>NCALayerClient</code>](#NCALayerClient)  
+<a name="NCALayerClient.basicsSignerSignHead"></a>
+
+### NCALayerClient.basicsSignerSignHead
+Сертификат руководителя юридического лица для подписания выпущенный боевым УЦ НУЦ.
+
+**Kind**: static property of [<code>NCALayerClient</code>](#NCALayerClient)  
+<a name="NCALayerClient.basicsSignerSignRight"></a>
+
+### NCALayerClient.basicsSignerSignRight
+Сертификат лица с правом подписи юридического лица для подписания выпущенный боевым УЦ НУЦ.
+
+**Kind**: static property of [<code>NCALayerClient</code>](#NCALayerClient)  
+<a name="NCALayerClient.basicsSignerSignEmployee"></a>
+
+### NCALayerClient.basicsSignerSignEmployee
+Сертификат сотрудника юридического лица для подписания выпущенный боевым УЦ НУЦ.
+
+**Kind**: static property of [<code>NCALayerClient</code>](#NCALayerClient)  
+<a name="NCALayerClient.basicsSignerAuthAny"></a>
+
+### NCALayerClient.basicsSignerAuthAny
+Любой сертификат для аутентификации выпущенный боевым УЦ НУЦ.
+
+**Kind**: static property of [<code>NCALayerClient</code>](#NCALayerClient)  
+<a name="NCALayerClient.basicsSignerAuthPerson"></a>
+
+### NCALayerClient.basicsSignerAuthPerson
+Сертификат физического лица для аутентификации выпущенный боевым УЦ НУЦ.
+
+**Kind**: static property of [<code>NCALayerClient</code>](#NCALayerClient)  
+<a name="NCALayerClient.basicsSignerAuthHead"></a>
+
+### NCALayerClient.basicsSignerAuthHead
+Сертификат руководителя юридического лица для аутентификации выпущенный боевым УЦ НУЦ.
+
+**Kind**: static property of [<code>NCALayerClient</code>](#NCALayerClient)  
+<a name="NCALayerClient.basicsSignerAuthRight"></a>
+
+### NCALayerClient.basicsSignerAuthRight
+Сертификат лица с правом подписи юридического лица для аутентификации выпущенный боевым УЦ
+НУЦ.
+
+**Kind**: static property of [<code>NCALayerClient</code>](#NCALayerClient)  
+<a name="NCALayerClient.basicsSignerAuthEmployee"></a>
+
+### NCALayerClient.basicsSignerAuthEmployee
+Сертификат сотрудника юридического лица для аутентификации выпущенный боевым УЦ НУЦ.
+
+**Kind**: static property of [<code>NCALayerClient</code>](#NCALayerClient)  
+<a name="NCALayerClient.basicsSignerTestAny"></a>
+
+### NCALayerClient.basicsSignerTestAny
+Любой сертификат выпущенный боевым или тестовым УЦ НУЦ.
+
+**Kind**: static property of [<code>NCALayerClient</code>](#NCALayerClient)  
 <a name="NCALayerClient.fileStorageType"></a>
 
 ### NCALayerClient.fileStorageType
