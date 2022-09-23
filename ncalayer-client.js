@@ -1,3 +1,5 @@
+// @ts-check
+
 ((exports, WebSocket, window) => { // eslint-disable-line max-classes-per-file
   /**
    * Класс ошибок NCALayerError.

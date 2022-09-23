@@ -26,16 +26,18 @@
     "jsdoc-to-markdown": "^7.1.0"
   },
   "dependencies": {
+    "typescript": "^4.8.3",
     "ws": "^8.4.2"
   },
   "browser": {
     "ws": false
   },
   "scripts": {
-    "build": "npm run test && npm run lint && npm run build-docs",
+    "build": "npm run test && npm run lint && npm run ts-check && npm run build-docs",
     "test": "node test/index.js",
     "build-docs": "jsdoc2md --no-cache --partial jsdoc2md-partials/sig-name.hbs --files ncalayer-client.js > API.md",
     "lint": "eslint --ignore-pattern 'test/test-data-builder/js/vue.min.js' '**/*.js'",
+    "ts-check": "tsc --allowJs --checkJs --noEmit --lib es2015 --target es6 --skipLibCheck ncalayer-client.js",
     "test-data-builder": "http-server ./test/test-data-builder"
   }
 }
