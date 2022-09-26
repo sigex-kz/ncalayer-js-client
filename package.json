@@ -37,7 +37,7 @@
     "test": "node test/index.js",
     "build-docs": "jsdoc2md --no-cache --partial jsdoc2md-partials/sig-name.hbs --files ncalayer-client.js > API.md",
     "lint": "eslint --ignore-pattern 'test/test-data-builder/js/vue.min.js' '**/*.js'",
-    "ts-check": "tsc --allowJs --checkJs --noEmit --lib es2015 --target es6 --skipLibCheck ncalayer-client.js",
+    "ts-check": "tsc --allowJs --checkJs --noEmit --target es6 --moduleResolution node ncalayer-client.js",
     "test-data-builder": "http-server ./test/test-data-builder"
   }
 }

@@ -5,8 +5,8 @@
    * Класс ошибок NCALayerError.
    */
   class NCALayerError extends Error {
-    constructor(message, options) {
-      super(message, options);
+    constructor(message) {
+      super(message);
       this.name = 'NCALayerError';
     }
   }
@@ -33,7 +33,7 @@
     /**
      * Подключиться к NCALayer.
      *
-     * @returns {String} версию NCALayer.
+     * @returns {Promise<String>} версию NCALayer.
      *
      * @throws NCALayerError
      */
@@ -73,8 +73,8 @@
     /**
      * Получить список активных типов устройств.
      *
-     * @returns {String[]} массив содержащий типы хранилищ экземпляры которых доступны в данный
-     * момент.
+     * @returns {Promise<String[]>} массив содержащий типы хранилищ экземпляры которых доступны в
+     * данный момент.
      *
      * @throws NCALayerError
      */
@@ -94,7 +94,7 @@
      *
      * @param {String} storageType тип хранилища на экземплярах которого следует искать записи.
      *
-     * @returns {Object} объект с информацией о записи.
+     * @returns {Promise<Object>} объект с информацией о записи.
      *
      * @throws NCALayerError
      */
@@ -126,7 +126,7 @@
      *
      * @param {Boolean} [attach = false] следует ли включить в подпись подписываемые данные.
      *
-     * @returns {String} CMS подпись в виде Base64 строки.
+     * @returns {Promise<String>} CMS подпись в виде Base64 строки.
      *
      * @throws NCALayerError
      */
@@ -158,7 +158,7 @@
      * варианты 'SIGNATURE' и 'AUTHENTICATION', иное значение позволит пользователю выбрать
      * любой доступный в хранилище ключа.
      *
-     * @returns {String} CMS подпись в виде Base64 строки.
+     * @returns {Promise<String>} CMS подпись в виде Base64 строки.
      *
      * @throws NCALayerError
      */
@@ -193,7 +193,7 @@
      *
      * @param {Boolean} [attach = false] следует ли включить в подпись подписываемые данные.
      *
-     * @returns {String} CMS подпись в виде Base64 строки.
+     * @returns {Promise<String>} CMS подпись в виде Base64 строки.
      *
      * @throws NCALayerError
      */
@@ -225,12 +225,12 @@
      * варианты 'SIGNATURE' и 'AUTHENTICATION', иное значение позволит пользователю выбрать
      * любой доступный в хранилище ключа.
      *
-     * @param {Boolean} [tbsElementXPath = ''] путь к подписываемому узлу XML.
+     * @param {String} [tbsElementXPath = ''] путь к подписываемому узлу XML.
      *
-     * @param {Boolean} [signatureParentElementXPath = ''] путь к узлу в который необходимо добавить
+     * @param {String} [signatureParentElementXPath = ''] путь к узлу в который необходимо добавить
      * сформированную подпись.
      *
-     * @returns {String} XML документ содержащий XMLDSIG подпись.
+     * @returns {Promise<String>} XML документ содержащий XMLDSIG подпись.
      *
      * @throws NCALayerError
      */
@@ -263,12 +263,12 @@
      * варианты 'SIGNATURE' и 'AUTHENTICATION', иное значение позволит пользователю выбрать
      * любой доступный в хранилище ключа.
      *
-     * @param {Boolean} [tbsElementXPath = ''] путь к подписываемому узлу XML.
+     * @param {String} [tbsElementXPath = ''] путь к подписываемому узлу XML.
      *
-     * @param {Boolean} [signatureParentElementXPath = ''] путь к узлу в который необходимо добавить
+     * @param {String} [signatureParentElementXPath = ''] путь к узлу в который необходимо добавить
      * сформированную подпись.
      *
-     * @returns {String[]} массив XML документов содержащих XMLDSIG подписи.
+     * @returns {Promise<String[]>} массив XML документов содержащих XMLDSIG подписи.
      *
      * @throws NCALayerError
      */
