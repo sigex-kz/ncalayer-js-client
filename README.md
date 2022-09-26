@@ -3,6 +3,8 @@
 JS клиент для [NCALayer](https://pki.gov.kz/ncalayer/) стремящийся быть максимально простым в
 использовании.
 
+**Поддерживает новый модуль kz.gov.pki.knca.basics (https://github.com/pkigovkz/sdkinfo/wiki/KNCA-Basics-Module)**
+
 Разработан для веб интерфейса [https://sigex.kz](https://sigex.kz).
 
 Документация по API: [API.md](API.md).
@@ -45,6 +47,36 @@ async function connectAndSign() {
   let base64EncodedSignature;
   try {
     base64EncodedSignature = await ncalayerClient.createCAdESFromBase64(storageType, 'MTEK');
+  } catch (error) {
+    alert(error.toString());
+    return;
+  }
+
+  return base64EncodedSignature;
+}
+```
+
+## Пример использования нового модуля kz.gov.pki.knca.basics
+
+```js
+async function connectAndSign() {
+  const ncalayerClient = new NCALayerClient();
+
+  try {
+    await ncalayerClient.connect();
+  } catch (error) {
+    alert(`Не удалось подключиться к NCALayer: ${error.toString()}`);
+    return;
+  }
+
+  let base64EncodedSignature;
+  try {
+    base64EncodedSignature = await ncalayerClient.basicsSignCMS(
+      NCALayerClient.basicsStoragesAll,
+      'MTEK',
+      NCALayerClient.basicsCMSParamsDetached,
+      NCALayerClient.basicsSignerSignAny,
+    );
   } catch (error) {
     alert(error.toString());
     return;
