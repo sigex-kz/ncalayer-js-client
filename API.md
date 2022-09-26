@@ -14,29 +14,28 @@
 ## NCALayerError
 Класс ошибок NCALayerError.
 
-**Kind**: global class
+**Kind**: global class  
 <a name="NCALayerClient"></a>
 
 ## NCALayerClient
 Класс клиента NCALayer.
 
-**Kind**: global class
+**Kind**: global class  
 
 * [NCALayerClient](#NCALayerClient)
     * [new NCALayerClient([url])](#new_NCALayerClient_new)
     * _instance_
-
-        * [.connect()](#NCALayerClient+connect) ⇒ <code>String</code>
-        * [.basicsSign(allowedStorages, format, data, signingParams, signerParams, locale)](#NCALayerClient+basicsSign) ⇒ <code>String</code>
-        * [.basicsSignCMS(allowedStorages, data, signingParams, signerParams, [locale])](#NCALayerClient+basicsSignCMS) ⇒ <code>String</code>
-        * [.basicsSignXML(allowedStorages, data, signingParams, signerParams, [locale])](#NCALayerClient+basicsSignXML) ⇒ <code>String</code>
-        * [.getActiveTokens()](#NCALayerClient+getActiveTokens) ⇒ <code>Array.&lt;String&gt;</code>
-        * [.getKeyInfo(storageType)](#NCALayerClient+getKeyInfo) ⇒ <code>Object</code>
-        * [.createCAdESFromBase64(storageType, data, [keyType], [attach])](#NCALayerClient+createCAdESFromBase64) ⇒ <code>String</code>
-        * [.createCAdESFromBase64Hash(storageType, hash, [keyType])](#NCALayerClient+createCAdESFromBase64Hash) ⇒ <code>String</code>
-        * [.createCMSSignatureFromBase64(storageType, data, [keyType], [attach])](#NCALayerClient+createCMSSignatureFromBase64) ⇒ <code>String</code>
-        * [.signXml(storageType, xml, [keyType], [tbsElementXPath], [signatureParentElementXPath])](#NCALayerClient+signXml) ⇒ <code>String</code>
-        * [.signXmls(storageType, xmls, [keyType], [tbsElementXPath], [signatureParentElementXPath])](#NCALayerClient+signXmls) ⇒ <code>Array.&lt;String&gt;</code>
+        * [.connect()](#NCALayerClient+connect) ⇒ <code>Promise.&lt;String&gt;</code>
+        * [.basicsSign(allowedStorages, format, data, signingParams, signerParams, locale)](#NCALayerClient+basicsSign) ⇒ <code>Promise.&lt;String&gt;</code>
+        * [.basicsSignCMS(allowedStorages, data, signingParams, signerParams, [locale])](#NCALayerClient+basicsSignCMS) ⇒ <code>Promise.&lt;String&gt;</code>
+        * [.basicsSignXML(allowedStorages, data, signingParams, signerParams, [locale])](#NCALayerClient+basicsSignXML) ⇒ <code>Promise.&lt;String&gt;</code>
+        * [.getActiveTokens()](#NCALayerClient+getActiveTokens) ⇒ <code>Promise.&lt;Array.&lt;String&gt;&gt;</code>
+        * [.getKeyInfo(storageType)](#NCALayerClient+getKeyInfo) ⇒ <code>Promise.&lt;Object&gt;</code>
+        * [.createCAdESFromBase64(storageType, data, [keyType], [attach])](#NCALayerClient+createCAdESFromBase64) ⇒ <code>Promise.&lt;String&gt;</code>
+        * [.createCAdESFromBase64Hash(storageType, hash, [keyType])](#NCALayerClient+createCAdESFromBase64Hash) ⇒ <code>Promise.&lt;String&gt;</code>
+        * [.createCMSSignatureFromBase64(storageType, data, [keyType], [attach])](#NCALayerClient+createCMSSignatureFromBase64) ⇒ <code>Promise.&lt;String&gt;</code>
+        * [.signXml(storageType, xml, [keyType], [tbsElementXPath], [signatureParentElementXPath])](#NCALayerClient+signXml) ⇒ <code>Promise.&lt;String&gt;</code>
+        * [.signXmls(storageType, xmls, [keyType], [tbsElementXPath], [signatureParentElementXPath])](#NCALayerClient+signXmls) ⇒ <code>Promise.&lt;Array.&lt;String&gt;&gt;</code>
         * [.changeLocale(localeId)](#NCALayerClient+changeLocale)
     * _static_
         * [.basicsStorageKAZTOKEN](#NCALayerClient.basicsStorageKAZTOKEN)
@@ -57,7 +56,7 @@
         * [.basicsSignerSignAny](#NCALayerClient.basicsSignerSignAny)
         * [.basicsSignerSignPerson](#NCALayerClient.basicsSignerSignPerson)
         * [.basicsSignerSignHead](#NCALayerClient.basicsSignerSignHead)
-        * [.basicsSignerSignRight](#NCALayerClient.basicsSignerSignRight)
+        * [.basicsSignerSignTrusted](#NCALayerClient.basicsSignerSignTrusted)
         * [.basicsSignerSignEmployee](#NCALayerClient.basicsSignerSignEmployee)
         * [.basicsSignerAuthAny](#NCALayerClient.basicsSignerAuthAny)
         * [.basicsSignerAuthPerson](#NCALayerClient.basicsSignerAuthPerson)
@@ -82,22 +81,22 @@
 ### *(async)* ncaLayerClient.connect() ⇒ <code>Promise.&lt;String&gt;</code>
 Подключиться к NCALayer.
 
-**Kind**: instance method of [<code>NCALayerClient</code>](#NCALayerClient)
-**Returns**: <code>Promise.&lt;String&gt;</code> - версию NCALayer.
+**Kind**: instance method of [<code>NCALayerClient</code>](#NCALayerClient)  
+**Returns**: <code>Promise.&lt;String&gt;</code> - версию NCALayer.  
 **Throws**:
 
 - NCALayerError
 
 <a name="NCALayerClient+basicsSign"></a>
 
-### *(async)* ncaLayerClient.basicsSign(allowedStorages, format, data, signingParams, signerParams, locale) ⇒ <code>String</code>
+### *(async)* ncaLayerClient.basicsSign(allowedStorages, format, data, signingParams, signerParams, locale) ⇒ <code>Promise.&lt;String&gt;</code>
 Вычислить подпись под данными с указанными параметрами. **Новая функция sign 2022 года из
 модуля kz.gov.pki.knca.basics (https://github.com/pkigovkz/sdkinfo/wiki/KNCA-Basics-Module)**.
 Сигнатура функции сложная, поэтому рекомендуем пользоваться функциями помошниками
 basicsSignXLM и basicsSignCMS.
 
-**Kind**: instance method of [<code>NCALayerClient</code>](#NCALayerClient)
-**Returns**: <code>String</code> - подпись.
+**Kind**: instance method of [<code>NCALayerClient</code>](#NCALayerClient)  
+**Returns**: <code>Promise.&lt;String&gt;</code> - подпись.  
 **Throws**:
 
 - NCALayerError
@@ -114,12 +113,12 @@ basicsSignXLM и basicsSignCMS.
 
 <a name="NCALayerClient+basicsSignCMS"></a>
 
-### *(async)* ncaLayerClient.basicsSignCMS(allowedStorages, data, signingParams, signerParams, [locale]) ⇒ <code>String</code>
+### *(async)* ncaLayerClient.basicsSignCMS(allowedStorages, data, signingParams, signerParams, [locale]) ⇒ <code>Promise.&lt;String&gt;</code>
 Вычислить CMS подпись под данными с указанными параметрами, это функция-помошник для
 упрощения работы с функцией basicsSign.
 
-**Kind**: instance method of [<code>NCALayerClient</code>](#NCALayerClient)
-**Returns**: <code>String</code> - подпись.
+**Kind**: instance method of [<code>NCALayerClient</code>](#NCALayerClient)  
+**Returns**: <code>Promise.&lt;String&gt;</code> - подпись.  
 **Throws**:
 
 - NCALayerError
@@ -135,14 +134,14 @@ basicsSignXLM и basicsSignCMS.
 
 <a name="NCALayerClient+basicsSignXML"></a>
 
-### *(async)* ncaLayerClient.basicsSignXML(allowedStorages, data, signingParams, signerParams, [locale]) ⇒ <code>String</code>
+### *(async)* ncaLayerClient.basicsSignXML(allowedStorages, data, signingParams, signerParams, [locale]) ⇒ <code>Promise.&lt;String&gt;</code>
 Вычислить подпись под данными с указанными параметрами. **Новая функция sign 2022 года из
 модуля kz.gov.pki.knca.basics (https://github.com/pkigovkz/sdkinfo/wiki/KNCA-Basics-Module)**.
 Сигнатура функции сложная, поэтому рекомендуем пользоваться функциями помошниками
 basicsSignXLM и basicsSignCMS.
 
-**Kind**: instance method of [<code>NCALayerClient</code>](#NCALayerClient)
-**Returns**: <code>String</code> - подпись.
+**Kind**: instance method of [<code>NCALayerClient</code>](#NCALayerClient)  
+**Returns**: <code>Promise.&lt;String&gt;</code> - подпись.  
 **Throws**:
 
 - NCALayerError
@@ -161,9 +160,9 @@ basicsSignXLM и basicsSignCMS.
 ### *(async)* ncaLayerClient.getActiveTokens() ⇒ <code>Promise.&lt;Array.&lt;String&gt;&gt;</code>
 Получить список активных типов устройств.
 
-**Kind**: instance method of [<code>NCALayerClient</code>](#NCALayerClient)
+**Kind**: instance method of [<code>NCALayerClient</code>](#NCALayerClient)  
 **Returns**: <code>Promise.&lt;Array.&lt;String&gt;&gt;</code> - массив содержащий типы хранилищ экземпляры которых доступны в
-данный момент.
+данный момент.  
 **Throws**:
 
 - NCALayerError
@@ -173,8 +172,8 @@ basicsSignXLM и basicsSignCMS.
 ### *(async)* ncaLayerClient.getKeyInfo(storageType) ⇒ <code>Promise.&lt;Object&gt;</code>
 Получить информацию об одной записи (ключевой паре с сертификатом).
 
-**Kind**: instance method of [<code>NCALayerClient</code>](#NCALayerClient)
-**Returns**: <code>Promise.&lt;Object&gt;</code> - объект с информацией о записи.
+**Kind**: instance method of [<code>NCALayerClient</code>](#NCALayerClient)  
+**Returns**: <code>Promise.&lt;Object&gt;</code> - объект с информацией о записи.  
 **Throws**:
 
 - NCALayerError
@@ -189,8 +188,8 @@ basicsSignXLM и basicsSignCMS.
 ### *(async)* ncaLayerClient.createCAdESFromBase64(storageType, data, [keyType], [attach]) ⇒ <code>Promise.&lt;String&gt;</code>
 Вычислить подпись под данными и сформировать CMS (CAdES).
 
-**Kind**: instance method of [<code>NCALayerClient</code>](#NCALayerClient)
-**Returns**: <code>Promise.&lt;String&gt;</code> - CMS подпись в виде Base64 строки.
+**Kind**: instance method of [<code>NCALayerClient</code>](#NCALayerClient)  
+**Returns**: <code>Promise.&lt;String&gt;</code> - CMS подпись в виде Base64 строки.  
 **Throws**:
 
 - NCALayerError
@@ -208,8 +207,8 @@ basicsSignXLM и basicsSignCMS.
 ### *(async)* ncaLayerClient.createCAdESFromBase64Hash(storageType, hash, [keyType]) ⇒ <code>Promise.&lt;String&gt;</code>
 Вычислить подпись под хешем данных и сформировать CMS (CAdES).
 
-**Kind**: instance method of [<code>NCALayerClient</code>](#NCALayerClient)
-**Returns**: <code>Promise.&lt;String&gt;</code> - CMS подпись в виде Base64 строки.
+**Kind**: instance method of [<code>NCALayerClient</code>](#NCALayerClient)  
+**Returns**: <code>Promise.&lt;String&gt;</code> - CMS подпись в виде Base64 строки.  
 **Throws**:
 
 - NCALayerError
@@ -227,8 +226,8 @@ basicsSignXLM и basicsSignCMS.
 Подписать блок данных и сформировать CMS (CAdES) подпись с интегрированной меткой времени
 TSP. **Не рекомендуется использовать, разработчики NCALayer пометили как DEPRECATED (https://forum.pki.gov.kz/t/podpis-s-metkoj-vremeni-na-js/704/7)!**
 
-**Kind**: instance method of [<code>NCALayerClient</code>](#NCALayerClient)
-**Returns**: <code>Promise.&lt;String&gt;</code> - CMS подпись в виде Base64 строки.
+**Kind**: instance method of [<code>NCALayerClient</code>](#NCALayerClient)  
+**Returns**: <code>Promise.&lt;String&gt;</code> - CMS подпись в виде Base64 строки.  
 **Throws**:
 
 - NCALayerError
@@ -246,8 +245,8 @@ TSP. **Не рекомендуется использовать, разрабо�
 ### *(async)* ncaLayerClient.signXml(storageType, xml, [keyType], [tbsElementXPath], [signatureParentElementXPath]) ⇒ <code>Promise.&lt;String&gt;</code>
 Вычислить подпись под документом в формате XML.
 
-**Kind**: instance method of [<code>NCALayerClient</code>](#NCALayerClient)
-**Returns**: <code>Promise.&lt;String&gt;</code> - XML документ содержащий XMLDSIG подпись.
+**Kind**: instance method of [<code>NCALayerClient</code>](#NCALayerClient)  
+**Returns**: <code>Promise.&lt;String&gt;</code> - XML документ содержащий XMLDSIG подпись.  
 **Throws**:
 
 - NCALayerError
@@ -266,8 +265,8 @@ TSP. **Не рекомендуется использовать, разрабо�
 ### *(async)* ncaLayerClient.signXmls(storageType, xmls, [keyType], [tbsElementXPath], [signatureParentElementXPath]) ⇒ <code>Promise.&lt;Array.&lt;String&gt;&gt;</code>
 Вычислить подпись под каждым из массива документов в формате XML.
 
-**Kind**: instance method of [<code>NCALayerClient</code>](#NCALayerClient)
-**Returns**: <code>Promise.&lt;Array.&lt;String&gt;&gt;</code> - массив XML документов содержащих XMLDSIG подписи.
+**Kind**: instance method of [<code>NCALayerClient</code>](#NCALayerClient)  
+**Returns**: <code>Promise.&lt;Array.&lt;String&gt;&gt;</code> - массив XML документов содержащих XMLDSIG подписи.  
 **Throws**:
 
 - NCALayerError
@@ -286,7 +285,7 @@ TSP. **Не рекомендуется использовать, разрабо�
 ### *(async)* ncaLayerClient.changeLocale(localeId)
 Изменить язык интерфейса NCALayer.
 
-**Kind**: instance method of [<code>NCALayerClient</code>](#NCALayerClient)
+**Kind**: instance method of [<code>NCALayerClient</code>](#NCALayerClient)  
 **Throws**:
 
 - NCALayerError
@@ -301,161 +300,161 @@ TSP. **Не рекомендуется использовать, разрабо�
 ### NCALayerClient.basicsStorageKAZTOKEN
 KAZTOKEN
 
-**Kind**: static property of [<code>NCALayerClient</code>](#NCALayerClient)
+**Kind**: static property of [<code>NCALayerClient</code>](#NCALayerClient)  
 <a name="NCALayerClient.basicsStorageIDCard"></a>
 
 ### NCALayerClient.basicsStorageIDCard
 Удостоверение личности
 
-**Kind**: static property of [<code>NCALayerClient</code>](#NCALayerClient)
+**Kind**: static property of [<code>NCALayerClient</code>](#NCALayerClient)  
 <a name="NCALayerClient.basicsStorageEToken72k"></a>
 
 ### NCALayerClient.basicsStorageEToken72k
 eToken 72k
 
-**Kind**: static property of [<code>NCALayerClient</code>](#NCALayerClient)
+**Kind**: static property of [<code>NCALayerClient</code>](#NCALayerClient)  
 <a name="NCALayerClient.basicsStorageEToken5110"></a>
 
 ### NCALayerClient.basicsStorageEToken5110
 eToken 5110
 
-**Kind**: static property of [<code>NCALayerClient</code>](#NCALayerClient)
+**Kind**: static property of [<code>NCALayerClient</code>](#NCALayerClient)  
 <a name="NCALayerClient.basicsStorageJaCarta"></a>
 
 ### NCALayerClient.basicsStorageJaCarta
 JaCarta
 
-**Kind**: static property of [<code>NCALayerClient</code>](#NCALayerClient)
+**Kind**: static property of [<code>NCALayerClient</code>](#NCALayerClient)  
 <a name="NCALayerClient.basicsStorageAKey"></a>
 
 ### NCALayerClient.basicsStorageAKey
 aKey
 
-**Kind**: static property of [<code>NCALayerClient</code>](#NCALayerClient)
+**Kind**: static property of [<code>NCALayerClient</code>](#NCALayerClient)  
 <a name="NCALayerClient.basicsStoragePKCS12"></a>
 
 ### NCALayerClient.basicsStoragePKCS12
 Файловле хранилище PKCS#12
 
-**Kind**: static property of [<code>NCALayerClient</code>](#NCALayerClient)
+**Kind**: static property of [<code>NCALayerClient</code>](#NCALayerClient)  
 <a name="NCALayerClient.basicsStorageJKS"></a>
 
 ### NCALayerClient.basicsStorageJKS
 Файловле хранилище JKS
 
-**Kind**: static property of [<code>NCALayerClient</code>](#NCALayerClient)
+**Kind**: static property of [<code>NCALayerClient</code>](#NCALayerClient)  
 <a name="NCALayerClient.basicsStoragesAll"></a>
 
 ### NCALayerClient.basicsStoragesAll
 Любые хранилища.
 
-**Kind**: static property of [<code>NCALayerClient</code>](#NCALayerClient)
+**Kind**: static property of [<code>NCALayerClient</code>](#NCALayerClient)  
 <a name="NCALayerClient.basicsStoragesHardware"></a>
 
 ### NCALayerClient.basicsStoragesHardware
 Только аппаратные хранилища.
 
-**Kind**: static property of [<code>NCALayerClient</code>](#NCALayerClient)
+**Kind**: static property of [<code>NCALayerClient</code>](#NCALayerClient)  
 <a name="NCALayerClient.basicsCMSParamsDetached"></a>
 
 ### NCALayerClient.basicsCMSParamsDetached
 Параметры подписания для формирования CMS без вложенных данных из данных в Base64.
 
-**Kind**: static property of [<code>NCALayerClient</code>](#NCALayerClient)
+**Kind**: static property of [<code>NCALayerClient</code>](#NCALayerClient)  
 <a name="NCALayerClient.basicsCMSParamsDetachedHash"></a>
 
 ### NCALayerClient.basicsCMSParamsDetachedHash
 Параметры подписания для формирования CMS без вложенных данных из хеша данных в Base64.
 
-**Kind**: static property of [<code>NCALayerClient</code>](#NCALayerClient)
+**Kind**: static property of [<code>NCALayerClient</code>](#NCALayerClient)  
 <a name="NCALayerClient.basicsCMSParamsAttached"></a>
 
 ### NCALayerClient.basicsCMSParamsAttached
 Параметры подписания для формирования CMS с вложенными данными из данных в Base64.
 
-**Kind**: static property of [<code>NCALayerClient</code>](#NCALayerClient)
+**Kind**: static property of [<code>NCALayerClient</code>](#NCALayerClient)  
 <a name="NCALayerClient.basicsXMLParams"></a>
 
 ### NCALayerClient.basicsXMLParams
 Параметры подписания для формирования XML по умолчанию.
 
-**Kind**: static property of [<code>NCALayerClient</code>](#NCALayerClient)
+**Kind**: static property of [<code>NCALayerClient</code>](#NCALayerClient)  
 <a name="NCALayerClient.basicsSignerAny"></a>
 
 ### NCALayerClient.basicsSignerAny
 Любой сертификат выпущенный боевым УЦ НУЦ.
 
-**Kind**: static property of [<code>NCALayerClient</code>](#NCALayerClient)
+**Kind**: static property of [<code>NCALayerClient</code>](#NCALayerClient)  
 <a name="NCALayerClient.basicsSignerSignAny"></a>
 
 ### NCALayerClient.basicsSignerSignAny
 Любой сертификат для подписания выпущенный боевым УЦ НУЦ.
 
-**Kind**: static property of [<code>NCALayerClient</code>](#NCALayerClient)
+**Kind**: static property of [<code>NCALayerClient</code>](#NCALayerClient)  
 <a name="NCALayerClient.basicsSignerSignPerson"></a>
 
 ### NCALayerClient.basicsSignerSignPerson
 Сертификат физического лица для подписания выпущенный боевым УЦ НУЦ.
 
-**Kind**: static property of [<code>NCALayerClient</code>](#NCALayerClient)
+**Kind**: static property of [<code>NCALayerClient</code>](#NCALayerClient)  
 <a name="NCALayerClient.basicsSignerSignHead"></a>
 
 ### NCALayerClient.basicsSignerSignHead
 Сертификат руководителя юридического лица для подписания выпущенный боевым УЦ НУЦ.
 
-**Kind**: static property of [<code>NCALayerClient</code>](#NCALayerClient)
-<a name="NCALayerClient.basicsSignerSignRight"></a>
+**Kind**: static property of [<code>NCALayerClient</code>](#NCALayerClient)  
+<a name="NCALayerClient.basicsSignerSignTrusted"></a>
 
-### NCALayerClient.basicsSignerSignRight
+### NCALayerClient.basicsSignerSignTrusted
 Сертификат лица с правом подписи юридического лица для подписания выпущенный боевым УЦ НУЦ.
 
-**Kind**: static property of [<code>NCALayerClient</code>](#NCALayerClient)
+**Kind**: static property of [<code>NCALayerClient</code>](#NCALayerClient)  
 <a name="NCALayerClient.basicsSignerSignEmployee"></a>
 
 ### NCALayerClient.basicsSignerSignEmployee
 Сертификат сотрудника юридического лица для подписания выпущенный боевым УЦ НУЦ.
 
-**Kind**: static property of [<code>NCALayerClient</code>](#NCALayerClient)
+**Kind**: static property of [<code>NCALayerClient</code>](#NCALayerClient)  
 <a name="NCALayerClient.basicsSignerAuthAny"></a>
 
 ### NCALayerClient.basicsSignerAuthAny
 Любой сертификат для аутентификации выпущенный боевым УЦ НУЦ.
 
-**Kind**: static property of [<code>NCALayerClient</code>](#NCALayerClient)
+**Kind**: static property of [<code>NCALayerClient</code>](#NCALayerClient)  
 <a name="NCALayerClient.basicsSignerAuthPerson"></a>
 
 ### NCALayerClient.basicsSignerAuthPerson
 Сертификат физического лица для аутентификации выпущенный боевым УЦ НУЦ.
 
-**Kind**: static property of [<code>NCALayerClient</code>](#NCALayerClient)
+**Kind**: static property of [<code>NCALayerClient</code>](#NCALayerClient)  
 <a name="NCALayerClient.basicsSignerAuthHead"></a>
 
 ### NCALayerClient.basicsSignerAuthHead
 Сертификат руководителя юридического лица для аутентификации выпущенный боевым УЦ НУЦ.
 
-**Kind**: static property of [<code>NCALayerClient</code>](#NCALayerClient)
+**Kind**: static property of [<code>NCALayerClient</code>](#NCALayerClient)  
 <a name="NCALayerClient.basicsSignerAuthRight"></a>
 
 ### NCALayerClient.basicsSignerAuthRight
 Сертификат лица с правом подписи юридического лица для аутентификации выпущенный боевым УЦ
 НУЦ.
 
-**Kind**: static property of [<code>NCALayerClient</code>](#NCALayerClient)
+**Kind**: static property of [<code>NCALayerClient</code>](#NCALayerClient)  
 <a name="NCALayerClient.basicsSignerAuthEmployee"></a>
 
 ### NCALayerClient.basicsSignerAuthEmployee
 Сертификат сотрудника юридического лица для аутентификации выпущенный боевым УЦ НУЦ.
 
-**Kind**: static property of [<code>NCALayerClient</code>](#NCALayerClient)
+**Kind**: static property of [<code>NCALayerClient</code>](#NCALayerClient)  
 <a name="NCALayerClient.basicsSignerTestAny"></a>
 
 ### NCALayerClient.basicsSignerTestAny
 Любой сертификат выпущенный боевым или тестовым УЦ НУЦ.
 
-**Kind**: static property of [<code>NCALayerClient</code>](#NCALayerClient)
+**Kind**: static property of [<code>NCALayerClient</code>](#NCALayerClient)  
 <a name="NCALayerClient.fileStorageType"></a>
 
 ### NCALayerClient.fileStorageType
 Константа определяющая имя файлового хранилища.
 
-**Kind**: static property of [<code>NCALayerClient</code>](#NCALayerClient)
+**Kind**: static property of [<code>NCALayerClient</code>](#NCALayerClient)  

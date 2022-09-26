@@ -331,7 +331,7 @@
      *
      * @param {String} locale язык пользовательского интерфейса.
      *
-     * @returns {String} подпись.
+     * @returns {Promise<String>} подпись.
      *
      * @throws NCALayerError
      */
@@ -371,7 +371,7 @@
      *
      * @param {String} [locale = 'ru'] язык пользовательского интерфейса.
      *
-     * @returns {String} подпись.
+     * @returns {Promise<String>} подпись.
      *
      * @throws NCALayerError
      */
@@ -404,7 +404,7 @@
      *
      * @param {String} [locale = 'ru'] язык пользовательского интерфейса.
      *
-     * @returns {String} подпись.
+     * @returns {Promise<String>} подпись.
      *
      * @throws NCALayerError
      */
