@@ -46,8 +46,9 @@
         * [.basicsStorageAKey](#NCALayerClient.basicsStorageAKey)
         * [.basicsStoragePKCS12](#NCALayerClient.basicsStoragePKCS12)
         * [.basicsStorageJKS](#NCALayerClient.basicsStorageJKS)
-        * [.basicsStoragesAll](#NCALayerClient.basicsStoragesAll)
-        * [.basicsStoragesHardware](#NCALayerClient.basicsStoragesHardware)
+        * [.basicsStorageAll](#NCALayerClient.basicsStorageAll)
+        * [.basicsStorageHardware](#NCALayerClient.basicsStorageHardware)
+        * [.basicsCMSParams](#NCALayerClient.basicsCMSParams)
         * [.basicsCMSParamsDetached](#NCALayerClient.basicsCMSParamsDetached)
         * [.basicsCMSParamsDetachedHash](#NCALayerClient.basicsCMSParamsDetachedHash)
         * [.basicsCMSParamsAttached](#NCALayerClient.basicsCMSParamsAttached)
@@ -55,11 +56,13 @@
         * [.basicsSignerAny](#NCALayerClient.basicsSignerAny)
         * [.basicsSignerSignAny](#NCALayerClient.basicsSignerSignAny)
         * [.basicsSignerSignPerson](#NCALayerClient.basicsSignerSignPerson)
+        * [.basicsSignerSignOrg](#NCALayerClient.basicsSignerSignOrg)
         * [.basicsSignerSignHead](#NCALayerClient.basicsSignerSignHead)
         * [.basicsSignerSignTrusted](#NCALayerClient.basicsSignerSignTrusted)
         * [.basicsSignerSignEmployee](#NCALayerClient.basicsSignerSignEmployee)
         * [.basicsSignerAuthAny](#NCALayerClient.basicsSignerAuthAny)
         * [.basicsSignerAuthPerson](#NCALayerClient.basicsSignerAuthPerson)
+        * [.basicsSignerAuthOrg](#NCALayerClient.basicsSignerAuthOrg)
         * [.basicsSignerAuthHead](#NCALayerClient.basicsSignerAuthHead)
         * [.basicsSignerAuthRight](#NCALayerClient.basicsSignerAuthRight)
         * [.basicsSignerAuthEmployee](#NCALayerClient.basicsSignerAuthEmployee)
@@ -92,7 +95,7 @@
 ### *(async)* ncaLayerClient.basicsSign(allowedStorages, format, data, signingParams, signerParams, locale) ⇒ <code>Promise.&lt;String&gt;</code>
 Вычислить подпись под данными с указанными параметрами. **Новая функция sign 2022 года из
 модуля kz.gov.pki.knca.basics (https://github.com/pkigovkz/sdkinfo/wiki/KNCA-Basics-Module)**.
-Сигнатура функции сложная, поэтому рекомендуем пользоваться функциями помошниками
+Сигнатура функции сложная, поэтому рекомендуем пользоваться функциями помощниками
 basicsSignXLM и basicsSignCMS.
 
 **Kind**: instance method of [<code>NCALayerClient</code>](#NCALayerClient)  
@@ -114,7 +117,7 @@ basicsSignXLM и basicsSignCMS.
 <a name="NCALayerClient+basicsSignCMS"></a>
 
 ### *(async)* ncaLayerClient.basicsSignCMS(allowedStorages, data, signingParams, signerParams, [locale]) ⇒ <code>Promise.&lt;String&gt;</code>
-Вычислить CMS подпись под данными с указанными параметрами, это функция-помошник для
+Вычислить CMS подпись под данными с указанными параметрами, это функция-помощник для
 упрощения работы с функцией basicsSign.
 
 **Kind**: instance method of [<code>NCALayerClient</code>](#NCALayerClient)  
@@ -135,10 +138,8 @@ basicsSignXLM и basicsSignCMS.
 <a name="NCALayerClient+basicsSignXML"></a>
 
 ### *(async)* ncaLayerClient.basicsSignXML(allowedStorages, data, signingParams, signerParams, [locale]) ⇒ <code>Promise.&lt;String&gt;</code>
-Вычислить подпись под данными с указанными параметрами. **Новая функция sign 2022 года из
-модуля kz.gov.pki.knca.basics (https://github.com/pkigovkz/sdkinfo/wiki/KNCA-Basics-Module)**.
-Сигнатура функции сложная, поэтому рекомендуем пользоваться функциями помошниками
-basicsSignXLM и basicsSignCMS.
+Вычислить XML подпись под данными с указанными параметрами, это функция-помощник для
+упрощения работы с функцией basicsSign.
 
 **Kind**: instance method of [<code>NCALayerClient</code>](#NCALayerClient)  
 **Returns**: <code>Promise.&lt;String&gt;</code> - подпись.  
@@ -343,16 +344,22 @@ aKey
 Файловле хранилище JKS
 
 **Kind**: static property of [<code>NCALayerClient</code>](#NCALayerClient)  
-<a name="NCALayerClient.basicsStoragesAll"></a>
+<a name="NCALayerClient.basicsStorageAll"></a>
 
-### NCALayerClient.basicsStoragesAll
+### NCALayerClient.basicsStorageAll
 Любые хранилища.
 
 **Kind**: static property of [<code>NCALayerClient</code>](#NCALayerClient)  
-<a name="NCALayerClient.basicsStoragesHardware"></a>
+<a name="NCALayerClient.basicsStorageHardware"></a>
 
-### NCALayerClient.basicsStoragesHardware
+### NCALayerClient.basicsStorageHardware
 Только аппаратные хранилища.
+
+**Kind**: static property of [<code>NCALayerClient</code>](#NCALayerClient)  
+<a name="NCALayerClient.basicsCMSParams"></a>
+
+### NCALayerClient.basicsCMSParams
+Параметры подписания для формирования CMS по умолчанию.
 
 **Kind**: static property of [<code>NCALayerClient</code>](#NCALayerClient)  
 <a name="NCALayerClient.basicsCMSParamsDetached"></a>
@@ -397,6 +404,12 @@ aKey
 Сертификат физического лица для подписания выпущенный боевым УЦ НУЦ.
 
 **Kind**: static property of [<code>NCALayerClient</code>](#NCALayerClient)  
+<a name="NCALayerClient.basicsSignerSignOrg"></a>
+
+### NCALayerClient.basicsSignerSignOrg
+Сертификат любого сотрудника юридического лица для подписания выпущенный боевым УЦ НУЦ.
+
+**Kind**: static property of [<code>NCALayerClient</code>](#NCALayerClient)  
 <a name="NCALayerClient.basicsSignerSignHead"></a>
 
 ### NCALayerClient.basicsSignerSignHead
@@ -425,6 +438,12 @@ aKey
 
 ### NCALayerClient.basicsSignerAuthPerson
 Сертификат физического лица для аутентификации выпущенный боевым УЦ НУЦ.
+
+**Kind**: static property of [<code>NCALayerClient</code>](#NCALayerClient)  
+<a name="NCALayerClient.basicsSignerAuthOrg"></a>
+
+### NCALayerClient.basicsSignerAuthOrg
+Сертификат любого сотрудника юридического лица для аутентификации выпущенный боевым УЦ НУЦ.
 
 **Kind**: static property of [<code>NCALayerClient</code>](#NCALayerClient)  
 <a name="NCALayerClient.basicsSignerAuthHead"></a>

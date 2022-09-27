@@ -5,9 +5,10 @@
    * Класс ошибок NCALayerError.
    */
   class NCALayerError extends Error {
-    constructor(message) {
+    constructor(message, canceledByUser) {
       super(message);
       this.name = 'NCALayerError';
+      this.canceledByUser = canceledByUser;
     }
   }
 
@@ -133,14 +134,14 @@
     /**
      * Любые хранилища.
      */
-    static get basicsStoragesAll() {
-      return [];
+    static get basicsStorageAll() {
+      return null;
     }
 
     /**
      * Только аппаратные хранилища.
      */
-    static get basicsStoragesHardware() {
+    static get basicsStorageHardware() {
       return [
         'AKKaztokenStore',
         'AKKZIDCardStore',
@@ -153,6 +154,13 @@
     //
     // Параметры подписания
     //
+
+    /**
+     * Параметры подписания для формирования CMS по умолчанию.
+     */
+    static get basicsCMSParams() {
+      return {};
+    }
 
     /**
      * Параметры подписания для формирования CMS без вложенных данных из данных в Base64.
@@ -229,6 +237,15 @@
     }
 
     /**
+     * Сертификат любого сотрудника юридического лица для подписания выпущенный боевым УЦ НУЦ.
+     */
+    static get basicsSignerSignOrg() {
+      return {
+        extKeyUsageOids: ['1.3.6.1.5.5.7.3.4', '1.2.398.3.3.4.1.2'],
+      };
+    }
+
+    /**
      * Сертификат руководителя юридического лица для подписания выпущенный боевым УЦ НУЦ.
      */
     static get basicsSignerSignHead() {
@@ -274,6 +291,15 @@
     }
 
     /**
+     * Сертификат любого сотрудника юридического лица для аутентификации выпущенный боевым УЦ НУЦ.
+     */
+    static get basicsSignerAuthOrg() {
+      return {
+        extKeyUsageOids: ['1.3.6.1.5.5.7.3.2', '1.2.398.3.3.4.1.2'],
+      };
+    }
+
+    /**
      * Сертификат руководителя юридического лица для аутентификации выпущенный боевым УЦ НУЦ.
      */
     static get basicsSignerAuthHead() {
@@ -314,7 +340,7 @@
     /**
      * Вычислить подпись под данными с указанными параметрами. **Новая функция sign 2022 года из
      * модуля kz.gov.pki.knca.basics (https://github.com/pkigovkz/sdkinfo/wiki/KNCA-Basics-Module)**.
-     * Сигнатура функции сложная, поэтому рекомендуем пользоваться функциями помошниками
+     * Сигнатура функции сложная, поэтому рекомендуем пользоваться функциями помощниками
      * basicsSignXLM и basicsSignCMS.
      *
      * @param {Array} allowedStorages массив строк с константами допустимых для использования
@@ -355,7 +381,7 @@
     }
 
     /**
-     * Вычислить CMS подпись под данными с указанными параметрами, это функция-помошник для
+     * Вычислить CMS подпись под данными с указанными параметрами, это функция-помощник для
      * упрощения работы с функцией basicsSign.
      *
      * @param {Array} allowedStorages массив строк с константами допустимых для использования
@@ -387,10 +413,8 @@
     }
 
     /**
-     * Вычислить подпись под данными с указанными параметрами. **Новая функция sign 2022 года из
-     * модуля kz.gov.pki.knca.basics (https://github.com/pkigovkz/sdkinfo/wiki/KNCA-Basics-Module)**.
-     * Сигнатура функции сложная, поэтому рекомендуем пользоваться функциями помошниками
-     * basicsSignXLM и basicsSignCMS.
+     * Вычислить XML подпись под данными с указанными параметрами, это функция-помощник для
+     * упрощения работы с функцией basicsSign.
      *
      * @param {Array} allowedStorages массив строк с константами допустимых для использования
      * типов хранилищ (см. константы basicsStorage*).
@@ -713,6 +737,23 @@
 
         const response = JSON.parse(msg.data);
 
+        // basics response
+        if (response.hasOwnProperty('status')) { // eslint-disable-line no-prototype-builtins
+          if (!response.status) {
+            reject(new NCALayerError(`${response.code}: ${response.message} (${response.details})`));
+            return;
+          }
+
+          if (!response.body.hasOwnProperty('result')) { // eslint-disable-line no-prototype-builtins
+            reject(new NCALayerError('cancelled by user', true));
+            return;
+          }
+
+          resolve(response.body.result);
+          return;
+        }
+
+        // commonUtils response
         if (response.code !== '200') {
           reject(new NCALayerError(`${response.code}: ${response.message}`));
           return;

@@ -34,10 +34,19 @@ wss.on('connection', (ws) => {
       const task = JSON.parse(testDataEntry.task);
       console.log(task); // eslint-disable-line no-console
 
+      const params = task.params.map((param) => {
+        if (typeof param === 'string' && param.startsWith('!!')) {
+          const attrName = param.replace('!!', '');
+          return NCALayerClient[attrName]; // eslint-disable-line no-undef
+        }
+
+        return param;
+      });
+
       let result;
       try {
         // eslint-disable-next-line no-await-in-loop
-        result = await ncalayerClient[task.exec](...task.params);
+        result = await ncalayerClient[task.exec](...params);
       } catch (error) {
         result = error.toString();
       }

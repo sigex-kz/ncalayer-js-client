@@ -193,5 +193,101 @@
     "task": "{\"text\":\"Мы сменим язык, визуально это никак не отобразится.\",\"exec\":\"changeLocale\",\"params\":[\"kz\"]}",
     "request": "{\"module\":\"kz.gov.pki.knca.commonUtils\",\"method\":\"changeLocale\",\"args\":[\"kz\"]}",
     "response": "{\"code\":\"200\"}"
+  },
+  {
+    "task": "{\"text\":\"Попытка отправки плохого запроса, ничего не отобразится.\",\"exec\":\"basicsSignCMS\",\"params\":[\"!!basicsStorageAll\",\"MTEK\",555,\"!!basicsSignerAny\"]}",
+    "request": "{\"module\":\"kz.gov.pki.knca.basics\",\"method\":\"sign\",\"args\":{\"allowedStorages\":null,\"format\":\"cms\",\"data\":\"MTEK\",\"signingParams\":555,\"signerParams\":{\"extKeyUsageOids\":[]},\"locale\":\"ru\"}}",
+    "response": "{\"code\":\"INVOCATION_ERROR\",\"details\":\"org.json.JSONException: JSONObject[\\\"signingParams\\\"] is not a JSONObject.\",\"message\":\"An invoked method threw an exception.\",\"status\":false}",
+    "result": "NCALayerError: INVOCATION_ERROR: An invoked method threw an exception. (org.json.JSONException: JSONObject[\"signingParams\"] is not a JSONObject.)"
+  },
+  {
+    "task": "{\"text\":\"Подписание блока данных, отобразятся все сертификаты, НАЖМИТЕ ОТМЕНА.\",\"exec\":\"basicsSignCMS\",\"params\":[\"!!basicsStorageAll\",\"MTEK\",\"!!basicsCMSParams\",\"!!basicsSignerAny\"]}",
+    "request": "{\"module\":\"kz.gov.pki.knca.basics\",\"method\":\"sign\",\"args\":{\"allowedStorages\":null,\"format\":\"cms\",\"data\":\"MTEK\",\"signingParams\":{},\"signerParams\":{\"extKeyUsageOids\":[]},\"locale\":\"ru\"}}",
+    "response": "{\"body\":{},\"status\":true}",
+    "result": "NCALayerError: cancelled by user"
+  },
+  {
+    "task": "{\"text\":\"Подписание блока данных, отобразятся все сертификаты, выберите любой.\",\"exec\":\"basicsSignCMS\",\"params\":[\"!!basicsStorageAll\",\"MTEK\",\"!!basicsCMSParams\",\"!!basicsSignerAny\"]}",
+    "request": "{\"module\":\"kz.gov.pki.knca.basics\",\"method\":\"sign\",\"args\":{\"allowedStorages\":null,\"format\":\"cms\",\"data\":\"MTEK\",\"signingParams\":{},\"signerParams\":{\"extKeyUsageOids\":[]},\"locale\":\"ru\"}}",
+    "response": "{\"body\":{\"result\":\"-----BEGIN CMS-----\\n-----END CMS-----\\n\"},\"status\":true}",
+    "result": "-----BEGIN CMS-----\n-----END CMS-----\n"
+  },
+  {
+    "task": "{\"text\":\"Подписание блока данных, отобразятся аппаратные хранилища, НАЖМИТЕ ОТМЕНА.\",\"exec\":\"basicsSignCMS\",\"params\":[\"!!basicsStorageHardware\",\"MTEK\",\"!!basicsCMSParams\",\"!!basicsSignerAny\"]}",
+    "request": "{\"module\":\"kz.gov.pki.knca.basics\",\"method\":\"sign\",\"args\":{\"allowedStorages\":[\"AKKaztokenStore\",\"AKKZIDCardStore\",\"AKEToken72KStore\",\"AKEToken5110Store\",\"AKAKEYStore\"],\"format\":\"cms\",\"data\":\"MTEK\",\"signingParams\":{},\"signerParams\":{\"extKeyUsageOids\":[]},\"locale\":\"ru\"}}",
+    "response": "{\"body\":{},\"status\":true}",
+    "result": "NCALayerError: cancelled by user"
+  },
+  {
+    "task": "{\"text\":\"Подписание блока данных, отобразятся файловые хранилища, выберите любой.\",\"exec\":\"basicsSignCMS\",\"params\":[\"!!basicsStoragePKCS12\",\"MTEK\",\"!!basicsCMSParams\",\"!!basicsSignerAny\"]}",
+    "request": "{\"module\":\"kz.gov.pki.knca.basics\",\"method\":\"sign\",\"args\":{\"allowedStorages\":[\"PKCS12\"],\"format\":\"cms\",\"data\":\"MTEK\",\"signingParams\":{},\"signerParams\":{\"extKeyUsageOids\":[]},\"locale\":\"ru\"}}",
+    "response": "{\"body\":{},\"status\":true}",
+    "result": "NCALayerError: cancelled by user"
+  },
+  {
+    "task": "{\"text\":\"Подписание блока данных и формирования подписи без данных, отобразятся хранилища KAZTOKEN, выберите любой.\",\"exec\":\"basicsSignCMS\",\"params\":[\"!!basicsStorageKAZTOKEN\",\"MTEK\",\"!!basicsCMSParamsDetached\",\"!!basicsSignerAny\"]}",
+    "request": "{\"module\":\"kz.gov.pki.knca.basics\",\"method\":\"sign\",\"args\":{\"allowedStorages\":[\"AKKaztokenStore\"],\"format\":\"cms\",\"data\":\"MTEK\",\"signingParams\":{\"decode\":true,\"encapsulate\":false,\"digested\":false,\"tsaProfile\":{}},\"signerParams\":{\"extKeyUsageOids\":[]},\"locale\":\"ru\"}}",
+    "response": "{\"body\":{\"result\":\"-----BEGIN CMS-----\\n-----END CMS-----\\n\"},\"status\":true}",
+    "result": "-----BEGIN CMS-----\n-----END CMS-----\n"
+  },
+  {
+    "task": "{\"text\":\"Подписание плохого хеша и формирования подписи без данных, отобразятся хранилища KAZTOKEN, выберите любой.\",\"exec\":\"basicsSignCMS\",\"params\":[\"!!basicsStorageKAZTOKEN\",\"MTEK\",\"!!basicsCMSParamsDetachedHash\",\"!!basicsSignerAny\"]}",
+    "request": "{\"module\":\"kz.gov.pki.knca.basics\",\"method\":\"sign\",\"args\":{\"allowedStorages\":[\"AKKaztokenStore\"],\"format\":\"cms\",\"data\":\"MTEK\",\"signingParams\":{\"decode\":true,\"encapsulate\":false,\"digested\":true,\"tsaProfile\":{}},\"signerParams\":{\"extKeyUsageOids\":[]},\"locale\":\"ru\"}}",
+    "response": "{\"body\":{\"result\":\"-----BEGIN CMS-----\\n-----END CMS-----\\n\"},\"status\":true}",
+    "result": "-----BEGIN CMS-----\n-----END CMS-----\n"
+  },
+  {
+    "task": "{\"text\":\"Подписание хеша и формирования подписи без данных, отобразятся хранилища KAZTOKEN, выберите любой.\",\"exec\":\"basicsSignCMS\",\"params\":[\"!!basicsStorageKAZTOKEN\",\"iUHBHfnY84CsJalfIy/Km9/A90p6Ox7DgEexE5C44p8=\",\"!!basicsCMSParamsDetachedHash\",\"!!basicsSignerAny\"]}",
+    "request": "{\"module\":\"kz.gov.pki.knca.basics\",\"method\":\"sign\",\"args\":{\"allowedStorages\":[\"AKKaztokenStore\"],\"format\":\"cms\",\"data\":\"iUHBHfnY84CsJalfIy/Km9/A90p6Ox7DgEexE5C44p8=\",\"signingParams\":{\"decode\":true,\"encapsulate\":false,\"digested\":true,\"tsaProfile\":{}},\"signerParams\":{\"extKeyUsageOids\":[]},\"locale\":\"ru\"}}",
+    "response": "{\"body\":{\"result\":\"-----BEGIN CMS-----\\n-----END CMS-----\\n\"},\"status\":true}",
+    "result": "-----BEGIN CMS-----\n-----END CMS-----\n"
+  },
+  {
+    "task": "{\"text\":\"Подписание блока данных и формирования подписи с данными, отобразятся хранилища KAZTOKEN, выберите любой.\",\"exec\":\"basicsSignCMS\",\"params\":[\"!!basicsStorageKAZTOKEN\",\"MTEK\",\"!!basicsCMSParamsAttached\",\"!!basicsSignerAny\"]}",
+    "request": "{\"module\":\"kz.gov.pki.knca.basics\",\"method\":\"sign\",\"args\":{\"allowedStorages\":[\"AKKaztokenStore\"],\"format\":\"cms\",\"data\":\"MTEK\",\"signingParams\":{\"decode\":true,\"encapsulate\":true,\"digested\":false,\"tsaProfile\":{}},\"signerParams\":{\"extKeyUsageOids\":[]},\"locale\":\"ru\"}}",
+    "response": "{\"body\":{\"result\":\"-----BEGIN CMS-----\\n-----END CMS-----\\n\"},\"status\":true}",
+    "result": "-----BEGIN CMS-----\n-----END CMS-----\n"
+  },
+  {
+    "task": "{\"text\":\"Подписание блока данных и формирования подписи с данными, отобразятся хранилища KAZTOKEN, сертификаты подписи, НАЖМИТЕ ОТМЕНА.\",\"exec\":\"basicsSignCMS\",\"params\":[\"!!basicsStorageKAZTOKEN\",\"MTEK\",\"!!basicsCMSParamsAttached\",\"!!basicsSignerSignAny\"]}",
+    "request": "{\"module\":\"kz.gov.pki.knca.basics\",\"method\":\"sign\",\"args\":{\"allowedStorages\":[\"AKKaztokenStore\"],\"format\":\"cms\",\"data\":\"MTEK\",\"signingParams\":{\"decode\":true,\"encapsulate\":true,\"digested\":false,\"tsaProfile\":{}},\"signerParams\":{\"extKeyUsageOids\":[\"1.3.6.1.5.5.7.3.4\"]},\"locale\":\"ru\"}}",
+    "response": "{\"body\":{},\"status\":true}",
+    "result": "NCALayerError: cancelled by user"
+  },
+  {
+    "task": "{\"text\":\"Подписание блока данных и формирования подписи с данными, отобразятся хранилища KAZTOKEN, сертификаты подписи, только юридические лица, НАЖМИТЕ ОТМЕНА.\",\"exec\":\"basicsSignCMS\",\"params\":[\"!!basicsStorageKAZTOKEN\",\"MTEK\",\"!!basicsCMSParamsAttached\",\"!!basicsSignerSignOrg\"]}",
+    "request": "{\"module\":\"kz.gov.pki.knca.basics\",\"method\":\"sign\",\"args\":{\"allowedStorages\":[\"AKKaztokenStore\"],\"format\":\"cms\",\"data\":\"MTEK\",\"signingParams\":{\"decode\":true,\"encapsulate\":true,\"digested\":false,\"tsaProfile\":{}},\"signerParams\":{\"extKeyUsageOids\":[\"1.3.6.1.5.5.7.3.4\",\"1.2.398.3.3.4.1.2\"]},\"locale\":\"ru\"}}",
+    "response": "{\"body\":{},\"status\":true}",
+    "result": "NCALayerError: cancelled by user"
+  },
+  {
+    "task": "{\"text\":\"Подписание блока данных и формирования подписи с данными, отобразятся хранилища KAZTOKEN, сертификаты подписи, только руководители юридических лиц, НАЖМИТЕ ОТМЕНА.\",\"exec\":\"basicsSignCMS\",\"params\":[\"!!basicsStorageKAZTOKEN\",\"MTEK\",\"!!basicsCMSParamsAttached\",\"!!basicsSignerSignHead\"]}",
+    "request": "{\"module\":\"kz.gov.pki.knca.basics\",\"method\":\"sign\",\"args\":{\"allowedStorages\":[\"AKKaztokenStore\"],\"format\":\"cms\",\"data\":\"MTEK\",\"signingParams\":{\"decode\":true,\"encapsulate\":true,\"digested\":false,\"tsaProfile\":{}},\"signerParams\":{\"extKeyUsageOids\":[\"1.3.6.1.5.5.7.3.4\",\"1.2.398.3.3.4.1.2.1\"]},\"locale\":\"ru\"}}",
+    "response": "{\"body\":{},\"status\":true}",
+    "result": "NCALayerError: cancelled by user"
+  },
+  {
+    "task": "{\"text\":\"Подписание блока данных и формирования подписи с данными, отобразятся хранилища KAZTOKEN, сертификаты аутентификации, только физические лица, НАЖМИТЕ ОТМЕНА.\",\"exec\":\"basicsSignCMS\",\"params\":[\"!!basicsStorageKAZTOKEN\",\"MTEK\",\"!!basicsCMSParamsAttached\",\"!!basicsSignerAuthPerson\"]}",
+    "request": "{\"module\":\"kz.gov.pki.knca.basics\",\"method\":\"sign\",\"args\":{\"allowedStorages\":[\"AKKaztokenStore\"],\"format\":\"cms\",\"data\":\"MTEK\",\"signingParams\":{\"decode\":true,\"encapsulate\":true,\"digested\":false,\"tsaProfile\":{}},\"signerParams\":{\"extKeyUsageOids\":[\"1.3.6.1.5.5.7.3.2\",\"1.2.398.3.3.4.1.1\"]},\"locale\":\"ru\"}}",
+    "response": "{\"body\":{},\"status\":true}",
+    "result": "NCALayerError: cancelled by user"
+  },
+  {
+    "task": "{\"text\":\"Подписание блока данных и формирования подписи с данными, отобразятся файловые хранилища, можно выбирать и тестовые и боевые, НАЖМИТЕ ОТМЕНА.\",\"exec\":\"basicsSignCMS\",\"params\":[\"!!basicsStoragePKCS12\",\"MTEK\",\"!!basicsCMSParamsAttached\",\"!!basicsSignerTestAny\"]}",
+    "request": "{\"module\":\"kz.gov.pki.knca.basics\",\"method\":\"sign\",\"args\":{\"allowedStorages\":[\"PKCS12\"],\"format\":\"cms\",\"data\":\"MTEK\",\"signingParams\":{\"decode\":true,\"encapsulate\":true,\"digested\":false,\"tsaProfile\":{}},\"signerParams\":{\"extKeyUsageOids\":[],\"chain\":[]},\"locale\":\"ru\"}}",
+    "response": "{\"body\":{},\"status\":true}",
+    "result": "NCALayerError: cancelled by user"
+  },
+  {
+    "task": "{\"text\":\"Подписание блока данных и формирования подписи с данными, отобразятся хранилища KAZTOKEN, можно выбирать и тестовые и боевые, НАЖМИТЕ ОТМЕНА.\",\"exec\":\"basicsSignCMS\",\"params\":[\"!!basicsStorageKAZTOKEN\",\"MTEK\",\"!!basicsCMSParamsAttached\",\"!!basicsSignerTestAny\"]}",
+    "request": "{\"module\":\"kz.gov.pki.knca.basics\",\"method\":\"sign\",\"args\":{\"allowedStorages\":[\"AKKaztokenStore\"],\"format\":\"cms\",\"data\":\"MTEK\",\"signingParams\":{\"decode\":true,\"encapsulate\":true,\"digested\":false,\"tsaProfile\":{}},\"signerParams\":{\"extKeyUsageOids\":[],\"chain\":[]},\"locale\":\"ru\"}}",
+    "response": "{\"body\":{},\"status\":true}",
+    "result": "NCALayerError: cancelled by user"
+  },
+  {
+    "task": "{\"text\":\"Подписание XML, отобразятся хранилища KAZTOKEN, отобразятся хранилища KAZTOKEN, выберите любой.\",\"exec\":\"basicsSignXML\",\"params\":[\"!!basicsStorageKAZTOKEN\",\"<tag>data</tag>\",\"!!basicsXMLParams\",\"!!basicsSignerAny\"]}",
+    "request": "{\"module\":\"kz.gov.pki.knca.basics\",\"method\":\"sign\",\"args\":{\"allowedStorages\":[\"AKKaztokenStore\"],\"format\":\"xml\",\"data\":\"<tag>data</tag>\",\"signingParams\":{},\"signerParams\":{\"extKeyUsageOids\":[]},\"locale\":\"ru\"}}",
+    "response": "{\"body\":{\"result\":[\"<?xml version=\\\"1.0\\\" encoding=\\\"UTF-8\\\" standalone=\\\"no\\\"?><tag>data<ds:Signature xmlns:ds=\\\"http://www.w3.org/2000/09/xmldsig#\\\">\\n<ds:SignedInfo>\\n<ds:CanonicalizationMethod Algorithm=\\\"http://www.w3.org/TR/2001/REC-xml-c14n-20010315\\\"/>\\n<ds:SignatureMethod Algorithm=\\\"http://www.w3.org/2001/04/xmldsig-more#rsa-sha256\\\"/>\\n<ds:Reference URI=\\\"\\\">\\n<ds:Transforms>\\n<ds:Transform Algorithm=\\\"http://www.w3.org/2000/09/xmldsig#enveloped-signature\\\"/>\\n<ds:Transform Algorithm=\\\"http://www.w3.org/TR/2001/REC-xml-c14n-20010315#WithComments\\\"/>\\n<\\/ds:Transforms>\\n<ds:DigestMethod Algorithm=\\\"http://www.w3.org/2001/04/xmlenc#sha256\\\"/>\\n<ds:DigestValue>soDZFGIUsZ1x0sK/7x1bJvtGeQsO0BKOVwAvKxC3RJY=<\\/ds:DigestValue>\\n<\\/ds:Reference>\\n<\\/ds:SignedInfo>\\n<ds:SignatureValue>\\nXf+s9CFDI9XQEAmRNsCMwONEdTSfylIqOp8flmv7g3XIBX9NjcsyqIStJKJCqoiC6L52IyC5t3QC\\n4KfDiK6SLVBApexKZkmhMgELQvchhdmXkQ9Eu1mOTJXDFdSbKnQCmwVXSXH+7+T6W/xTHBGAfsHA\\nA1QVF2gvYZRjsyglilYHUc3gOltvAxlblRqsWW5r7XNtVTknq/3YeyA1zgQDgiX3dfdPngSSirs/\\ndtB9Doso93SkO/+s0xo0ABb8fcav710MBn6rpSJkLEbSl+y40MV5cgLb18zzQKc77t74hpEacWSj\\nBlrNZFWWxuneu8nv8W9PXE29aNmlNTZ/38Ms4w==\\n<\\/ds:SignatureValue>\\n<ds:KeyInfo>\\n<ds:X509Data>\\n<ds:X509Certificate><\\/ds:X509Certificate>\\n<\\/ds:X509Data>\\n<\\/ds:KeyInfo>\\n<\\/ds:Signature><\\/tag>\"]},\"status\":true}",
+    "result": "[\"<?xml version=\\\"1.0\\\" encoding=\\\"UTF-8\\\" standalone=\\\"no\\\"?><tag>data<ds:Signature xmlns:ds=\\\"http://www.w3.org/2000/09/xmldsig#\\\">\\n<ds:SignedInfo>\\n<ds:CanonicalizationMethod Algorithm=\\\"http://www.w3.org/TR/2001/REC-xml-c14n-20010315\\\"/>\\n<ds:SignatureMethod Algorithm=\\\"http://www.w3.org/2001/04/xmldsig-more#rsa-sha256\\\"/>\\n<ds:Reference URI=\\\"\\\">\\n<ds:Transforms>\\n<ds:Transform Algorithm=\\\"http://www.w3.org/2000/09/xmldsig#enveloped-signature\\\"/>\\n<ds:Transform Algorithm=\\\"http://www.w3.org/TR/2001/REC-xml-c14n-20010315#WithComments\\\"/>\\n</ds:Transforms>\\n<ds:DigestMethod Algorithm=\\\"http://www.w3.org/2001/04/xmlenc#sha256\\\"/>\\n<ds:DigestValue>soDZFGIUsZ1x0sK/7x1bJvtGeQsO0BKOVwAvKxC3RJY=</ds:DigestValue>\\n</ds:Reference>\\n</ds:SignedInfo>\\n<ds:SignatureValue>\\nXf+s9CFDI9XQEAmRNsCMwONEdTSfylIqOp8flmv7g3XIBX9NjcsyqIStJKJCqoiC6L52IyC5t3QC\\n4KfDiK6SLVBApexKZkmhMgELQvchhdmXkQ9Eu1mOTJXDFdSbKnQCmwVXSXH+7+T6W/xTHBGAfsHA\\nA1QVF2gvYZRjsyglilYHUc3gOltvAxlblRqsWW5r7XNtVTknq/3YeyA1zgQDgiX3dfdPngSSirs/\\ndtB9Doso93SkO/+s0xo0ABb8fcav710MBn6rpSJkLEbSl+y40MV5cgLb18zzQKc77t74hpEacWSj\\nBlrNZFWWxuneu8nv8W9PXE29aNmlNTZ/38Ms4w==\\n</ds:SignatureValue>\\n<ds:KeyInfo>\\n<ds:X509Data>\\n<ds:X509Certificate></ds:X509Certificate>\\n</ds:X509Data>\\n</ds:KeyInfo>\\n</ds:Signature></tag>\"]"
   }
 ]

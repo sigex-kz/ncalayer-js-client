@@ -3,7 +3,7 @@
 JS клиент для [NCALayer](https://pki.gov.kz/ncalayer/) стремящийся быть максимально простым в
 использовании.
 
-**Поддерживает новый модуль kz.gov.pki.knca.basics (https://github.com/pkigovkz/sdkinfo/wiki/KNCA-Basics-Module)**
+**Поддерживает новый модуль kz.gov.pki.knca.basics (https://github.com/pkigovkz/sdkinfo/wiki/KNCA-Basics-Module), пример использования приведен ниже в этом файле.**
 
 Разработан для веб интерфейса [https://sigex.kz](https://sigex.kz).
 
@@ -78,6 +78,10 @@ async function connectAndSign() {
       NCALayerClient.basicsSignerSignAny,
     );
   } catch (error) {
+    if (error.canceledByUser) {
+      alert('Действие отменено пользователем.');
+    }
+
     alert(error.toString());
     return;
   }
@@ -90,6 +94,7 @@ async function connectAndSign() {
 
 - `npm run lint` - проверка кода с помощью ESLint;
 - `npm run test` - выполнение тестов;
+- `npm run ts-check` - проверка с помощью TypeScript;
 - `npm run build-docs` - обновление документации из комментариев в коде;
 - `npm run build` - все вышеперечисленное вместе, **рекомендуется выполнять перед коммитом**;
 - `npm run test-data-builder` - запуск веб сервера на http://127.0.0.1:8080 со страницей подготовки данных для тестов.
