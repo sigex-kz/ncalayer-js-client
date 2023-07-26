@@ -1,6 +1,6 @@
 # ncalayer-js-client
 
-JS клиент для [NCALayer](https://pki.gov.kz/ncalayer/) стремящийся быть максимально простым в
+JS клиент для [NCALayer](https://ncl.pki.gov.kz/) стремящийся быть максимально простым в
 использовании.
 
 **Поддерживает новый модуль kz.gov.pki.knca.basics (https://github.com/pkigovkz/sdkinfo/wiki/KNCA-Basics-Module), пример использования приведен ниже в этом файле.**
