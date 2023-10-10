@@ -387,8 +387,10 @@
      * @param {Array} allowedStorages массив строк с константами допустимых для использования
      * типов хранилищ (см. константы basicsStorage*).
      *
-     * @param {String | ArrayBuffer} data данные, которые нужно подписать, в виде строки Base64 либо
-     * ArrayBuffer.
+     * @param {String | ArrayBuffer | Array} data данные, которые нужно подписать, в виде строки
+     * Base64 либо ArrayBuffer. Так же поддерживается массив строк Base64 или ArrayBuffer, но это
+     * будет работать только с приложениями KAZTOKEN mobile/desktop, NCALayer не умеет подписывать
+     * массив документов.
      *
      * @param {Object} signingParams параметры подписания (см basicsCMSParams*).
      *
@@ -405,7 +407,7 @@
       return this.basicsSign(
         allowedStorages,
         'cms',
-        (typeof data === 'string') ? data : NCALayerClient.arrayBufferToB64(data),
+        NCALayerClient.normalizeDataToSign(data),
         signingParams,
         signerParams,
         locale,
@@ -490,8 +492,10 @@
      *
      * @param {String} storageType тип хранилища который следует использовать для подписания.
      *
-     * @param {String | ArrayBuffer} data данные которые нужно подписать в виде строки Base64 либо
-     * ArrayBuffer.
+     * @param {String | ArrayBuffer | Array} data данные, которые нужно подписать, в виде строки
+     * Base64 либо ArrayBuffer. Так же поддерживается массив строк Base64 или ArrayBuffer, но это
+     * будет работать только с приложениями KAZTOKEN mobile/desktop, NCALayer не умеет подписывать
+     * массив документов.
      *
      * @param {String} [keyType = 'SIGNATURE'] каким типом ключа следует подписывать, поддерживаемые
      * варианты 'SIGNATURE' и 'AUTHENTICATION', иное значение позволит пользователю выбрать
@@ -510,7 +514,7 @@
         args: [
           storageType,
           keyType,
-          (typeof data === 'string') ? data : NCALayerClient.arrayBufferToB64(data),
+          NCALayerClient.normalizeDataToSign(data),
           attach,
         ],
       };
@@ -525,7 +529,9 @@
      *
      * @param {String} storageType тип хранилища который следует использовать для подписания.
      *
-     * @param {String} hash хеш данных в виде строки Base64 либо ArrayBuffer.
+     * @param {String | ArrayBuffer | Array} hash хеш данных в виде строки Base64 либо ArrayBuffer.
+     * Так же поддерживается массив строк Base64 или ArrayBuffer, но это будет работать только с
+     * приложениями KAZTOKEN mobile/desktop, NCALayer не умеет подписывать массив хешей.
      *
      * @param {String} [keyType = 'SIGNATURE'] каким типом ключа следует подписывать, поддерживаемые
      * варианты 'SIGNATURE' и 'AUTHENTICATION', иное значение позволит пользователю выбрать
@@ -542,7 +548,7 @@
         args: [
           storageType,
           keyType,
-          (typeof hash === 'string') ? hash : NCALayerClient.arrayBufferToB64(hash),
+          NCALayerClient.normalizeDataToSign(hash),
         ],
       };
 
@@ -557,8 +563,10 @@
      *
      * @param {String} storageType тип хранилища который следует использовать для подписания.
      *
-     * @param {String | ArrayBuffer} data данные которые нужно подписать в виде строки Base64 либо
-     * ArrayBuffer.
+     * @param {String | ArrayBuffer | Array} data данные, которые нужно подписать, в виде строки
+     * Base64 либо ArrayBuffer. Так же поддерживается массив строк Base64 или ArrayBuffer, но это
+     * будет работать только с приложениями KAZTOKEN mobile/desktop, NCALayer не умеет подписывать
+     * массив документов.
      *
      * @param {String} [keyType = 'SIGNATURE'] каким типом ключа следует подписывать, поддерживаемые
      * варианты 'SIGNATURE' и 'AUTHENTICATION', иное значение позволит пользователю выбрать
@@ -577,7 +585,7 @@
         args: [
           storageType,
           keyType,
-          (typeof data === 'string') ? data : NCALayerClient.arrayBufferToB64(data),
+          NCALayerClient.normalizeDataToSign(data),
           attach,
         ],
       };
@@ -771,6 +779,18 @@
         binary += String.fromCharCode(bytes[i]);
       }
       return window.btoa(binary);
+    }
+
+    static normalizeDataToSign(data) {
+      if (typeof data === 'string') {
+        return data;
+      }
+
+      if (Array.isArray(data)) {
+        return data.map((i) => ((typeof i === 'string') ? i : NCALayerClient.arrayBufferToB64(i)));
+      }
+
+      return NCALayerClient.arrayBufferToB64(data);
     }
   }
 
