@@ -33,9 +33,12 @@
         * [.getKeyInfo(storageType)](#NCALayerClient+getKeyInfo) ⇒ <code>Promise.&lt;Object&gt;</code>
         * [.createCAdESFromBase64(storageType, data, [keyType], [attach])](#NCALayerClient+createCAdESFromBase64) ⇒ <code>Promise.&lt;String&gt;</code>
         * [.createCAdESFromBase64Hash(storageType, hash, [keyType])](#NCALayerClient+createCAdESFromBase64Hash) ⇒ <code>Promise.&lt;String&gt;</code>
+        * [.createCAdESFromFile(storageType, filePath, [keyType], [attach])](#NCALayerClient+createCAdESFromFile) ⇒ <code>Promise.&lt;String&gt;</code>
         * [.createCMSSignatureFromBase64(storageType, data, [keyType], [attach])](#NCALayerClient+createCMSSignatureFromBase64) ⇒ <code>Promise.&lt;String&gt;</code>
+        * [.createCMSSignatureFromFile(storageType, filePath, [keyType], [attach])](#NCALayerClient+createCMSSignatureFromFile) ⇒ <code>Promise.&lt;String&gt;</code>
         * [.signXml(storageType, xml, [keyType], [tbsElementXPath], [signatureParentElementXPath])](#NCALayerClient+signXml) ⇒ <code>Promise.&lt;String&gt;</code>
         * [.signXmls(storageType, xmls, [keyType], [tbsElementXPath], [signatureParentElementXPath])](#NCALayerClient+signXmls) ⇒ <code>Promise.&lt;Array.&lt;String&gt;&gt;</code>
+        * [.showFileChooser([fileExtension], [currentDirectory])](#NCALayerClient+showFileChooser) ⇒ <code>Promise.&lt;String&gt;</code>
         * [.changeLocale(localeId)](#NCALayerClient+changeLocale)
     * _static_
         * [.basicsStorageKAZTOKEN](#NCALayerClient.basicsStorageKAZTOKEN)
@@ -221,6 +224,25 @@ basicsSignXLM и basicsSignCMS.
 | hash | <code>String</code> \| <code>ArrayBuffer</code> \| <code>Array</code> |  | хеш данных в виде строки Base64 либо ArrayBuffer. Так же поддерживается массив строк Base64 или ArrayBuffer, но это будет работать только с приложениями KAZTOKEN mobile/desktop, NCALayer не умеет подписывать массив хешей. |
 | [keyType] | <code>String</code> | <code>&#x27;SIGNATURE&#x27;</code> | каким типом ключа следует подписывать, поддерживаемые варианты 'SIGNATURE' и 'AUTHENTICATION', иное значение позволит пользователю выбрать любой доступный в хранилище ключа. |
 
+<a name="NCALayerClient+createCAdESFromFile"></a>
+
+### *(async)* ncaLayerClient.createCAdESFromFile(storageType, filePath, [keyType], [attach]) ⇒ <code>Promise.&lt;String&gt;</code>
+Вычислить подпись файла и сформировать CMS (CAdES).
+
+**Kind**: instance method of [<code>NCALayerClient</code>](#NCALayerClient)  
+**Returns**: <code>Promise.&lt;String&gt;</code> - CMS подпись в виде Base64 строки.  
+**Throws**:
+
+- NCALayerError
+
+
+| Param | Type | Default | Description |
+| --- | --- | --- | --- |
+| storageType | <code>String</code> |  | тип хранилища который следует использовать для подписания. |
+| filePath | <code>String</code> |  | путь к подписываемому файлу. |
+| [keyType] | <code>String</code> | <code>&#x27;SIGNATURE&#x27;</code> | каким типом ключа следует подписывать, поддерживаемые варианты 'SIGNATURE' и 'AUTHENTICATION', иное значение позволит пользователю выбрать любой доступный в хранилище ключа. |
+| [attach] | <code>Boolean</code> | <code>false</code> | следует ли включить в подпись подписываемые данные. |
+
 <a name="NCALayerClient+createCMSSignatureFromBase64"></a>
 
 ### *(async)* ncaLayerClient.createCMSSignatureFromBase64(storageType, data, [keyType], [attach]) ⇒ <code>Promise.&lt;String&gt;</code>
@@ -238,6 +260,26 @@ TSP. **Не рекомендуется использовать, разрабо�
 | --- | --- | --- | --- |
 | storageType | <code>String</code> |  | тип хранилища который следует использовать для подписания. |
 | data | <code>String</code> \| <code>ArrayBuffer</code> \| <code>Array</code> |  | данные, которые нужно подписать, в виде строки Base64 либо ArrayBuffer. Так же поддерживается массив строк Base64 или ArrayBuffer, но это будет работать только с приложениями KAZTOKEN mobile/desktop, NCALayer не умеет подписывать массив документов. |
+| [keyType] | <code>String</code> | <code>&#x27;SIGNATURE&#x27;</code> | каким типом ключа следует подписывать, поддерживаемые варианты 'SIGNATURE' и 'AUTHENTICATION', иное значение позволит пользователю выбрать любой доступный в хранилище ключа. |
+| [attach] | <code>Boolean</code> | <code>false</code> | следует ли включить в подпись подписываемые данные. |
+
+<a name="NCALayerClient+createCMSSignatureFromFile"></a>
+
+### *(async)* ncaLayerClient.createCMSSignatureFromFile(storageType, filePath, [keyType], [attach]) ⇒ <code>Promise.&lt;String&gt;</code>
+Подписать выбранный файл и сформировать CMS (CAdES) подпись с интегрированной меткой времени
+TSP. **Не рекомендуется использовать, разработчики NCALayer пометили как DEPRECATED (https://forum.pki.gov.kz/t/podpis-s-metkoj-vremeni-na-js/704/7)!**
+
+**Kind**: instance method of [<code>NCALayerClient</code>](#NCALayerClient)  
+**Returns**: <code>Promise.&lt;String&gt;</code> - CMS подпись в виде Base64 строки.  
+**Throws**:
+
+- NCALayerError
+
+
+| Param | Type | Default | Description |
+| --- | --- | --- | --- |
+| storageType | <code>String</code> |  | тип хранилища который следует использовать для подписания. |
+| filePath | <code>String</code> |  | путь в файловой системе. |
 | [keyType] | <code>String</code> | <code>&#x27;SIGNATURE&#x27;</code> | каким типом ключа следует подписывать, поддерживаемые варианты 'SIGNATURE' и 'AUTHENTICATION', иное значение позволит пользователю выбрать любой доступный в хранилище ключа. |
 | [attach] | <code>Boolean</code> | <code>false</code> | следует ли включить в подпись подписываемые данные. |
 
@@ -280,6 +322,23 @@ TSP. **Не рекомендуется использовать, разрабо�
 | [keyType] | <code>String</code> | <code>&#x27;SIGNATURE&#x27;</code> | каким типом ключа следует подписывать, поддерживаемые варианты 'SIGNATURE' и 'AUTHENTICATION', иное значение позволит пользователю выбрать любой доступный в хранилище ключа. |
 | [tbsElementXPath] | <code>String</code> | <code>&#x27;&#x27;</code> | путь к подписываемому узлу XML. |
 | [signatureParentElementXPath] | <code>String</code> | <code>&#x27;&#x27;</code> | путь к узлу в который необходимо добавить сформированную подпись. |
+
+<a name="NCALayerClient+showFileChooser"></a>
+
+### *(async)* ncaLayerClient.showFileChooser([fileExtension], [currentDirectory]) ⇒ <code>Promise.&lt;String&gt;</code>
+Открывает диалоговое окно для выбора файла.
+
+**Kind**: instance method of [<code>NCALayerClient</code>](#NCALayerClient)  
+**Returns**: <code>Promise.&lt;String&gt;</code> - полный путь к файлу.  
+**Throws**:
+
+- NCALayerError
+
+
+| Param | Type | Default | Description |
+| --- | --- | --- | --- |
+| [fileExtension] | <code>String</code> | <code>&#x27;ALL&#x27;</code> | расширение для выбора файла. |
+| [currentDirectory] | <code>String</code> | <code>&#x27;&#x27;</code> | путь выбираемого файла. |
 
 <a name="NCALayerClient+changeLocale"></a>
 
