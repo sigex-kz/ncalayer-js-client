@@ -558,6 +558,40 @@
     }
 
     /**
+     * Вычислить подпись файла и сформировать CMS (CAdES).
+     *
+     * @param {String} storageType тип хранилища который следует использовать для подписания.
+     *
+     * @param {String} filePath путь к подписываемому файлу.
+     *
+     * @param {String} [keyType = 'SIGNATURE'] каким типом ключа следует подписывать, поддерживаемые
+     * варианты 'SIGNATURE' и 'AUTHENTICATION', иное значение позволит пользователю выбрать
+     * любой доступный в хранилище ключа.
+     *
+     * @param {Boolean} [attach = false] следует ли включить в подпись подписываемые данные.
+     *
+     * @returns {Promise<String>} CMS подпись в виде Base64 строки.
+     *
+     * @throws NCALayerError
+     */
+    async createCAdESFromFile(storageType, filePath, keyType = 'SIGNATURE', attach = false) {
+      const request = {
+        module: 'kz.gov.pki.knca.commonUtils',
+        method: 'createCAdESFromFile',
+        args: [
+          storageType,
+          keyType,
+          filePath,
+          attach,
+        ],
+      };
+
+      this.sendRequest(request);
+
+      return new Promise((resolve, reject) => { this.setHandlers(resolve, reject); });
+    }
+
+    /**
      * Подписать блок данных и сформировать CMS (CAdES) подпись с интегрированной меткой времени
      * TSP. **Не рекомендуется использовать, разработчики NCALayer пометили как DEPRECATED (https://forum.pki.gov.kz/t/podpis-s-metkoj-vremeni-na-js/704/7)!**
      *
@@ -586,6 +620,41 @@
           storageType,
           keyType,
           NCALayerClient.normalizeDataToSign(data),
+          attach,
+        ],
+      };
+
+      this.sendRequest(request);
+
+      return new Promise((resolve, reject) => { this.setHandlers(resolve, reject); });
+    }
+
+    /**
+     * Подписать выбранный файл и сформировать CMS (CAdES) подпись с интегрированной меткой времени
+     * TSP. **Не рекомендуется использовать, разработчики NCALayer пометили как DEPRECATED (https://forum.pki.gov.kz/t/podpis-s-metkoj-vremeni-na-js/704/7)!**
+     *
+     * @param {String} storageType тип хранилища который следует использовать для подписания.
+     *
+     * @param {String} filePath путь в файловой системе.
+     *
+     * @param {String} [keyType = 'SIGNATURE'] каким типом ключа следует подписывать, поддерживаемые
+     * варианты 'SIGNATURE' и 'AUTHENTICATION', иное значение позволит пользователю выбрать
+     * любой доступный в хранилище ключа.
+     *
+     * @param {Boolean} [attach = false] следует ли включить в подпись подписываемые данные.
+     *
+     * @returns {Promise<String>} CMS подпись в виде Base64 строки.
+     *
+     * @throws NCALayerError
+     */
+    async createCMSSignatureFromFile(storageType, filePath, keyType = 'SIGNATURE', attach = false) {
+      const request = {
+        module: 'kz.gov.pki.knca.commonUtils',
+        method: 'createCMSSignatureFromFile',
+        args: [
+          storageType,
+          keyType,
+          filePath,
           attach,
         ],
       };
@@ -663,6 +732,32 @@
           xmls,
           tbsElementXPath,
           signatureParentElementXPath,
+        ],
+      };
+
+      this.sendRequest(request);
+
+      return new Promise((resolve, reject) => { this.setHandlers(resolve, reject); });
+    }
+
+    /**
+     * Открывает диалоговое окно для выбора файла.
+     *
+     * @param {String} [fileExtension = 'ALL'] расширение для выбора файла.
+     *
+     * @param {String} [currentDirectory = ''] путь выбираемого файла.
+     *
+     * @returns {Promise<String>} полный путь к файлу.
+     *
+     * @throws NCALayerError
+     */
+    async showFileChooser(fileExtension = 'ALL', currentDirectory = '') {
+      const request = {
+        module: 'kz.gov.pki.knca.commonUtils',
+        method: 'showFileChooser',
+        args: [
+          fileExtension,
+          currentDirectory,
         ],
       };
 

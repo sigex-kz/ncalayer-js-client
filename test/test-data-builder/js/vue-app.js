@@ -27,6 +27,13 @@ new Vue({ // eslint-disable-line no-new, no-undef
         params: [],
       },
 
+      // showFileChooser
+      {
+        text: 'Выберите произвольный файл.',
+        exec: 'showFileChooser',
+        params: [],
+      },
+
       // getKeyInfo
       {
         text: 'Попытка отправки плохого запроса, ничего не отобразится.',
