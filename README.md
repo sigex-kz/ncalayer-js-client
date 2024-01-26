@@ -7,7 +7,7 @@ JS клиент для [NCALayer](https://ncl.pki.gov.kz/) стремящийс�
 
 Разработан для веб интерфейса [https://sigex.kz](https://sigex.kz).
 
-Документация по API: [API.md](API.md).
+Документация по API: [https://sigex-kz.github.io/ncalayer-js-client/](https://sigex-kz.github.io/ncalayer-js-client/).
 
 Документация по NCALayer доступна в составе [SDK НУЦ](https://pki.gov.kz/developers/),
 либо на странице документации приложения [KAZTOKEN mobile](https://kaztoken.kz/mobile-docs/)
