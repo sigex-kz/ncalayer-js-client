@@ -5,6 +5,11 @@ JS клиент для [NCALayer](https://ncl.pki.gov.kz/) стремящийс�
 
 **Поддерживает новый модуль kz.gov.pki.knca.basics (https://github.com/pkigovkz/sdkinfo/wiki/KNCA-Basics-Module), пример использования приведен ниже в этом файле.**
 
+**Поддерживает HTTP API KAZTOKEN mobile/desktop (https://kaztoken.kz/products/kaztoken-desktop/#%D0%BE%D0%BF%D0%B8%D1%81%D0%B0%D0%BD%D0%B8%D0%B5-api-%D0%BC%D1%83%D0%BB%D1%8C%D1%82%D0%B8%D0%BF%D0%BE%D0%B4%D0%BF%D0%B8%D1%81%D0%B0%D0%BD%D0%B8%D1%8F-sigex).**
+Поддержка реализована в функции `basicsSignCMS` - в том случае, если в конструкторе не запрещено использовать HTTP API (`allowKmdHttpApi`)
+и библиотека определила что доступен HTTP API KAZTOKEN mobile/desktop, будет использован он, так как он позволяет подписывать документы
+значительно большего размера чем WebSocket API NCALayer и KAZTOKEN mobile/desktop.
+
 Разработан для веб интерфейса [https://sigex.kz](https://sigex.kz).
 
 Документация по API: [https://sigex-kz.github.io/ncalayer-js-client/](https://sigex-kz.github.io/ncalayer-js-client/).
@@ -19,7 +24,43 @@ JS клиент для [NCALayer](https://ncl.pki.gov.kz/) стремящийс�
 - скопировать себе `ncalayer-client.js` и загрузить его на странице;
 - `npm install ncalayer-js-client`.
 
-## Пример использования
+## Пример использования нового модуля kz.gov.pki.knca.basics
+
+```js
+async function connectAndSign() {
+  const ncalayerClient = new NCALayerClient();
+
+  try {
+    await ncalayerClient.connect();
+  } catch (error) {
+    alert(`Не удалось подключиться к NCALayer: ${error.toString()}`);
+    return;
+  }
+
+  const documentInBase64 = 'MTEK';
+
+  let base64EncodedSignature;
+  try {
+    base64EncodedSignature = await ncalayerClient.basicsSignCMS(
+      NCALayerClient.basicsStoragesAll,
+      documentInBase64,
+      NCALayerClient.basicsCMSParamsDetached,
+      NCALayerClient.basicsSignerSignAny,
+    );
+  } catch (error) {
+    if (error.canceledByUser) {
+      alert('Действие отменено пользователем.');
+    }
+
+    alert(error.toString());
+    return;
+  }
+
+  return base64EncodedSignature;
+}
+```
+
+## Пример использования старого модуля commonUtils
 
 ```js
 async function connectAndSign() {
@@ -44,44 +85,12 @@ async function connectAndSign() {
   // Иначе нужно просить пользователя выбрать тип носителя.
   const storageType = activeTokens[0] || NCALayerClient.fileStorageType;
 
-  let base64EncodedSignature;
-  try {
-    base64EncodedSignature = await ncalayerClient.createCAdESFromBase64(storageType, 'MTEK');
-  } catch (error) {
-    alert(error.toString());
-    return;
-  }
-
-  return base64EncodedSignature;
-}
-```
-
-## Пример использования нового модуля kz.gov.pki.knca.basics
-
-```js
-async function connectAndSign() {
-  const ncalayerClient = new NCALayerClient();
-
-  try {
-    await ncalayerClient.connect();
-  } catch (error) {
-    alert(`Не удалось подключиться к NCALayer: ${error.toString()}`);
-    return;
-  }
+  const documentInBase64 = 'MTEK';
 
   let base64EncodedSignature;
   try {
-    base64EncodedSignature = await ncalayerClient.basicsSignCMS(
-      NCALayerClient.basicsStoragesAll,
-      'MTEK',
-      NCALayerClient.basicsCMSParamsDetached,
-      NCALayerClient.basicsSignerSignAny,
-    );
+    base64EncodedSignature = await ncalayerClient.createCAdESFromBase64(storageType, documentInBase64);
   } catch (error) {
-    if (error.canceledByUser) {
-      alert('Действие отменено пользователем.');
-    }
-
     alert(error.toString());
     return;
   }
