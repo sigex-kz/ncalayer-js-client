@@ -25,6 +25,8 @@
       this.url = url;
       this.wsConnection = null;
       this.responseProcessed = false;
+      this.isKmd = false; // Работаем с KAZTOKEN mobile/desktop?
+      this.isMultisignAvailable = false; // Добстыпна ли функция мультиподписания?
 
       // Используются для упрощения тестирования
       this.onRequestReady = null;
@@ -49,7 +51,7 @@
         this.responseProcessed = false;
         this.setHandlers(resolve, reject);
 
-        this.wsConnection.onmessage = (msg) => {
+        this.wsConnection.onmessage = async (msg) => {
           if (this.responseProcessed) {
             return;
           }
@@ -61,12 +63,30 @@
 
           const response = JSON.parse(msg.data);
 
-          if (response.result && response.result.version) {
-            resolve(response.result.version);
+          if (!response.result || !response.result.version) {
+            reject(new NCALayerError('Ошибка взаимодействия с NCALayer.'));
             return;
           }
 
-          reject(new NCALayerError('Ошибка взаимодействия с NCALayer.'));
+          // Идентификация KAZTOKEN mobile/desktop
+          try {
+            const request = {
+              module: 'kz.digiflow.mobile.extensions',
+              method: 'getVersion',
+            };
+
+            this.sendRequest(request);
+
+            await new Promise((resolveInner, rejectInner) => {
+              this.setHandlers(resolveInner, rejectInner);
+            });
+            this.isKmd = true;
+            this.isMultisignAvailable = true;
+          } catch (err) {
+            /* игнорируем */
+          }
+
+          resolve(response.result.version);
         };
       });
     }
@@ -404,6 +424,14 @@
      * @throws NCALayerError
      */
     async basicsSignCMS(allowedStorages, data, signingParams, signerParams, locale = 'ru') {
+      if (Array.isArray(data) && !this.isMultisignAvailable) {
+        if (!this.isKmd) {
+          throw new NCALayerError('Функция мультиподписания доступна при использовании приложений KAZTOKEN mobile/desktop вместо NCALayer.');
+        }
+
+        throw new NCALayerError('Функция мультиподписания недоступна.');
+      }
+
       return this.basicsSign(
         allowedStorages,
         'cms',
