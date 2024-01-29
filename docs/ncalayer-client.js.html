@@ -67,13 +67,21 @@
      * Конструктор.
      *
      * @param {String} [url = 'wss://127.0.0.1:13579'] опциональный URL для подключения к NCALayer.
+     * @param {Boolean} [allowKmdHttpApi = true] допустимо ли использовать HTTP API
+     * KAZTOKEN mobile/desktop
+     * (https://kaztoken.kz/products/kaztoken-desktop/#%D0%BE%D0%BF%D0%B8%D1%81%D0%B0%D0%BD%D0%B8%D0%B5-api-%D0%BC%D1%83%D0%BB%D1%8C%D1%82%D0%B8%D0%BF%D0%BE%D0%B4%D0%BF%D0%B8%D1%81%D0%B0%D0%BD%D0%B8%D1%8F-sigex),
+     * этот API работает в поточном режиме и позволяет подписывать документы очень больших размеров.
+     * На данный момент реализована поддержка этого API только в функции `basicsSignCMS`.
      */
-    constructor(url = 'wss://127.0.0.1:13579') {
+    constructor(url = 'wss://127.0.0.1:13579', allowKmdHttpApi = true) {
       this.url = url;
       this.wsConnection = null;
       this.responseProcessed = false;
       this.isKmd = false; // Работаем с KAZTOKEN mobile/desktop?
       this.isMultisignAvailable = false; // Доступна ли функция мультиподписания?
+      this.allowKmdHttpApi = allowKmdHttpApi;
+      this.kmdHttpApiUrl = 'https://127.0.0.1:24680/';
+      this.isKmdHttpApiAvailable = false; // Доступен ли HTTP API KAZTOKEN mobile/desktop?
 
       // Используются для упрощения тестирования
       this.onRequestReady = null;
@@ -129,6 +137,18 @@
             });
             this.isKmd = true;
             this.isMultisignAvailable = true;
+          } catch (err) {
+            /* игнорируем */
+          }
+
+          // Идентификация KAZTOKEN mobile/desktop HTTP API
+          try {
+            const httpResponse = await fetch(this.kmdHttpApiUrl);
+
+            if (httpResponse.ok) {
+              this.isKmdHttpApiAvailable = true;
+              this.isMultisignAvailable = true;
+            }
           } catch (err) {
             /* игнорируем */
           }
@@ -451,6 +471,10 @@
      * Вычислить CMS подпись под данными с указанными параметрами, это функция-помощник для
      * упрощения работы с функцией basicsSign.
      *
+     * В том случае, если библиотека смогла обнаружить HTTP API KAZTOKEN desktop на локальном
+     * компьютере, она будет пробовать использовать его для подписания в том случае, если это
+     * не было запрещено при вызове конструктора (параметр `allowKmdHttpApi`).
+     *
      * @param {Array} allowedStorages массив строк с константами допустимых для использования
      * типов хранилищ (см. константы basicsStorage*).
      *
@@ -466,7 +490,8 @@
      *
      * @param {String} [locale = 'ru'] язык пользовательского интерфейса.
      *
-     * @returns {Promise&lt;String>} подпись.
+     * @returns {Promise&lt;String | Array>} подпись, либо массив подписей если на подписание был
+     * передан массиов документов.
      *
      * @throws NCALayerError
      */
@@ -477,6 +502,83 @@
         }
 
         throw new NCALayerError('Функция мультиподписания недоступна.');
+      }
+
+      // Использование HTTP API KAZTOKEN mobile/desktop
+      if (this.allowKmdHttpApi &amp;&amp; this.isKmdHttpApiAvailable) {
+        try {
+          const documents = Array.isArray(data) ? data : [data];
+          const base64 = (typeof (documents[0]) === 'string');
+
+          let response = await fetch(
+            this.kmdHttpApiUrl,
+            {
+              method: 'POST',
+              mode: 'cors',
+              credentials: 'include',
+              body: JSON.stringify({
+                numberOfDocuments: documents.length,
+                base64,
+                encapsulateContent: signingParams.encapsulate,
+              }),
+            },
+          );
+
+          if (!response) {
+            throw new NCALayerError('Ошибка взаимодействия с KAZTOKEN mobile/desktop.');
+          }
+
+          if (!response.ok) {
+            if (response.status === 409) {
+              throw new NCALayerError('Операция отменена пользователем', true);
+            }
+            throw new NCALayerError(`KAZTOKEN mobile/desktop вернул ошибку '${response.status}: ${response.statusText}'`);
+          }
+
+          const operationId = await response.text();
+
+          const signatures = [];
+          // eslint-disable-next-line no-restricted-syntax
+          for (const document of documents) {
+            // eslint-disable-next-line no-await-in-loop
+            response = await fetch(
+              `${this.kmdHttpApiUrl}${operationId}`,
+              {
+                method: 'POST',
+                mode: 'cors',
+                credentials: 'include',
+                body: document,
+              },
+            );
+
+            if (!response) {
+              throw new NCALayerError('Ошибка взаимодействия с KAZTOKEN mobile/desktop.');
+            }
+
+            if (!response.ok) {
+              if (response.status === 401) {
+                throw new NCALayerError('Операция отменена пользователем', true);
+              }
+              throw new NCALayerError(`KAZTOKEN mobile/desktop вернул ошибку '${response.status}: ${response.statusText}'`);
+            }
+
+            let signature = '';
+            if (base64) {
+              // eslint-disable-next-line no-await-in-loop
+              signature = await response.text();
+            } else {
+              // eslint-disable-next-line no-await-in-loop
+              const signatureBytes = await response.arrayBuffer();
+              signature = NCALayerClient.arrayBufferToB64(signatureBytes);
+            }
+
+            signatures.push(signature);
+          }
+
+          return Array.isArray(data) ? signatures : signatures[0];
+        } catch (err) {
+          throw new NCALayerError(`Ошибка взаимодействия с KAZTOKEN mobile/desktop: ${err}`);
+        }
       }
 
       return this.basicsSign(
@@ -889,7 +991,7 @@
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 4.0.2</a> on Mon Jan 29 2024 12:51:24 GMT+0000 (Coordinated Universal Time) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 4.0.2</a> on Mon Jan 29 2024 16:32:30 GMT+0000 (Coordinated Universal Time) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
 </footer>
 
 <script>prettyPrint();</script>
