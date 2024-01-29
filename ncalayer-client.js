@@ -26,7 +26,7 @@
       this.wsConnection = null;
       this.responseProcessed = false;
       this.isKmd = false; // Работаем с KAZTOKEN mobile/desktop?
-      this.isMultisignAvailable = false; // Добстыпна ли функция мультиподписания?
+      this.isMultisignAvailable = false; // Доступна ли функция мультиподписания?
 
       // Используются для упрощения тестирования
       this.onRequestReady = null;

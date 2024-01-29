@@ -1,7 +1,9 @@
 [
   {
     "task": "{\"text\":\"Удостовреьтесь в том, что NCALayer запущен.\",\"exec\":\"connect\",\"params\":[]}",
-    "response": "{\"result\":{\"version\":\"1.2\"}}",
+    "initMessage": "{\"result\":{\"version\":\"1.2\"}}",
+    "request": "{\"module\":\"kz.digiflow.mobile.extensions\",\"method\":\"getVersion\"}",
+    "response": "{\"code\":\"200\",\"responseObject\":{\"name\":\"KAZTOKENdesktop\",\"version\":\"1.2.758.648\"}}",
     "result": "1.2"
   },
   {

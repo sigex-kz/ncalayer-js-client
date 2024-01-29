@@ -14,14 +14,14 @@ function nextTestDataEntry() {
 // Эмулятор NCALayer
 const wss = new WebSocket.Server({ port: 8080 });
 wss.on('connection', (ws) => {
+  if (testDataEntry.initMessage) {
+    ws.send(testDataEntry.initMessage);
+  }
+
   ws.on('message', (message) => {
     assert.strictEqual(message.toString(), testDataEntry.request);
     ws.send(testDataEntry.response);
   });
-
-  if (!testDataEntry.request) {
-    ws.send(testDataEntry.response);
-  }
 });
 
 // Клиентский код
