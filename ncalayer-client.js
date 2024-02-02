@@ -95,16 +95,18 @@
           }
 
           // Идентификация KAZTOKEN mobile/desktop HTTP API
-          try {
-            const httpResponse = await fetch(this.kmdHttpApiUrl);
+          (async () => {
+            try {
+              const httpResponse = await fetch(this.kmdHttpApiUrl);
 
-            if (httpResponse.ok) {
-              this.isKmdHttpApiAvailable = true;
-              this.isMultisignAvailable = true;
+              if (httpResponse.ok) {
+                this.isKmdHttpApiAvailable = true;
+                this.isMultisignAvailable = true;
+              }
+            } catch (err) {
+              /* игнорируем */
             }
-          } catch (err) {
-            /* игнорируем */
-          }
+          })();
 
           resolve(response.result.version);
         };
@@ -431,10 +433,11 @@
      * @param {Array} allowedStorages массив строк с константами допустимых для использования
      * типов хранилищ (см. константы basicsStorage*).
      *
-     * @param {String | ArrayBuffer | Array} data данные, которые нужно подписать, в виде строки
-     * Base64 либо ArrayBuffer. Так же поддерживается массив строк Base64 или ArrayBuffer, но это
-     * будет работать только с приложениями KAZTOKEN mobile/desktop, NCALayer не умеет подписывать
-     * массив документов.
+     * @param {String | ArrayBuffer | Blob | File | Array<String | ArrayBuffer | Blob | File>} data
+     * данные, которые нужно подписать, в виде строки Base64, либо ArrayBuffer, Blob или File.
+     * Так же поддерживается массив строк Base64, ArrayBuffer, Blob или File, но это будет работать
+     * только с приложениями KAZTOKEN mobile/desktop, NCALayer не умеет подписывать массив
+     * документов.
      *
      * @param {Object} signingParams параметры подписания (см basicsCMSParams*).
      *
@@ -537,7 +540,7 @@
       return this.basicsSign(
         allowedStorages,
         'cms',
-        NCALayerClient.normalizeDataToSign(data),
+        await NCALayerClient.normalizeDataToSign(data),
         signingParams,
         signerParams,
         locale,
@@ -622,10 +625,11 @@
      *
      * @param {String} storageType тип хранилища который следует использовать для подписания.
      *
-     * @param {String | ArrayBuffer | Array} data данные, которые нужно подписать, в виде строки
-     * Base64 либо ArrayBuffer. Так же поддерживается массив строк Base64 или ArrayBuffer, но это
-     * будет работать только с приложениями KAZTOKEN mobile/desktop, NCALayer не умеет подписывать
-     * массив документов.
+     * @param {String | ArrayBuffer | Blob | File | Array<String | ArrayBuffer | Blob | File>} data
+     * данные, которые нужно подписать, в виде строки Base64, либо ArrayBuffer, Blob или File.
+     * Так же поддерживается массив строк Base64, ArrayBuffer, Blob или File, но это будет работать
+     * только с приложениями KAZTOKEN mobile/desktop, NCALayer не умеет подписывать массив
+     * документов.
      *
      * @param {String} [keyType = 'SIGNATURE'] каким типом ключа следует подписывать, поддерживаемые
      * варианты 'SIGNATURE' и 'AUTHENTICATION', иное значение позволит пользователю выбрать
@@ -644,7 +648,7 @@
         args: [
           storageType,
           keyType,
-          NCALayerClient.normalizeDataToSign(data),
+          await NCALayerClient.normalizeDataToSign(data),
           attach,
         ],
       };
@@ -659,9 +663,11 @@
      *
      * @param {String} storageType тип хранилища который следует использовать для подписания.
      *
-     * @param {String | ArrayBuffer | Array} hash хеш данных в виде строки Base64 либо ArrayBuffer.
-     * Так же поддерживается массив строк Base64 или ArrayBuffer, но это будет работать только с
-     * приложениями KAZTOKEN mobile/desktop, NCALayer не умеет подписывать массив хешей.
+     * @param {String | ArrayBuffer | Blob | File | Array<String | ArrayBuffer | Blob | File>} hash
+     * хеш данных в виде строки Base64, либо ArrayBuffer, Blob или File.
+     * Так же поддерживается массив строк Base64, ArrayBuffer, Blob или File, но это будет работать
+     * только с приложениями KAZTOKEN mobile/desktop, NCALayer не умеет подписывать массив
+     * хешей.
      *
      * @param {String} [keyType = 'SIGNATURE'] каким типом ключа следует подписывать, поддерживаемые
      * варианты 'SIGNATURE' и 'AUTHENTICATION', иное значение позволит пользователю выбрать
@@ -678,7 +684,7 @@
         args: [
           storageType,
           keyType,
-          NCALayerClient.normalizeDataToSign(hash),
+          await NCALayerClient.normalizeDataToSign(hash),
         ],
       };
 
@@ -693,10 +699,11 @@
      *
      * @param {String} storageType тип хранилища который следует использовать для подписания.
      *
-     * @param {String | ArrayBuffer | Array} data данные, которые нужно подписать, в виде строки
-     * Base64 либо ArrayBuffer. Так же поддерживается массив строк Base64 или ArrayBuffer, но это
-     * будет работать только с приложениями KAZTOKEN mobile/desktop, NCALayer не умеет подписывать
-     * массив документов.
+     * @param {String | ArrayBuffer | Blob | File | Array<String | ArrayBuffer | Blob | File>} data
+     * данные, которые нужно подписать, в виде строки Base64, либо ArrayBuffer, Blob или File.
+     * Так же поддерживается массив строк Base64, ArrayBuffer, Blob или File, но это будет работать
+     * только с приложениями KAZTOKEN mobile/desktop, NCALayer не умеет подписывать массив
+     * документов.
      *
      * @param {String} [keyType = 'SIGNATURE'] каким типом ключа следует подписывать, поддерживаемые
      * варианты 'SIGNATURE' и 'AUTHENTICATION', иное значение позволит пользователю выбрать
@@ -715,7 +722,7 @@
         args: [
           storageType,
           keyType,
-          NCALayerClient.normalizeDataToSign(data),
+          await NCALayerClient.normalizeDataToSign(data),
           attach,
         ],
       };
@@ -911,16 +918,25 @@
       return window.btoa(binary);
     }
 
-    static normalizeDataToSign(data) {
-      if (typeof data === 'string') {
-        return data;
-      }
+    static async normalizeDataToSign(data) {
+      const normalizeDataBlock = async (dataBlock) => {
+        if (typeof dataBlock === 'string') {
+          return dataBlock;
+        }
+
+        let dataBlockArrayBuffer = dataBlock;
+        if (dataBlock instanceof Blob) {
+          dataBlockArrayBuffer = await dataBlock.arrayBuffer();
+        }
+
+        return NCALayerClient.arrayBufferToB64(dataBlockArrayBuffer);
+      };
 
       if (Array.isArray(data)) {
-        return data.map((i) => ((typeof i === 'string') ? i : NCALayerClient.arrayBufferToB64(i)));
+        return Promise.all(data.map(normalizeDataBlock));
       }
 
-      return NCALayerClient.arrayBufferToB64(data);
+      return normalizeDataBlock(data);
     }
   }
 
