@@ -5,7 +5,7 @@ JS клиент для [NCALayer](https://ncl.pki.gov.kz/) стремящийс�
 
 **Поддерживает новый модуль kz.gov.pki.knca.basics (https://github.com/pkigovkz/sdkinfo/wiki/KNCA-Basics-Module), пример использования приведен ниже в этом файле.**
 
-**Поддерживает HTTP API KAZTOKEN mobile/desktop (https://kaztoken.kz/products/kaztoken-desktop/#%D0%BE%D0%BF%D0%B8%D1%81%D0%B0%D0%BD%D0%B8%D0%B5-api-%D0%BC%D1%83%D0%BB%D1%8C%D1%82%D0%B8%D0%BF%D0%BE%D0%B4%D0%BF%D0%B8%D1%81%D0%B0%D0%BD%D0%B8%D1%8F-sigex).**
+**Поддерживает [HTTP API KAZTOKEN mobile/desktop](https://kaztoken.kz/products/kaztoken-desktop/#%D0%BE%D0%BF%D0%B8%D1%81%D0%B0%D0%BD%D0%B8%D0%B5-api-%D0%BC%D1%83%D0%BB%D1%8C%D1%82%D0%B8%D0%BF%D0%BE%D0%B4%D0%BF%D0%B8%D1%81%D0%B0%D0%BD%D0%B8%D1%8F-sigex).**
 Поддержка реализована в функции `basicsSignCMS` - в том случае, если в конструкторе не запрещено использовать HTTP API (`allowKmdHttpApi`)
 и библиотека определила что доступен HTTP API KAZTOKEN mobile/desktop, будет использован он, так как он позволяет подписывать документы
 значительно большего размера чем WebSocket API NCALayer и KAZTOKEN mobile/desktop.
@@ -42,7 +42,7 @@ async function connectAndSign() {
   let base64EncodedSignature;
   try {
     base64EncodedSignature = await ncalayerClient.basicsSignCMS(
-      NCALayerClient.basicsStoragesAll,
+      NCALayerClient.basicsStorageAll,
       documentInBase64,
       NCALayerClient.basicsCMSParamsDetached,
       NCALayerClient.basicsSignerSignAny,
