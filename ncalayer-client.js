@@ -35,6 +35,10 @@
       this.allowKmdHttpApi = allowKmdHttpApi;
       this.kmdHttpApiUrl = 'https://127.0.0.1:24680/';
       this.isKmdHttpApiAvailable = false; // Доступен ли HTTP API KAZTOKEN mobile/desktop?
+      this.KmdHTTPAPIOperationId = null;
+      this.KmdHTTPAPIOperationInBase64 = false;
+      this.KmdHTTPAPIOperationTotal = 0;
+      this.KmdHTTPAPIOperationProcessed = 0;
 
       // Используются для упрощения тестирования
       this.onRequestReady = null;
@@ -586,6 +590,147 @@
         signerParams,
         locale,
       );
+    }
+
+    /**
+     * Проверить доступность функции мультиподписания через HTTP API KAZTOKEN mobile/desktop.
+     *
+     * @returns {Promise<Boolean>} доступна ли функция.
+     */
+    async kmdMultisignAvailable() {
+      try {
+        const httpResponse = await fetch(
+          this.kmdHttpApiUrl,
+          { signal: AbortSignal.timeout(1000) },
+        );
+
+        if (httpResponse.ok) {
+          return true;
+        }
+      } catch (err) {
+        /* игнорируем */
+      }
+
+      return false;
+    }
+
+    /**
+     * Инициировать процедуру мультиподписания через HTTP API KAZTOKEN mobile/desktop.
+     * Не требует предварительного вызова `connect()`.
+     *
+     * @param {Number} numberOfDocuments количество документов которые будут подписаны
+     * в рамках процедуры мкльтиподписания.
+     *
+     * @param {Boolean} base64 будут ли данные передаваться в base64 или в бинарном виде.
+     *
+     * @param {Boolean} encapsulateContent следудует ли встраивать подписываемые данные в подписи
+     * (не рекомендуется, так как в этом случае требуется значительно больше ОЗУ для обработки).
+     *
+     * @throws NCALayerError
+     */
+    async startKmdMultisign(numberOfDocuments, base64, encapsulateContent) {
+      let response;
+      try {
+        response = await fetch(
+          this.kmdHttpApiUrl,
+          {
+            method: 'POST',
+            mode: 'cors',
+            credentials: 'include',
+            body: JSON.stringify({
+              numberOfDocuments,
+              base64,
+              encapsulateContent,
+            }),
+          },
+        );
+      } catch (err) {
+        throw new NCALayerError(`Ошибка взаимодействия с KAZTOKEN mobile/desktop: ${err}`);
+      }
+
+      if (!response) {
+        throw new NCALayerError('Ошибка взаимодействия с KAZTOKEN mobile/desktop');
+      }
+
+      if (!response.ok) {
+        if (response.status === 409) {
+          throw new NCALayerError('Операция отменена пользователем', true);
+        }
+        throw new NCALayerError(`KAZTOKEN mobile/desktop вернул ошибку '${response.status}: ${response.statusText}'`);
+      }
+
+      try {
+        this.KmdHTTPAPIOperationId = await response.text();
+        this.KmdHTTPAPIOperationInBase64 = base64;
+        this.KmdHTTPAPIOperationTotal = numberOfDocuments;
+        this.KmdHTTPAPIOperationProcessed = 0;
+      } catch (err) {
+        throw new NCALayerError(`Ошибка взаимодействия с KAZTOKEN mobile/desktop: ${err}`);
+      }
+    }
+
+    /**
+     * Вычислить CMS подпись под данными в рамках процедуры мультиподписания через HTTP API
+     * KAZTOKEN mobile/desktop.
+     *
+     * Можно вызывать только после того как процедура была инициализирована с помощью
+     * `StartKmdMultisign` и только для того количества документов, которое было
+     * указано при инициализации.
+     *
+     * @param {String | ArrayBuffer | Blob | File} data
+     * данные, которые нужно подписать, в виде строки Base64, либо ArrayBuffer, Blob или File.
+     *
+     * @returns {Promise<String>} подпись в base64.
+     *
+     * @throws NCALayerError
+     */
+    async kmdMultisignNext(data) {
+      if (!this.KmdHTTPAPIOperationId) {
+        throw new NCALayerError('Процедура мультиподписания не была инициализирована');
+      }
+
+      let response;
+      try {
+        response = await fetch(
+          `${this.kmdHttpApiUrl}${this.KmdHTTPAPIOperationId}`,
+          {
+            method: 'POST',
+            mode: 'cors',
+            credentials: 'include',
+            body: data,
+          },
+        );
+      } catch (err) {
+        throw new NCALayerError(`Ошибка взаимодействия с KAZTOKEN mobile/desktop: ${err}`);
+      }
+
+      if (!response) {
+        throw new NCALayerError('Ошибка взаимодействия с KAZTOKEN mobile/desktop');
+      }
+
+      if (!response.ok) {
+        if (response.status === 401) {
+          throw new NCALayerError('Операция отменена пользователем', true);
+        }
+        throw new NCALayerError(`KAZTOKEN mobile/desktop вернул ошибку '${response.status}: ${response.statusText}'`);
+      }
+
+      let signature = '';
+      if (this.KmdHTTPAPIOperationInBase64) {
+        signature = await response.text();
+      } else {
+        const signatureBytes = await response.arrayBuffer();
+        signature = NCALayerClient.arrayBufferToB64(signatureBytes);
+      }
+
+      this.KmdHTTPAPIOperationProcessed += 1;
+      if (this.KmdHTTPAPIOperationProcessed === this.KmdHTTPAPIOperationTotal) {
+        this.KmdHTTPAPIOperationId = null;
+        this.KmdHTTPAPIOperationProcessed = 0;
+        this.KmdHTTPAPIOperationTotal = 0;
+      }
+
+      return signature;
     }
 
     /**
