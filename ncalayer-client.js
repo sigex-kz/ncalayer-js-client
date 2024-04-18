@@ -97,7 +97,7 @@
           // Идентификация KAZTOKEN mobile/desktop HTTP API
           (async () => {
             try {
-              const httpResponse = await fetch(this.kmdHttpApiUrl);
+              const httpResponse = await fetch(this.kmdHttpApiUrl, { signal: AbortSignal.timeout(1000) });
 
               if (httpResponse.ok) {
                 this.isKmdHttpApiAvailable = true;
