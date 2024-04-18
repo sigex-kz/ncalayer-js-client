@@ -12,7 +12,7 @@ JS клиент для [NCALayer](https://ncl.pki.gov.kz/) стремящийс�
 
 Разработан для веб интерфейса [https://sigex.kz](https://sigex.kz).
 
-Документация по API: [https://sigex-kz.github.io/ncalayer-js-client/](https://sigex-kz.github.io/ncalayer-js-client/).
+Документация по API: [https://sigex-kz.github.io/ncalayer-js-client/](https://sigex-kz.github.io/ncalayer-js-client/api/).
 
 Документация по NCALayer доступна в составе [SDK НУЦ](https://pki.gov.kz/developers/),
 либо на странице документации приложения [KAZTOKEN mobile](https://kaztoken.kz/mobile-docs/)
@@ -124,6 +124,44 @@ async function connectAndSign() {
 
   }
   return base64EncodedSignatures;
+}
+```
+
+## Пример использования функции мультиподписания через HTTP API KAZTOKEN mobile/desktop
+
+```js
+async function connectAndSign() {
+  const ncalayerClient = new NCALayerClient();
+
+  const documentsInBase64 = [
+    'MTEK',
+    'MTEK',
+    'MTEK',
+  ];
+
+  try {
+    await ncalayerClient.startKmdMultisign(documentsInBase64.length, true, false);
+  } catch (error) {
+    alert(`Не удалось подключиться к KAZTOKEN mobile/desktop: ${error.toString()}`);
+    return;
+  }
+
+  const signatures = [];
+  try {
+    for (const documentInBase64 of documentsInBase64) {
+      const signature = await ncalayerClient.kmdMultisignNext(documentInBase64);
+      this.signatures.push(signature);
+    }
+  } catch (error) {
+    if (error.canceledByUser) {
+      alert('Действие отменено пользователем.');
+    }
+
+    alert(error.toString());
+    return;
+  }
+
+  return signatures;
 }
 ```
 
