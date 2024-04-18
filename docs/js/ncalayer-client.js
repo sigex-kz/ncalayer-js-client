@@ -1,51 +1,4 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    
-    <meta charset="utf-8">
-    <title>ncalayer-client.js - Documentation</title>
-    
-    
-    <script src="scripts/prettify/prettify.js"></script>
-    <script src="scripts/prettify/lang-css.js"></script>
-    <!--[if lt IE 9]>
-      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
-    <![endif]-->
-    <link type="text/css" rel="stylesheet" href="styles/prettify.css">
-    <link type="text/css" rel="stylesheet" href="styles/jsdoc.css">
-    <script src="scripts/nav.js" defer></script>
-    
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-</head>
-<body>
-
-<input type="checkbox" id="nav-trigger" class="nav-trigger" />
-<label for="nav-trigger" class="navicon-button x">
-  <div class="navicon"></div>
-</label>
-
-<label for="nav-trigger" class="overlay"></label>
-
-<nav >
-    
-    
-    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="NCALayerClient.html">NCALayerClient</a><ul class='methods'><li data-type='method'><a href="NCALayerClient.html#basicsSign">basicsSign</a></li><li data-type='method'><a href="NCALayerClient.html#basicsSignCMS">basicsSignCMS</a></li><li data-type='method'><a href="NCALayerClient.html#basicsSignXML">basicsSignXML</a></li><li data-type='method'><a href="NCALayerClient.html#changeLocale">changeLocale</a></li><li data-type='method'><a href="NCALayerClient.html#connect">connect</a></li><li data-type='method'><a href="NCALayerClient.html#createCAdESFromBase64">createCAdESFromBase64</a></li><li data-type='method'><a href="NCALayerClient.html#createCAdESFromBase64Hash">createCAdESFromBase64Hash</a></li><li data-type='method'><a href="NCALayerClient.html#createCMSSignatureFromBase64">createCMSSignatureFromBase64</a></li><li data-type='method'><a href="NCALayerClient.html#getActiveTokens">getActiveTokens</a></li><li data-type='method'><a href="NCALayerClient.html#getKeyInfo">getKeyInfo</a></li><li data-type='method'><a href="NCALayerClient.html#signXml">signXml</a></li><li data-type='method'><a href="NCALayerClient.html#signXmls">signXmls</a></li></ul></li><li><a href="NCALayerError.html">NCALayerError</a></li></ul>
-    
-</nav>
-
-<div id="main">
-    
-    <h1 class="page-title">ncalayer-client.js</h1>
-    
-
-    
-
-
-
-    
-    <section>
-        <article>
-            <pre class="prettyprint source linenums"><code>// @ts-check
+// @ts-check
 
 ((exports, WebSocket, window) => { // eslint-disable-line max-classes-per-file
   /**
@@ -82,6 +35,10 @@
       this.allowKmdHttpApi = allowKmdHttpApi;
       this.kmdHttpApiUrl = 'https://127.0.0.1:24680/';
       this.isKmdHttpApiAvailable = false; // Доступен ли HTTP API KAZTOKEN mobile/desktop?
+      this.KmdHTTPAPIOperationId = null;
+      this.KmdHTTPAPIOperationInBase64 = false;
+      this.KmdHTTPAPIOperationTotal = 0;
+      this.KmdHTTPAPIOperationProcessed = 0;
 
       // Используются для упрощения тестирования
       this.onRequestReady = null;
@@ -91,7 +48,7 @@
     /**
      * Подключиться к NCALayer.
      *
-     * @returns {Promise&lt;String>} версию NCALayer.
+     * @returns {Promise<String>} версию NCALayer.
      *
      * @throws NCALayerError
      */
@@ -456,7 +413,7 @@
      *
      * @param {String} locale язык пользовательского интерфейса.
      *
-     * @returns {Promise&lt;String>} подпись.
+     * @returns {Promise<String>} подпись.
      *
      * @throws NCALayerError
      */
@@ -490,7 +447,7 @@
      * @param {Array | null} allowedStorages массив строк с константами допустимых для использования
      * типов хранилищ (см. константы basicsStorage*).
      *
-     * @param {String | ArrayBuffer | Blob | File | Array&lt;String | ArrayBuffer | Blob | File>} data
+     * @param {String | ArrayBuffer | Blob | File | Array<String | ArrayBuffer | Blob | File>} data
      * данные, которые нужно подписать, в виде строки Base64, либо ArrayBuffer, Blob или File.
      * Так же поддерживается массив строк Base64, ArrayBuffer, Blob или File, но это будет работать
      * только с приложениями KAZTOKEN mobile/desktop, NCALayer не умеет подписывать массив
@@ -503,13 +460,13 @@
      *
      * @param {String} [locale = 'ru'] язык пользовательского интерфейса.
      *
-     * @returns {Promise&lt;String | Array>} подпись, либо массив подписей если на подписание был
+     * @returns {Promise<String | Array>} подпись, либо массив подписей если на подписание был
      * передан массиов документов.
      *
      * @throws NCALayerError
      */
     async basicsSignCMS(allowedStorages, data, signingParams, signerParams, locale = 'ru') {
-      if (Array.isArray(data) &amp;&amp; !this.isMultisignAvailable) {
+      if (Array.isArray(data) && !this.isMultisignAvailable) {
         if (!this.isKmd) {
           throw new NCALayerError('Функция мультиподписания доступна при использовании приложений KAZTOKEN mobile/desktop вместо NCALayer.');
         }
@@ -518,7 +475,7 @@
       }
 
       // Использование HTTP API KAZTOKEN mobile/desktop
-      if (this.allowKmdHttpApi &amp;&amp; this.isKmdHttpApiAvailable) {
+      if (this.allowKmdHttpApi && this.isKmdHttpApiAvailable) {
         try {
           const documents = Array.isArray(data) ? data : [data];
           const base64 = (typeof (documents[0]) === 'string');
@@ -620,7 +577,7 @@
      *
      * @param {String} [locale = 'ru'] язык пользовательского интерфейса.
      *
-     * @returns {Promise&lt;String>} подпись.
+     * @returns {Promise<String>} подпись.
      *
      * @throws NCALayerError
      */
@@ -636,9 +593,150 @@
     }
 
     /**
+     * Проверить доступность функции мультиподписания через HTTP API KAZTOKEN mobile/desktop.
+     *
+     * @returns {Promise<Boolean>} доступна ли функция.
+     */
+    async kmdMultisignAvailable() {
+      try {
+        const httpResponse = await fetch(
+          this.kmdHttpApiUrl,
+          { signal: AbortSignal.timeout(1000) },
+        );
+
+        if (httpResponse.ok) {
+          return true;
+        }
+      } catch (err) {
+        /* игнорируем */
+      }
+
+      return false;
+    }
+
+    /**
+     * Инициировать процедуру мультиподписания через HTTP API KAZTOKEN mobile/desktop.
+     * Не требует предварительного вызова `connect()`.
+     *
+     * @param {Number} numberOfDocuments количество документов которые будут подписаны
+     * в рамках процедуры мкльтиподписания.
+     *
+     * @param {Boolean} base64 будут ли данные передаваться в base64 или в бинарном виде.
+     *
+     * @param {Boolean} encapsulateContent следудует ли встраивать подписываемые данные в подписи
+     * (не рекомендуется, так как в этом случае требуется значительно больше ОЗУ для обработки).
+     *
+     * @throws NCALayerError
+     */
+    async startKmdMultisign(numberOfDocuments, base64, encapsulateContent) {
+      let response;
+      try {
+        response = await fetch(
+          this.kmdHttpApiUrl,
+          {
+            method: 'POST',
+            mode: 'cors',
+            credentials: 'include',
+            body: JSON.stringify({
+              numberOfDocuments,
+              base64,
+              encapsulateContent,
+            }),
+          },
+        );
+      } catch (err) {
+        throw new NCALayerError(`Ошибка взаимодействия с KAZTOKEN mobile/desktop: ${err}`);
+      }
+
+      if (!response) {
+        throw new NCALayerError('Ошибка взаимодействия с KAZTOKEN mobile/desktop');
+      }
+
+      if (!response.ok) {
+        if (response.status === 409) {
+          throw new NCALayerError('Операция отменена пользователем', true);
+        }
+        throw new NCALayerError(`KAZTOKEN mobile/desktop вернул ошибку '${response.status}: ${response.statusText}'`);
+      }
+
+      try {
+        this.KmdHTTPAPIOperationId = await response.text();
+        this.KmdHTTPAPIOperationInBase64 = base64;
+        this.KmdHTTPAPIOperationTotal = numberOfDocuments;
+        this.KmdHTTPAPIOperationProcessed = 0;
+      } catch (err) {
+        throw new NCALayerError(`Ошибка взаимодействия с KAZTOKEN mobile/desktop: ${err}`);
+      }
+    }
+
+    /**
+     * Вычислить CMS подпись под данными в рамках процедуры мультиподписания через HTTP API
+     * KAZTOKEN mobile/desktop.
+     *
+     * Можно вызывать только после того как процедура была инициализирована с помощью
+     * `StartKmdMultisign` и только для того количества документов, которое было
+     * указано при инициализации.
+     *
+     * @param {String | ArrayBuffer | Blob | File} data
+     * данные, которые нужно подписать, в виде строки Base64, либо ArrayBuffer, Blob или File.
+     *
+     * @returns {Promise<String>} подпись в base64.
+     *
+     * @throws NCALayerError
+     */
+    async kmdMultisignNext(data) {
+      if (!this.KmdHTTPAPIOperationId) {
+        throw new NCALayerError('Процедура мультиподписания не была инициализирована');
+      }
+
+      let response;
+      try {
+        response = await fetch(
+          `${this.kmdHttpApiUrl}${this.KmdHTTPAPIOperationId}`,
+          {
+            method: 'POST',
+            mode: 'cors',
+            credentials: 'include',
+            body: data,
+          },
+        );
+      } catch (err) {
+        throw new NCALayerError(`Ошибка взаимодействия с KAZTOKEN mobile/desktop: ${err}`);
+      }
+
+      if (!response) {
+        throw new NCALayerError('Ошибка взаимодействия с KAZTOKEN mobile/desktop');
+      }
+
+      if (!response.ok) {
+        if (response.status === 401) {
+          throw new NCALayerError('Операция отменена пользователем', true);
+        }
+        throw new NCALayerError(`KAZTOKEN mobile/desktop вернул ошибку '${response.status}: ${response.statusText}'`);
+      }
+
+      let signature = '';
+      if (this.KmdHTTPAPIOperationInBase64) {
+        signature = await response.text();
+      } else {
+        const signatureBytes = await response.arrayBuffer();
+        signature = NCALayerClient.arrayBufferToB64(signatureBytes);
+      }
+
+      this.KmdHTTPAPIOperationProcessed += 1;
+      if (this.KmdHTTPAPIOperationProcessed === this.KmdHTTPAPIOperationTotal) {
+        this.KmdHTTPAPIOperationId = null;
+        this.KmdHTTPAPIOperationProcessed = 0;
+        this.KmdHTTPAPIOperationTotal = 0;
+      }
+
+      return signature;
+    }
+
+    /**
      * Получить список активных типов устройств.
      *
-     * @returns {Promise&lt;String[]>} массив содержащий типы хранилищ экземпляры которых доступны в
+     * @returns {Promise<String[]>} массив содержащий типы хранилищ экземпляры которых доступны в
      * данный момент.
      *
      * @throws NCALayerError
@@ -659,7 +757,7 @@
      *
      * @param {String} storageType тип хранилища на экземплярах которого следует искать записи.
      *
-     * @returns {Promise&lt;Object>} объект с информацией о записи.
+     * @returns {Promise<Object>} объект с информацией о записи.
      *
      * @throws NCALayerError
      */
@@ -682,7 +780,7 @@
      *
      * @param {String} storageType тип хранилища который следует использовать для подписания.
      *
-     * @param {String | ArrayBuffer | Blob | File | Array&lt;String | ArrayBuffer | Blob | File>} data
+     * @param {String | ArrayBuffer | Blob | File | Array<String | ArrayBuffer | Blob | File>} data
      * данные, которые нужно подписать, в виде строки Base64, либо ArrayBuffer, Blob или File.
      * Так же поддерживается массив строк Base64, ArrayBuffer, Blob или File, но это будет работать
      * только с приложениями KAZTOKEN mobile/desktop, NCALayer не умеет подписывать массив
@@ -694,7 +792,7 @@
      *
      * @param {Boolean} [attach = false] следует ли включить в подпись подписываемые данные.
      *
-     * @returns {Promise&lt;String>} CMS подпись в виде Base64 строки.
+     * @returns {Promise<String>} CMS подпись в виде Base64 строки.
      *
      * @throws NCALayerError
      */
@@ -720,7 +818,7 @@
      *
      * @param {String} storageType тип хранилища который следует использовать для подписания.
      *
-     * @param {String | ArrayBuffer | Blob | File | Array&lt;String | ArrayBuffer | Blob | File>} hash
+     * @param {String | ArrayBuffer | Blob | File | Array<String | ArrayBuffer | Blob | File>} hash
      * хеш данных в виде строки Base64, либо ArrayBuffer, Blob или File.
      * Так же поддерживается массив строк Base64, ArrayBuffer, Blob или File, но это будет работать
      * только с приложениями KAZTOKEN mobile/desktop, NCALayer не умеет подписывать массив
@@ -730,7 +828,7 @@
      * варианты 'SIGNATURE' и 'AUTHENTICATION', иное значение позволит пользователю выбрать
      * любой доступный в хранилище ключа.
      *
-     * @returns {Promise&lt;String>} CMS подпись в виде Base64 строки.
+     * @returns {Promise<String>} CMS подпись в виде Base64 строки.
      *
      * @throws NCALayerError
      */
@@ -756,7 +854,7 @@
      *
      * @param {String} storageType тип хранилища который следует использовать для подписания.
      *
-     * @param {String | ArrayBuffer | Blob | File | Array&lt;String | ArrayBuffer | Blob | File>} data
+     * @param {String | ArrayBuffer | Blob | File | Array<String | ArrayBuffer | Blob | File>} data
      * данные, которые нужно подписать, в виде строки Base64, либо ArrayBuffer, Blob или File.
      * Так же поддерживается массив строк Base64, ArrayBuffer, Blob или File, но это будет работать
      * только с приложениями KAZTOKEN mobile/desktop, NCALayer не умеет подписывать массив
@@ -768,7 +866,7 @@
      *
      * @param {Boolean} [attach = false] следует ли включить в подпись подписываемые данные.
      *
-     * @returns {Promise&lt;String>} CMS подпись в виде Base64 строки.
+     * @returns {Promise<String>} CMS подпись в виде Base64 строки.
      *
      * @throws NCALayerError
      */
@@ -805,7 +903,7 @@
      * @param {String} [signatureParentElementXPath = ''] путь к узлу в который необходимо добавить
      * сформированную подпись.
      *
-     * @returns {Promise&lt;String>} XML документ содержащий XMLDSIG подпись.
+     * @returns {Promise<String>} XML документ содержащий XMLDSIG подпись.
      *
      * @throws NCALayerError
      */
@@ -843,7 +941,7 @@
      * @param {String} [signatureParentElementXPath = ''] путь к узлу в который необходимо добавить
      * сформированную подпись.
      *
-     * @returns {Promise&lt;String[]>} массив XML документов содержащих XMLDSIG подписи.
+     * @returns {Promise<String[]>} массив XML документов содержащих XMLDSIG подписи.
      *
      * @throws NCALayerError
      */
@@ -969,7 +1067,7 @@
       let binary = '';
       const bytes = new Uint8Array(arrayBuffer);
       const len = bytes.byteLength;
-      for (let i = 0; i &lt; len; i += 1) {
+      for (let i = 0; i < len; i += 1) {
         binary += String.fromCharCode(bytes[i]);
       }
       return window.btoa(binary);
@@ -1003,28 +1101,3 @@
   typeof WebSocket === 'undefined' ? require('ws') : WebSocket,
   typeof window === 'undefined' ? { btoa(x) { return x; } } : window // eslint-disable-line comma-dangle
 ); // Заглушка для NodeJS
-</code></pre>
-        </article>
-    </section>
-
-
-
-
-    
-    
-</div>
-
-<br class="clear">
-
-<footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 4.0.2</a> on Thu Apr 18 2024 11:21:22 GMT+0000 (Coordinated Universal Time) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
-</footer>
-
-<script>prettyPrint();</script>
-<script src="scripts/polyfill.js"></script>
-<script src="scripts/linenumber.js"></script>
-
-
-
-</body>
-</html>

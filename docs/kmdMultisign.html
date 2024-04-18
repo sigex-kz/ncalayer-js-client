@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Пример использования ncalayer-client.js</title>
+
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+
+    <script src="js/ncalayer-client.js"></script>
+    <script src="js/vue.min.js""></script>
+  </head>
+  <body>
+    <div class="container" id="app">
+      <div class="row">
+        <div class="col">
+
+          <h1 class="my-5">Пример использования функции мультиподписания через HTTP API KAZTOKEN mobile/desktop библиотеки <a href="https://github.com/sigex-kz/ncalayer-js-client">https://github.com/sigex-kz/ncalayer-js-client</a></h1>
+          <h2 class="mb-5">Работает только с KAZTOKEN mobile/desktop, функиция мультиподписания через HTTP API KAZTOKEN mobile/desktop позволяет подписывать неограниченные количества документов любых размеров.</h1>
+
+          <p>
+            Выберите файлы для подписания, нажмите <strong>Отправить на подпись</strong>, отобразится интерфейс KAZTOKEN mobile/desktop.
+            После выбора хранилища и ключа будут вычислены подписи и отображены на странице.
+          </p>
+
+          <form v-on:submit.prevent="sign">
+
+            <div class="form-group">
+              <label>Выберите файлы для подписания</label>
+              <input v-for="dataFile in dataFiles" class="form-control mb-2" type="file" ref="fileUploadInputs">
+              <button v-on:click="addDataFile()" type="button" class="btn btn-secondary">Добавить файл</button>
+            </div>
+
+            <div class="d-flex justify-content-end mt-3">
+              <button v-if="waiting" type="button" class="btn btn-primary mb-1" disabled>
+                <span class="spinner-border spinner-border-sm"></span>
+                Ожидаем подпись файла {{currentlySigning}}...
+              </button>
+              <button v-else type="submit" class="btn btn-primary">Отправить на подпись</button>
+            </div>
+
+            <div>
+              <div v-if="signatures.length > 0">
+                <label>Полученные подписи</label>
+                <textarea v-for="signature in signatures" class="form-control my-3" v-model="signature" rows="3" disabled></textarea>
+              </div>
+            </div>
+
+          </form>
+
+        </div>
+      </div>
+    </div>
+    <script src="js/vue-app-kmdMultisign.js"></script>
+  </body>
+</html>

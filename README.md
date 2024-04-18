@@ -18,6 +18,10 @@ JS клиент для [NCALayer](https://ncl.pki.gov.kz/) стремящийс�
 либо на странице документации приложения [KAZTOKEN mobile](https://kaztoken.kz/mobile-docs/)
 повторяющего API NCALayer.
 
+Демо: [https://sigex-kz.github.io/ncalayer-js-client/](https://sigex-kz.github.io/ncalayer-js-client/).
+
+Демо мультиподписания: [https://sigex-kz.github.io/ncalayer-js-client/multisign.html](https://sigex-kz.github.io/ncalayer-js-client/multisign.html).
+
 ## Использование
 
 Одним из следующих образов:
