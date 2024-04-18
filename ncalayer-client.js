@@ -97,7 +97,10 @@
           // Идентификация KAZTOKEN mobile/desktop HTTP API
           (async () => {
             try {
-              const httpResponse = await fetch(this.kmdHttpApiUrl, { signal: AbortSignal.timeout(1000) });
+              const httpResponse = await fetch(
+                this.kmdHttpApiUrl,
+                { signal: AbortSignal.timeout(1000) },
+              );
 
               if (httpResponse.ok) {
                 this.isKmdHttpApiAvailable = true;
@@ -111,6 +114,13 @@
           resolve(response.result.version);
         };
       });
+    }
+
+    /**
+     * Доступна ли функия мультиподписания (подписание нескольких документов одной операцией).
+     */
+    get multisignAvailable() {
+      return this.isMultisignAvailable;
     }
 
     //

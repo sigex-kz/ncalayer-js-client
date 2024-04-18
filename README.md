@@ -43,7 +43,7 @@ async function connectAndSign() {
   try {
     base64EncodedSignature = await ncalayerClient.basicsSignCMS(
       NCALayerClient.basicsStorageAll,
-      documentInBase64,
+      documentInBase64, // здесь поддерживаются String | ArrayBuffer | Blob | File, строки интерпретируются как Base64
       NCALayerClient.basicsCMSParamsDetached,
       NCALayerClient.basicsSignerSignAny,
     );
@@ -60,7 +60,76 @@ async function connectAndSign() {
 }
 ```
 
+## Пример мультиподписания с использованием KAZTOKEN mobile/desktop
+
+```js
+async function connectAndSign() {
+  const ncalayerClient = new NCALayerClient();
+
+  try {
+    await ncalayerClient.connect();
+  } catch (error) {
+    alert(`Не удалось подключиться к NCALayer: ${error.toString()}`);
+    return;
+  }
+
+  const documentsInBase64 = [
+    'MTEK',
+    'MTEK',
+    'MTEK',
+  ];
+
+  // Функция мультиподписания доступна, значит можно передать массив документов
+  // и получить массив подписей
+  if (ncalayerClient.multisignAvailable) {
+    let base64EncodedSignatures;
+    try {
+      base64EncodedSignatures = await ncalayerClient.basicsSignCMS(
+        NCALayerClient.basicsStorageAll,
+        documentsInBase64, // здесь поддерживаются Array<String | ArrayBuffer | Blob | File>, строки интерпретируются как Base64
+        NCALayerClient.basicsCMSParamsDetached,
+        NCALayerClient.basicsSignerSignAny,
+      );
+    } catch (error) {
+      if (error.canceledByUser) {
+        alert('Действие отменено пользователем.');
+      }
+
+      alert(error.toString());
+      return;
+    }
+
+    return base64EncodedSignatures;
+  }
+
+  // Иначе подписываем документы по одному
+  const base64EncodedSignatures = [];
+  for (const documentInBase64 of documentsInBase64) {
+    try {
+      const base64EncodedSignature = await ncalayerClient.basicsSignCMS(
+        NCALayerClient.basicsStorageAll,
+        documentInBase64,
+        NCALayerClient.basicsCMSParamsDetached,
+        NCALayerClient.basicsSignerSignAny,
+      );
+      base64EncodedSignatures.push(base64EncodedSignature);
+    } catch (error) {
+      if (error.canceledByUser) {
+        alert('Действие отменено пользователем.');
+      }
+
+      alert(error.toString());
+      return;
+    }
+
+  }
+  return base64EncodedSignatures;
+}
+```
+
 ## Пример использования старого модуля commonUtils
+
+Использование этого модуля не рекомендуется, так как НУЦ не будет его развивать и рекомендует переходить на kz.gov.pki.knca.basics.
 
 ```js
 async function connectAndSign() {
