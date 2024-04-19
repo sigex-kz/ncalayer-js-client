@@ -132,6 +132,11 @@ async function connectAndSign() {
 ```
 
 ## Пример использования функции мультиподписания через HTTP API KAZTOKEN mobile/desktop
+**Важно:** для работы этого API необходимо чтобы сервер, со страницы которого осуществляются
+вызовы, устанавливал в заголовке
+[`Content-Security-Policy`](https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP)
+значение `connect-src https://127.0.0.1:24680;` иначе браузер не будет передавать в HTTP запросах
+к KAZTOKEN mobile/desktop куки `operationCookie` и вызовы будут возвращать `401 Unauthorized`.
 
 ```js
 async function connectAndSign() {
@@ -142,6 +147,12 @@ async function connectAndSign() {
     'MTEK',
     'MTEK',
   ];
+
+  const kmdMultisignAvailable = await ncalayerClient.kmdMultisignAvailable();
+  if (!kmdMultisignAvailable) {
+    alert('На данном компьютере не удалось обнаружить KAZTOKEN mobile/desktop с поддержкой HTTP API');
+    return;
+  }
 
   try {
     await ncalayerClient.startKmdMultisign(documentsInBase64.length, true, false);
