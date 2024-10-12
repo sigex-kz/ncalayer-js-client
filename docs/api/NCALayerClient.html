@@ -2310,7 +2310,7 @@ KAZTOKEN mobile/desktop
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="ncalayer-client.js.html">ncalayer-client.js</a>, <a href="ncalayer-client.js.html#line990">line 990</a>
+        <a href="ncalayer-client.js.html">ncalayer-client.js</a>, <a href="ncalayer-client.js.html#line1007">line 1007</a>
     </li></ul></dd>
     
 
@@ -2371,7 +2371,7 @@ KAZTOKEN mobile/desktop
 
     
 
-    <h4 class="name" id="basicsSign"><span class="type-signature type-signature-async">(async) </span>basicsSign<span class="signature">(allowedStorages, format, data, signingParams, signerParams, locale)</span><span class="type-signature"> &rarr; {Promise.&lt;String>}</span></h4>
+    <h4 class="name" id="basicsSign"><span class="type-signature type-signature-async">(async) </span>basicsSign<span class="signature">(allowedStorages, format, data, signingParams, signerParams, locale, forceSingleSignature)</span><span class="type-signature"> &rarr; {Promise.&lt;String>}</span></h4>
 
     
 
@@ -2390,7 +2390,7 @@ basicsSignXLM и basicsSignCMS.</li></ul></dd>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="ncalayer-client.js.html">ncalayer-client.js</a>, <a href="ncalayer-client.js.html#line420">line 420</a>
+        <a href="ncalayer-client.js.html">ncalayer-client.js</a>, <a href="ncalayer-client.js.html#line423">line 423</a>
     </li></ul></dd>
     
 
@@ -2452,6 +2452,8 @@ basicsSignXLM и basicsSignCMS.</li></ul></dd>
         
 
         
+        <th>Default</th>
+        
 
         <th class="last">Description</th>
     </tr>
@@ -2481,6 +2483,10 @@ basicsSignXLM и basicsSignCMS.</li></ul></dd>
             
 
             
+                <td class="default">
+                
+                </td>
+            
 
             <td class="description last">массив строк с константами допустимых для использования
 типов хранилищ (см. константы basicsStorage*).</td>
@@ -2506,6 +2512,10 @@ basicsSignXLM и basicsSignCMS.</li></ul></dd>
             
 
             
+                <td class="default">
+                
+                </td>
+            
 
             <td class="description last">тип вычисляемой подписи: 'xml', либо 'cms'.</td>
         </tr>
@@ -2529,6 +2539,10 @@ basicsSignXLM и basicsSignCMS.</li></ul></dd>
 
             
 
+            
+                <td class="default">
+                
+                </td>
             
 
             <td class="description last">подписываемые данные.</td>
@@ -2554,6 +2568,10 @@ basicsSignXLM и basicsSignCMS.</li></ul></dd>
             
 
             
+                <td class="default">
+                
+                </td>
+            
 
             <td class="description last">параметры подписания (см. basicsCMSParams* и basicsXMLParams*).</td>
         </tr>
@@ -2577,6 +2595,10 @@ basicsSignXLM и basicsSignCMS.</li></ul></dd>
 
             
 
+            
+                <td class="default">
+                
+                </td>
             
 
             <td class="description last">параметры выбора сертификата для подписания (см. константы
@@ -2603,8 +2625,43 @@ basicsSigner*).</td>
             
 
             
+                <td class="default">
+                
+                </td>
+            
 
             <td class="description last">язык пользовательского интерфейса.</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>forceSingleSignature</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Boolean</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+                <td class="default">
+                
+                    <code>false</code>
+                
+                </td>
+            
+
+            <td class="description last">возвращать только одну подпись даже если получили
+массив, используется для обеспечения обратной совместимости работы с CMS.</td>
         </tr>
 
     
@@ -2690,7 +2747,7 @@ basicsSigner*).</td>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="ncalayer-client.js.html">ncalayer-client.js</a>, <a href="ncalayer-client.js.html#line468">line 468</a>
+        <a href="ncalayer-client.js.html">ncalayer-client.js</a>, <a href="ncalayer-client.js.html#line481">line 481</a>
     </li></ul></dd>
     
 
@@ -3046,7 +3103,7 @@ basicsSigner*).</td>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="ncalayer-client.js.html">ncalayer-client.js</a>, <a href="ncalayer-client.js.html#line584">line 584</a>
+        <a href="ncalayer-client.js.html">ncalayer-client.js</a>, <a href="ncalayer-client.js.html#line601">line 601</a>
     </li></ul></dd>
     
 
@@ -3385,7 +3442,7 @@ basicsSigner*).</td>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="ncalayer-client.js.html">ncalayer-client.js</a>, <a href="ncalayer-client.js.html#line973">line 973</a>
+        <a href="ncalayer-client.js.html">ncalayer-client.js</a>, <a href="ncalayer-client.js.html#line990">line 990</a>
     </li></ul></dd>
     
 
@@ -3652,7 +3709,7 @@ basicsSigner*).</td>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="ncalayer-client.js.html">ncalayer-client.js</a>, <a href="ncalayer-client.js.html#line799">line 799</a>
+        <a href="ncalayer-client.js.html">ncalayer-client.js</a>, <a href="ncalayer-client.js.html#line816">line 816</a>
     </li></ul></dd>
     
 
@@ -3971,7 +4028,7 @@ basicsSigner*).</td>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="ncalayer-client.js.html">ncalayer-client.js</a>, <a href="ncalayer-client.js.html#line835">line 835</a>
+        <a href="ncalayer-client.js.html">ncalayer-client.js</a>, <a href="ncalayer-client.js.html#line852">line 852</a>
     </li></ul></dd>
     
 
@@ -4251,7 +4308,7 @@ TSP. **Не рекомендуется использовать, разрабо�
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="ncalayer-client.js.html">ncalayer-client.js</a>, <a href="ncalayer-client.js.html#line873">line 873</a>
+        <a href="ncalayer-client.js.html">ncalayer-client.js</a>, <a href="ncalayer-client.js.html#line890">line 890</a>
     </li></ul></dd>
     
 
@@ -4570,7 +4627,7 @@ TSP. **Не рекомендуется использовать, разрабо�
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="ncalayer-client.js.html">ncalayer-client.js</a>, <a href="ncalayer-client.js.html#line744">line 744</a>
+        <a href="ncalayer-client.js.html">ncalayer-client.js</a>, <a href="ncalayer-client.js.html#line761">line 761</a>
     </li></ul></dd>
     
 
@@ -4691,7 +4748,7 @@ TSP. **Не рекомендуется использовать, разрабо�
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="ncalayer-client.js.html">ncalayer-client.js</a>, <a href="ncalayer-client.js.html#line764">line 764</a>
+        <a href="ncalayer-client.js.html">ncalayer-client.js</a>, <a href="ncalayer-client.js.html#line781">line 781</a>
     </li></ul></dd>
     
 
@@ -4861,7 +4918,7 @@ TSP. **Не рекомендуется использовать, разрабо�
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="ncalayer-client.js.html">ncalayer-client.js</a>, <a href="ncalayer-client.js.html#line600">line 600</a>
+        <a href="ncalayer-client.js.html">ncalayer-client.js</a>, <a href="ncalayer-client.js.html#line617">line 617</a>
     </li></ul></dd>
     
 
@@ -4974,7 +5031,7 @@ KAZTOKEN mobile/desktop.
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="ncalayer-client.js.html">ncalayer-client.js</a>, <a href="ncalayer-client.js.html#line687">line 687</a>
+        <a href="ncalayer-client.js.html">ncalayer-client.js</a>, <a href="ncalayer-client.js.html#line704">line 704</a>
     </li></ul></dd>
     
 
@@ -5153,7 +5210,7 @@ KAZTOKEN mobile/desktop.
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="ncalayer-client.js.html">ncalayer-client.js</a>, <a href="ncalayer-client.js.html#line910">line 910</a>
+        <a href="ncalayer-client.js.html">ncalayer-client.js</a>, <a href="ncalayer-client.js.html#line927">line 927</a>
     </li></ul></dd>
     
 
@@ -5498,7 +5555,7 @@ KAZTOKEN mobile/desktop.
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="ncalayer-client.js.html">ncalayer-client.js</a>, <a href="ncalayer-client.js.html#line948">line 948</a>
+        <a href="ncalayer-client.js.html">ncalayer-client.js</a>, <a href="ncalayer-client.js.html#line965">line 965</a>
     </li></ul></dd>
     
 
@@ -5844,7 +5901,7 @@ KAZTOKEN mobile/desktop.
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="ncalayer-client.js.html">ncalayer-client.js</a>, <a href="ncalayer-client.js.html#line631">line 631</a>
+        <a href="ncalayer-client.js.html">ncalayer-client.js</a>, <a href="ncalayer-client.js.html#line648">line 648</a>
     </li></ul></dd>
     
 
@@ -6040,7 +6097,7 @@ KAZTOKEN mobile/desktop.
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 4.0.3</a> on Thu Jun 27 2024 09:18:48 GMT+0000 (Coordinated Universal Time) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 4.0.3</a> on Sat Oct 12 2024 09:51:13 GMT+0000 (Coordinated Universal Time) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
 </footer>
 
 <script>prettyPrint();</script>

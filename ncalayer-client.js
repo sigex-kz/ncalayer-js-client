@@ -413,11 +413,22 @@
      *
      * @param {String} locale язык пользовательского интерфейса.
      *
+     * @param {Boolean} forceSingleSignature возвращать только одну подпись даже если получили
+     * массив, используется для обеспечения обратной совместимости работы с CMS.
+     *
      * @returns {Promise<String>} подпись.
      *
      * @throws NCALayerError
      */
-    async basicsSign(allowedStorages, format, data, signingParams, signerParams, locale) {
+    async basicsSign(
+      allowedStorages,
+      format,
+      data,
+      signingParams,
+      signerParams,
+      locale,
+      forceSingleSignature = false,
+    ) {
       const request = {
         module: 'kz.gov.pki.knca.basics',
         method: 'sign',
@@ -433,7 +444,9 @@
 
       this.sendRequest(request);
 
-      return new Promise((resolve, reject) => { this.setHandlers(resolve, reject); });
+      return new Promise((resolve, reject) => {
+        this.setHandlers(resolve, reject, forceSingleSignature);
+      });
     }
 
     /**
@@ -466,7 +479,9 @@
      * @throws NCALayerError
      */
     async basicsSignCMS(allowedStorages, data, signingParams, signerParams, locale = 'ru') {
-      if (Array.isArray(data) && !this.isMultisignAvailable) {
+      const dataIsArray = Array.isArray(data);
+
+      if (dataIsArray && !this.isMultisignAvailable) {
         if (!this.isKmd) {
           throw new NCALayerError('Функция мультиподписания доступна при использовании приложений KAZTOKEN mobile/desktop вместо NCALayer.');
         }
@@ -477,7 +492,7 @@
       // Использование HTTP API KAZTOKEN mobile/desktop
       if (this.allowKmdHttpApi && this.isKmdHttpApiAvailable) {
         try {
-          const documents = Array.isArray(data) ? data : [data];
+          const documents = dataIsArray ? data : [data];
           const base64 = (typeof (documents[0]) === 'string');
 
           let response = await fetch(
@@ -545,12 +560,13 @@
             signatures.push(signature);
           }
 
-          return Array.isArray(data) ? signatures : signatures[0];
+          return dataIsArray ? signatures : signatures[0];
         } catch (err) {
           throw new NCALayerError(`Ошибка взаимодействия с KAZTOKEN mobile/desktop: ${err}`);
         }
       }
 
+      const forceSingleSignature = !dataIsArray;
       return this.basicsSign(
         allowedStorages,
         'cms',
@@ -558,6 +574,7 @@
         signingParams,
         signerParams,
         locale,
+        forceSingleSignature,
       );
     }
 
@@ -1004,7 +1021,7 @@
       this.wsConnection.send(jsonRequest);
     }
 
-    setHandlers(resolve, reject) {
+    setHandlers(resolve, reject, forceSingleSignature) {
       this.responseProcessed = false;
 
       this.wsConnection.onerror = () => {
@@ -1049,7 +1066,11 @@
             return;
           }
 
-          resolve(response.body.result);
+          let { result } = response.body;
+          if (forceSingleSignature && Array.isArray(result)) {
+            [result] = result;
+          }
+          resolve(result);
           return;
         }
 
