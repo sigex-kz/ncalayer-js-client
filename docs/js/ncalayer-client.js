@@ -31,7 +31,6 @@
       this.wsConnection = null;
       this.responseProcessed = false;
       this.isKmd = false; // Работаем с KAZTOKEN mobile/desktop?
-      this.isMultisignAvailable = false; // Доступна ли функция мультиподписания?
       this.allowKmdHttpApi = allowKmdHttpApi;
       this.kmdHttpApiUrl = 'https://127.0.0.1:24680/';
       this.isKmdHttpApiAvailable = false; // Доступен ли HTTP API KAZTOKEN mobile/desktop?
@@ -93,7 +92,6 @@
               this.setHandlers(resolveInner, rejectInner);
             });
             this.isKmd = true;
-            this.isMultisignAvailable = true;
           } catch (err) {
             /* игнорируем */
           }
@@ -108,7 +106,6 @@
 
               if (httpResponse.ok) {
                 this.isKmdHttpApiAvailable = true;
-                this.isMultisignAvailable = true;
               }
             } catch (err) {
               /* игнорируем */
@@ -123,8 +120,10 @@
     /**
      * Доступна ли функия мультиподписания (подписание нескольких документов одной операцией).
      */
-    get multisignAvailable() {
-      return this.isMultisignAvailable;
+    get multisignAvailable() { // eslint-disable-line class-methods-use-this
+      // eslint отключен для обеспечения обратной совместимости,
+      // так как раньше этот метод использовал `this`.
+      return true;
     }
 
     //
@@ -480,14 +479,6 @@
      */
     async basicsSignCMS(allowedStorages, data, signingParams, signerParams, locale = 'ru') {
       const dataIsArray = Array.isArray(data);
-
-      if (dataIsArray && !this.isMultisignAvailable) {
-        if (!this.isKmd) {
-          throw new NCALayerError('Функция мультиподписания доступна при использовании приложений KAZTOKEN mobile/desktop вместо NCALayer.');
-        }
-
-        throw new NCALayerError('Функция мультиподписания недоступна.');
-      }
 
       // Использование HTTP API KAZTOKEN mobile/desktop
       if (this.allowKmdHttpApi && this.isKmdHttpApiAvailable) {

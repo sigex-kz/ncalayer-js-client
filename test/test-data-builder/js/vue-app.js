@@ -272,6 +272,11 @@ new Vue({ // eslint-disable-line no-new, no-undef
         exec: 'basicsSignXML',
         params: ['!!basicsStorageKAZTOKEN', '<tag>data</tag>', '!!basicsXMLParams', '!!basicsSignerAny'],
       },
+      {
+        text: 'Подписание нескольких блоков данных, отобразятся все сертификаты, выберите любой.',
+        exec: 'basicsSignCMS',
+        params: ['!!basicsStorageAll', ['MTEK', 'MTEK', 'MTEK'], '!!basicsCMSParams', '!!basicsSignerAny'],
+      },
     ],
   },
 
