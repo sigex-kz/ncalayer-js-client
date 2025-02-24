@@ -230,6 +230,18 @@
     }
 
     /**
+     * Параметры подписания для формирования CMS без вложенных данных из данных в Base64.
+     * Без метки времени.
+     */
+    static get basicsCMSParamsDetachedNoTSP() {
+      return {
+        decode: true,
+        encapsulate: false,
+        digested: false,
+      };
+    }
+
+    /**
      * Параметры подписания для формирования CMS без вложенных данных из хеша данных в Base64.
      */
     static get basicsCMSParamsDetachedHash() {
