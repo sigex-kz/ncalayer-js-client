@@ -30,7 +30,7 @@ new Vue({ // eslint-disable-line no-new, no-undef
         const signatures = await ncalayerClient.basicsSignCMS(
           NCALayerClient.basicsStorageAll,
           files,
-          NCALayerClient.basicsCMSParamsDetached,
+          NCALayerClient.basicsCMSParamsDetachedNoTSP,
           NCALayerClient.basicsSignerSignAny,
         );
         this.waiting = false;

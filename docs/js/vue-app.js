@@ -25,7 +25,7 @@ new Vue({ // eslint-disable-line no-new, no-undef
         this.signature = await ncalayerClient.basicsSignCMS(
           NCALayerClient.basicsStorageAll,
           this.$refs.fileUploadInput.files[0],
-          NCALayerClient.basicsCMSParamsDetached,
+          NCALayerClient.basicsCMSParamsDetachedNoTSP,
           NCALayerClient.basicsSignerSignAny,
         );
         this.waiting = false;

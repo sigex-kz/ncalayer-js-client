@@ -22,6 +22,8 @@ JS клиент для [NCALayer](https://ncl.pki.gov.kz/) стремящийс�
 
 Демо мультиподписания: [https://sigex-kz.github.io/ncalayer-js-client/multisign.html](https://sigex-kz.github.io/ncalayer-js-client/multisign.html).
 
+Демо мультиподписания с использованием HTTP API KAZTOKEN desktop: [https://sigex-kz.github.io/ncalayer-js-client/kmdMultisign.html](https://sigex-kz.github.io/ncalayer-js-client/kmdMultisign.html).
+
 ## Использование
 
 Одним из следующих образов:
