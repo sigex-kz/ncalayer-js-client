@@ -415,7 +415,7 @@
      *
      * @param {String} format тип вычисляемой подписи: 'xml', либо 'cms'.
      *
-     * @param {String} data подписываемые данные.
+     * @param {String | Array} data подписываемые данные.
      *
      * @param {Object} signingParams параметры подписания (см. basicsCMSParams* и basicsXMLParams*).
      *
@@ -427,7 +427,7 @@
      * @param {Boolean} forceSingleSignature возвращать только одну подпись даже если получили
      * массив, используется для обеспечения обратной совместимости работы с CMS.
      *
-     * @returns {Promise<String>} подпись.
+     * @returns {Promise<String | Array<String>>} подпись или массив подписей.
      *
      * @throws NCALayerError
      */
@@ -484,8 +484,8 @@
      *
      * @param {String} [locale = 'ru'] язык пользовательского интерфейса.
      *
-     * @returns {Promise<String | Array>} подпись, либо массив подписей если на подписание был
-     * передан массиов документов.
+     * @returns {Promise<String | Array<String>>} подпись, либо массив подписей если на подписание
+     * был передан массиов документов.
      *
      * @throws NCALayerError
      */
@@ -588,7 +588,7 @@
      * @param {Array | null} allowedStorages массив строк с константами допустимых для использования
      * типов хранилищ (см. константы basicsStorage*).
      *
-     * @param {String} data подписываемые данные.
+     * @param {String | Array<String>} data подписываемые данные - строка (либо массив строк) XML.
      *
      * @param {Object} signingParams параметры подписания (см basicsXMLParams*).
      *
@@ -597,7 +597,7 @@
      *
      * @param {String} [locale = 'ru'] язык пользовательского интерфейса.
      *
-     * @returns {Promise<String>} подпись.
+     * @returns {Promise<String | Array<String>>} подпись или массив подписей.
      *
      * @throws NCALayerError
      */
