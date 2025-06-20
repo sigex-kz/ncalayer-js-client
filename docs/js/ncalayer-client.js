@@ -473,9 +473,7 @@
      *
      * @param {String | ArrayBuffer | Blob | File | Array<String | ArrayBuffer | Blob | File>} data
      * данные, которые нужно подписать, в виде строки Base64, либо ArrayBuffer, Blob или File.
-     * Так же поддерживается массив строк Base64, ArrayBuffer, Blob или File, но это будет работать
-     * только с приложениями KAZTOKEN mobile/desktop, NCALayer не умеет подписывать массив
-     * документов.
+     * Так же поддерживается массив документов.
      *
      * @param {Object} signingParams параметры подписания (см basicsCMSParams*).
      *
