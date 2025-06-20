@@ -38,6 +38,7 @@
       this.KmdHTTPAPIOperationInBase64 = false;
       this.KmdHTTPAPIOperationTotal = 0;
       this.KmdHTTPAPIOperationProcessed = 0;
+      this.basicsLogo = '';
 
       // Используются для упрощения тестирования
       this.onRequestReady = null;
@@ -405,6 +406,16 @@
     }
 
     /**
+     * Настроить логотип который будет отображаться окном приложения NCALayer.
+     *
+     * @param {String | ArrayBuffer | Blob | File} logo логотип для отображения NCALayer
+     * в виде строки Base64, либо ArrayBuffer, Blob или File.
+     */
+    async setLogoForBasicsSign(logo) {
+      this.basicsLogo = await NCALayerClient.normalizeDataToSign(logo);
+    }
+
+    /**
      * Вычислить подпись под данными с указанными параметрами. **Новая функция sign 2022 года из
      * модуля kz.gov.pki.knca.basics (https://github.com/pkigovkz/sdkinfo/wiki/KNCA-Basics-Module)**.
      * Сигнатура функции сложная, поэтому рекомендуем пользоваться функциями помощниками
@@ -452,6 +463,10 @@
           locale,
         },
       };
+
+      if (this.basicsLogo) {
+        request.args.logo = this.basicsLogo;
+      }
 
       this.sendRequest(request);
 
