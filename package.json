@@ -18,6 +18,12 @@
   },
   "homepage": "https://github.com/sigex-kz/ncalayer-js-client#readme",
   "main": "ncalayer-client.js",
+  "types": "ncalayer-client.d.ts",
+  "exports": {
+    ".": {
+      "types": "./ncalayer-client.d.ts"
+    }
+  },
   "devDependencies": {
     "eslint": "^8.7.0",
     "eslint-config-airbnb-base": "^15.0.0",
