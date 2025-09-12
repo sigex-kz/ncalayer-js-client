@@ -3,6 +3,8 @@
 
 ((exports, WebSocket, window) => { // eslint-disable-line max-classes-per-file
   /**
+   * Класс ошибок NCALayerError.
+   *
    * @typedef {Error & {canceledByUser?: boolean}} NCALayerErrorLike
    *
    * @typedef {string} Base64String
@@ -14,9 +16,6 @@
    * @typedef {{decode?: boolean, encapsulate?: boolean, digested?: boolean, tsaProfile?: Record<string, unknown>, [key: string]: unknown}} BasicsCMSParams
    * @typedef {Record<string, unknown>} BasicsXMLParams
    * @typedef {{extKeyUsageOids: ReadonlyArray<string>, chain?: ReadonlyArray<unknown>, [key: string]: unknown}} BasicsSignerParams
-   */
-  /**
-   * Класс ошибок NCALayerError.
    */
   class NCALayerError extends Error {
     /**
@@ -1193,6 +1192,7 @@
   exports.NCALayerClient = NCALayerClient; // eslint-disable-line no-param-reassign
 })(
   typeof exports === 'undefined' ? this : exports,
+  // @ts-ignore
   typeof WebSocket === 'undefined' ? require('ws') : WebSocket,
   typeof window === 'undefined' ? { btoa(x) { return x; } } : window // eslint-disable-line comma-dangle
 ); // Заглушка для NodeJS
