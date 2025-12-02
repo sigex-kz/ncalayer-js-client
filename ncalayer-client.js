@@ -1,13 +1,31 @@
 // @ts-check
+/* eslint-disable max-len */
 
 ((exports, WebSocket, window) => { // eslint-disable-line max-classes-per-file
   /**
    * Класс ошибок NCALayerError.
+   *
+   * @typedef {Error & {canceledByUser?: boolean}} NCALayerErrorLike
+   *
+   * @typedef {string} Base64String
+   * @typedef {ArrayBuffer | Blob | File} BinaryLike
+   * @typedef {Base64String | BinaryLike} Signable
+   * @typedef {ReadonlyArray<Signable>} SignableMany
+   * @typedef {string} StorageType
+   *
+   * @typedef {{decode?: boolean, encapsulate?: boolean, digested?: boolean, tsaProfile?: Record<string, unknown>, [key: string]: unknown}} BasicsCMSParams
+   * @typedef {Record<string, unknown>} BasicsXMLParams
+   * @typedef {{extKeyUsageOids: ReadonlyArray<string>, chain?: ReadonlyArray<unknown>, [key: string]: unknown}} BasicsSignerParams
    */
   class NCALayerError extends Error {
+    /**
+     * @param {string} message
+     * @param {boolean} [canceledByUser]
+     */
     constructor(message, canceledByUser) {
       super(message);
       this.name = 'NCALayerError';
+      /** @type {boolean | undefined} */
       this.canceledByUser = canceledByUser;
     }
   }
@@ -19,38 +37,52 @@
     /**
      * Конструктор.
      *
-     * @param {String} [url = 'wss://127.0.0.1:13579'] опциональный URL для подключения к NCALayer.
-     * @param {Boolean} [allowKmdHttpApi = true] допустимо ли использовать HTTP API
+     * @param {string} [url='wss://127.0.0.1:13579'] опциональный URL для подключения к NCALayer.
+     * @param {boolean} [allowKmdHttpApi=true] допустимо ли использовать HTTP API
      * KAZTOKEN mobile/desktop
      * (https://kaztoken.kz/products/kaztoken-desktop/#%D0%BE%D0%BF%D0%B8%D1%81%D0%B0%D0%BD%D0%B8%D0%B5-api-%D0%BC%D1%83%D0%BB%D1%8C%D1%82%D0%B8%D0%BF%D0%BE%D0%B4%D0%BF%D0%B8%D1%81%D0%B0%D0%BD%D0%B8%D1%8F-sigex),
      * этот API работает в поточном режиме и позволяет подписывать документы очень больших размеров.
      * На данный момент реализована поддержка этого API только в функции `basicsSignCMS`.
      */
     constructor(url = 'wss://127.0.0.1:13579', allowKmdHttpApi = true) {
+      /** @type {string} */
       this.url = url;
+      /** @type {WebSocket | null} */
       this.wsConnection = null;
+      /** @type {boolean} */
       this.responseProcessed = false;
+      /** @type {boolean} */
       this.isKmd = false; // Работаем с KAZTOKEN mobile/desktop?
+      /** @type {boolean} */
       this.allowKmdHttpApi = allowKmdHttpApi;
+      /** @type {string} */
       this.kmdHttpApiUrl = 'https://127.0.0.1:24680/';
+      /** @type {boolean} */
       this.isKmdHttpApiAvailable = false; // Доступен ли HTTP API KAZTOKEN mobile/desktop?
+      /** @type {string | null} */
       this.KmdHTTPAPIOperationId = null;
+      /** @type {boolean} */
       this.KmdHTTPAPIOperationInBase64 = false;
+      /** @type {number} */
       this.KmdHTTPAPIOperationTotal = 0;
+      /** @type {number} */
       this.KmdHTTPAPIOperationProcessed = 0;
+      /** @type {Base64String | ''} */
       this.basicsLogo = '';
 
       // Используются для упрощения тестирования
+      /** @type {((json: string) => void) | null} */
       this.onRequestReady = null;
+      /** @type {((json: string) => void) | null} */
       this.onResponseReady = null;
     }
 
     /**
      * Подключиться к NCALayer.
      *
-     * @returns {Promise<String>} версию NCALayer.
+     * @returns {Promise<string>} версию NCALayer.
      *
-     * @throws NCALayerError
+     * @throws {NCALayerError}
      */
     async connect() {
       if (this.wsConnection) {
@@ -120,6 +152,7 @@
 
     /**
      * Доступна ли функия мультиподписания (подписание нескольких документов одной операцией).
+     * @returns {boolean}
      */
     get multisignAvailable() { // eslint-disable-line class-methods-use-this
       // eslint отключен для обеспечения обратной совместимости,
@@ -133,6 +166,7 @@
 
     /**
      * KAZTOKEN
+     * @returns {ReadonlyArray<string>}
      */
     static get basicsStorageKAZTOKEN() {
       return ['AKKaztokenStore'];
@@ -140,6 +174,7 @@
 
     /**
      * Удостоверение личности
+     * @returns {ReadonlyArray<string>}
      */
     static get basicsStorageIDCard() {
       return ['AKKZIDCardStore'];
@@ -147,6 +182,7 @@
 
     /**
      * eToken 72k
+     * @returns {ReadonlyArray<string>}
      */
     static get basicsStorageEToken72k() {
       return ['AKEToken72KStore'];
@@ -154,6 +190,7 @@
 
     /**
      * eToken 5110
+     * @returns {ReadonlyArray<string>}
      */
     static get basicsStorageEToken5110() {
       return ['AKEToken5110Store'];
@@ -161,6 +198,7 @@
 
     /**
      * JaCarta
+     * @returns {ReadonlyArray<string>}
      */
     static get basicsStorageJaCarta() {
       return ['AKJaCartaStore'];
@@ -168,6 +206,7 @@
 
     /**
      * aKey
+     * @returns {ReadonlyArray<string>}
      */
     static get basicsStorageAKey() {
       return ['AKAKEYStore'];
@@ -175,6 +214,7 @@
 
     /**
      * Файловле хранилище PKCS#12
+     * @returns {ReadonlyArray<string>}
      */
     static get basicsStoragePKCS12() {
       return ['PKCS12'];
@@ -182,6 +222,7 @@
 
     /**
      * Файловле хранилище JKS
+     * @returns {ReadonlyArray<string>}
      */
     static get basicsStorageJKS() {
       return ['JKS'];
@@ -189,6 +230,7 @@
 
     /**
      * Любые хранилища.
+     * @returns {null}
      */
     static get basicsStorageAll() {
       return null;
@@ -196,6 +238,7 @@
 
     /**
      * Только аппаратные хранилища.
+     * @returns {ReadonlyArray<string>}
      */
     static get basicsStorageHardware() {
       return [
@@ -213,6 +256,7 @@
 
     /**
      * Параметры подписания для формирования CMS по умолчанию.
+     * @returns {BasicsCMSParams}
      */
     static get basicsCMSParams() {
       return {};
@@ -220,6 +264,7 @@
 
     /**
      * Параметры подписания для формирования CMS без вложенных данных из данных в Base64.
+     * @returns {BasicsCMSParams}
      */
     static get basicsCMSParamsDetached() {
       return {
@@ -233,6 +278,7 @@
     /**
      * Параметры подписания для формирования CMS без вложенных данных из данных в Base64.
      * Без метки времени.
+     * @returns {BasicsCMSParams}
      */
     static get basicsCMSParamsDetachedNoTSP() {
       return {
@@ -244,6 +290,7 @@
 
     /**
      * Параметры подписания для формирования CMS без вложенных данных из хеша данных в Base64.
+     * @returns {BasicsCMSParams}
      */
     static get basicsCMSParamsDetachedHash() {
       return {
@@ -256,6 +303,7 @@
 
     /**
      * Параметры подписания для формирования CMS с вложенными данными из данных в Base64.
+     * @returns {BasicsCMSParams}
      */
     static get basicsCMSParamsAttached() {
       return {
@@ -268,6 +316,7 @@
 
     /**
      * Параметры подписания для формирования XML по умолчанию.
+     * @returns {BasicsXMLParams}
      */
     static get basicsXMLParams() {
       return {};
@@ -279,6 +328,7 @@
 
     /**
      * Любой сертификат выпущенный боевым УЦ НУЦ.
+     * @returns {BasicsSignerParams}
      */
     static get basicsSignerAny() {
       return {
@@ -288,6 +338,7 @@
 
     /**
      * Любой сертификат для подписания выпущенный боевым УЦ НУЦ.
+     * @returns {BasicsSignerParams}
      */
     static get basicsSignerSignAny() {
       return {
@@ -297,6 +348,7 @@
 
     /**
      * Сертификат физического лица для подписания выпущенный боевым УЦ НУЦ.
+     * @returns {BasicsSignerParams}
      */
     static get basicsSignerSignPerson() {
       return {
@@ -306,6 +358,7 @@
 
     /**
      * Сертификат любого сотрудника юридического лица для подписания выпущенный боевым УЦ НУЦ.
+     * @returns {BasicsSignerParams}
      */
     static get basicsSignerSignOrg() {
       return {
@@ -315,6 +368,7 @@
 
     /**
      * Сертификат руководителя юридического лица для подписания выпущенный боевым УЦ НУЦ.
+     * @returns {BasicsSignerParams}
      */
     static get basicsSignerSignHead() {
       return {
@@ -324,6 +378,7 @@
 
     /**
      * Сертификат лица с правом подписи юридического лица для подписания выпущенный боевым УЦ НУЦ.
+     * @returns {BasicsSignerParams}
      */
     static get basicsSignerSignTrusted() {
       return {
@@ -333,6 +388,7 @@
 
     /**
      * Сертификат сотрудника юридического лица для подписания выпущенный боевым УЦ НУЦ.
+     * @returns {BasicsSignerParams}
      */
     static get basicsSignerSignEmployee() {
       return {
@@ -342,6 +398,7 @@
 
     /**
      * Любой сертификат для аутентификации выпущенный боевым УЦ НУЦ.
+     * @returns {BasicsSignerParams}
      */
     static get basicsSignerAuthAny() {
       return {
@@ -351,6 +408,7 @@
 
     /**
      * Сертификат физического лица для аутентификации выпущенный боевым УЦ НУЦ.
+     * @returns {BasicsSignerParams}
      */
     static get basicsSignerAuthPerson() {
       return {
@@ -360,6 +418,7 @@
 
     /**
      * Сертификат любого сотрудника юридического лица для аутентификации выпущенный боевым УЦ НУЦ.
+     * @returns {BasicsSignerParams}
      */
     static get basicsSignerAuthOrg() {
       return {
@@ -369,6 +428,7 @@
 
     /**
      * Сертификат руководителя юридического лица для аутентификации выпущенный боевым УЦ НУЦ.
+     * @returns {BasicsSignerParams}
      */
     static get basicsSignerAuthHead() {
       return {
@@ -379,6 +439,7 @@
     /**
      * Сертификат лица с правом подписи юридического лица для аутентификации выпущенный боевым УЦ
      * НУЦ.
+     * @returns {BasicsSignerParams}
      */
     static get basicsSignerAuthRight() {
       return {
@@ -388,6 +449,7 @@
 
     /**
      * Сертификат сотрудника юридического лица для аутентификации выпущенный боевым УЦ НУЦ.
+     * @returns {BasicsSignerParams}
      */
     static get basicsSignerAuthEmployee() {
       return {
@@ -397,6 +459,7 @@
 
     /**
      * Любой сертификат выпущенный боевым или тестовым УЦ НУЦ.
+     * @returns {BasicsSignerParams}
      */
     static get basicsSignerTestAny() {
       return {
@@ -408,11 +471,14 @@
     /**
      * Настроить логотип который будет отображаться окном приложения NCALayer.
      *
-     * @param {String | ArrayBuffer | Blob | File} logo логотип для отображения NCALayer
+     * @param {Signable} logo логотип для отображения NCALayer
      * в виде строки Base64, либо ArrayBuffer, Blob или File.
+     * @returns {Promise<void>}
      */
     async setLogoForBasicsSign(logo) {
-      this.basicsLogo = await NCALayerClient.normalizeDataToSign(logo);
+      this.basicsLogo = /** @type {Base64String} */ (
+        await NCALayerClient.normalizeDataToSign(logo)
+      );
     }
 
     /**
@@ -421,26 +487,40 @@
      * Сигнатура функции сложная, поэтому рекомендуем пользоваться функциями помощниками
      * basicsSignXLM и basicsSignCMS.
      *
-     * @param {Array | null} allowedStorages массив строк с константами допустимых для использования
+     * @overload
+     * @param {ReadonlyArray<string>|null} allowedStorages
+     * @param {'cms'} format
+     * @param {Signable|SignableMany} data
+     * @param {BasicsCMSParams} signingParams
+     * @param {BasicsSignerParams} signerParams
+     * @param {string} locale
+     * @param {boolean} [forceSingleSignature]
+     * @returns {Promise<string|ReadonlyArray<string>>}
+     */
+    /**
+     * @overload
+     * @param {ReadonlyArray<string>|null} allowedStorages
+     * @param {'xml'} format
+     * @param {string|ReadonlyArray<string>} data
+     * @param {BasicsXMLParams} signingParams
+     * @param {BasicsSignerParams} signerParams
+     * @param {string} locale
+     * @param {boolean} [forceSingleSignature]
+     * @returns {Promise<string|ReadonlyArray<string>>}
+     */
+    /**
+     * @param {ReadonlyArray<string>|null} allowedStorages массив строк с константами допустимых для использования
      * типов хранилищ (см. константы basicsStorage*).
-     *
-     * @param {String} format тип вычисляемой подписи: 'xml', либо 'cms'.
-     *
-     * @param {String | Array} data подписываемые данные.
-     *
-     * @param {Object} signingParams параметры подписания (см. basicsCMSParams* и basicsXMLParams*).
-     *
-     * @param {Object} signerParams параметры выбора сертификата для подписания (см. константы
+     * @param {'cms'|'xml'|string} format тип вычисляемой подписи: 'xml', либо 'cms'.
+     * @param {Signable|SignableMany|string|ReadonlyArray<string>} data подписываемые данные.
+     * @param {BasicsCMSParams|BasicsXMLParams} signingParams параметры подписания (см. basicsCMSParams* и basicsXMLParams*).
+     * @param {BasicsSignerParams} signerParams параметры выбора сертификата для подписания (см. константы
      * basicsSigner*).
-     *
-     * @param {String} locale язык пользовательского интерфейса.
-     *
-     * @param {Boolean} forceSingleSignature возвращать только одну подпись даже если получили
+     * @param {string} locale язык пользовательского интерфейса.
+     * @param {boolean} [forceSingleSignature=false] возвращать только одну подпись даже если получили
      * массив, используется для обеспечения обратной совместимости работы с CMS.
-     *
-     * @returns {Promise<String | Array<String>>} подпись или массив подписей.
-     *
-     * @throws NCALayerError
+     * @returns {Promise<string|ReadonlyArray<string>>} подпись или массив подписей.
+     * @throws {NCALayerError}
      */
     async basicsSign(
       allowedStorages,
@@ -483,24 +563,17 @@
      * компьютере, она будет пробовать использовать его для подписания в том случае, если это
      * не было запрещено при вызове конструктора (параметр `allowKmdHttpApi`).
      *
-     * @param {Array | null} allowedStorages массив строк с константами допустимых для использования
+     * @param {ReadonlyArray<string>|null} allowedStorages массив строк с константами допустимых для использования
      * типов хранилищ (см. константы basicsStorage*).
-     *
-     * @param {String | ArrayBuffer | Blob | File | Array<String | ArrayBuffer | Blob | File>} data
-     * данные, которые нужно подписать, в виде строки Base64, либо ArrayBuffer, Blob или File.
+     * @param {Signable|SignableMany} data данные, которые нужно подписать, в виде строки Base64, либо ArrayBuffer, Blob или File.
      * Так же поддерживается массив документов.
-     *
-     * @param {Object} signingParams параметры подписания (см basicsCMSParams*).
-     *
-     * @param {Object} signerParams параметры выбора сертификата для подписания (см. константы
+     * @param {BasicsCMSParams} signingParams параметры подписания (см basicsCMSParams*).
+     * @param {BasicsSignerParams} signerParams параметры выбора сертификата для подписания (см. константы
      * basicsSigner*).
-     *
-     * @param {String} [locale = 'ru'] язык пользовательского интерфейса.
-     *
-     * @returns {Promise<String | Array<String>>} подпись, либо массив подписей если на подписание
+     * @param {string} [locale='ru'] язык пользовательского интерфейса.
+     * @returns {Promise<string|ReadonlyArray<string>>} подпись, либо массив подписей если на подписание
      * был передан массиов документов.
-     *
-     * @throws NCALayerError
+     * @throws {NCALayerError}
      */
     async basicsSignCMS(allowedStorages, data, signingParams, signerParams, locale = 'ru') {
       const dataIsArray = Array.isArray(data);
@@ -598,21 +671,15 @@
      * Вычислить XML подпись под данными с указанными параметрами, это функция-помощник для
      * упрощения работы с функцией basicsSign.
      *
-     * @param {Array | null} allowedStorages массив строк с константами допустимых для использования
+     * @param {ReadonlyArray<string>|null} allowedStorages массив строк с константами допустимых для использования
      * типов хранилищ (см. константы basicsStorage*).
-     *
-     * @param {String | Array<String>} data подписываемые данные - строка (либо массив строк) XML.
-     *
-     * @param {Object} signingParams параметры подписания (см basicsXMLParams*).
-     *
-     * @param {Object} signerParams параметры выбора сертификата для подписания (см. константы
+     * @param {string|ReadonlyArray<string>} data подписываемые данные - строка (либо массив строк) XML.
+     * @param {BasicsXMLParams} signingParams параметры подписания (см basicsXMLParams*).
+     * @param {BasicsSignerParams} signerParams параметры выбора сертификата для подписания (см. константы
      * basicsSigner*).
-     *
-     * @param {String} [locale = 'ru'] язык пользовательского интерфейса.
-     *
-     * @returns {Promise<String | Array<String>>} подпись или массив подписей.
-     *
-     * @throws NCALayerError
+     * @param {string} [locale='ru'] язык пользовательского интерфейса.
+     * @returns {Promise<string|ReadonlyArray<string>>} подпись или массив подписей.
+     * @throws {NCALayerError}
      */
     async basicsSignXML(allowedStorages, data, signingParams, signerParams, locale = 'ru') {
       return this.basicsSign(
@@ -628,7 +695,7 @@
     /**
      * Проверить доступность функции мультиподписания через HTTP API KAZTOKEN mobile/desktop.
      *
-     * @returns {Promise<Boolean>} доступна ли функция.
+     * @returns {Promise<boolean>} доступна ли функция.
      */
     async kmdMultisignAvailable() {
       try {
@@ -651,15 +718,16 @@
      * Инициировать процедуру мультиподписания через HTTP API KAZTOKEN mobile/desktop.
      * Не требует предварительного вызова `connect()`.
      *
-     * @param {Number} numberOfDocuments количество документов которые будут подписаны
+     * @param {number} numberOfDocuments количество документов которые будут подписаны
      * в рамках процедуры мультиподписания.
      *
-     * @param {Boolean} base64 будут ли данные передаваться в base64 или в бинарном виде.
+     * @param {boolean} base64 будут ли данные передаваться в base64 или в бинарном виде.
      *
-     * @param {Boolean} encapsulateContent следудует ли встраивать подписываемые данные в подписи
+     * @param {boolean} encapsulateContent следудует ли встраивать подписываемые данные в подписи
      * (не рекомендуется, так как в этом случае требуется значительно больше ОЗУ для обработки).
      *
-     * @throws NCALayerError
+     * @returns {Promise<void>}
+     * @throws {NCALayerError}
      */
     async startKmdMultisign(numberOfDocuments, base64, encapsulateContent) {
       let response;
@@ -710,12 +778,12 @@
      * `StartKmdMultisign` и только для того количества документов, которое было
      * указано при инициализации.
      *
-     * @param {String | ArrayBuffer | Blob | File} data
+     * @param {Signable} data
      * данные, которые нужно подписать, в виде строки Base64, либо ArrayBuffer, Blob или File.
      *
-     * @returns {Promise<String>} подпись в base64.
+     * @returns {Promise<string>} подпись в base64.
      *
-     * @throws NCALayerError
+     * @throws {NCALayerError}
      */
     async kmdMultisignNext(data) {
       if (!this.KmdHTTPAPIOperationId) {
@@ -769,10 +837,10 @@
     /**
      * Получить список активных типов устройств.
      *
-     * @returns {Promise<String[]>} массив содержащий типы хранилищ экземпляры которых доступны в
+     * @returns {Promise<ReadonlyArray<string>>} массив содержащий типы хранилищ экземпляры которых доступны в
      * данный момент.
      *
-     * @throws NCALayerError
+     * @throws {NCALayerError}
      */
     async getActiveTokens() {
       const request = {
@@ -788,11 +856,11 @@
     /**
      * Получить информацию об одной записи (ключевой паре с сертификатом).
      *
-     * @param {String} storageType тип хранилища на экземплярах которого следует искать записи.
+     * @param {StorageType} storageType тип хранилища на экземплярах которого следует искать записи.
      *
-     * @returns {Promise<Object>} объект с информацией о записи.
+     * @returns {Promise<Record<string, unknown>>} объект с информацией о записи.
      *
-     * @throws NCALayerError
+     * @throws {NCALayerError}
      */
     async getKeyInfo(storageType) {
       const request = {
@@ -811,23 +879,17 @@
     /**
      * Вычислить подпись под данными и сформировать CMS (CAdES).
      *
-     * @param {String} storageType тип хранилища который следует использовать для подписания.
-     *
-     * @param {String | ArrayBuffer | Blob | File | Array<String | ArrayBuffer | Blob | File>} data
-     * данные, которые нужно подписать, в виде строки Base64, либо ArrayBuffer, Blob или File.
+     * @param {StorageType} storageType тип хранилища который следует использовать для подписания.
+     * @param {Signable|SignableMany} data данные, которые нужно подписать, в виде строки Base64, либо ArrayBuffer, Blob или File.
      * Так же поддерживается массив строк Base64, ArrayBuffer, Blob или File, но это будет работать
      * только с приложениями KAZTOKEN mobile/desktop, NCALayer не умеет подписывать массив
      * документов.
-     *
-     * @param {String} [keyType = 'SIGNATURE'] каким типом ключа следует подписывать, поддерживаемые
+     * @param {'SIGNATURE'|'AUTHENTICATION'|string} [keyType='SIGNATURE'] каким типом ключа следует подписывать, поддерживаемые
      * варианты 'SIGNATURE' и 'AUTHENTICATION', иное значение позволит пользователю выбрать
      * любой доступный в хранилище ключа.
-     *
-     * @param {Boolean} [attach = false] следует ли включить в подпись подписываемые данные.
-     *
-     * @returns {Promise<String>} CMS подпись в виде Base64 строки.
-     *
-     * @throws NCALayerError
+     * @param {boolean} [attach=false] следует ли включить в подпись подписываемые данные.
+     * @returns {Promise<Base64String>} CMS подпись в виде Base64 строки.
+     * @throws {NCALayerError}
      */
     async createCAdESFromBase64(storageType, data, keyType = 'SIGNATURE', attach = false) {
       const request = {
@@ -849,21 +911,16 @@
     /**
      * Вычислить подпись под хешем данных и сформировать CMS (CAdES).
      *
-     * @param {String} storageType тип хранилища который следует использовать для подписания.
-     *
-     * @param {String | ArrayBuffer | Blob | File | Array<String | ArrayBuffer | Blob | File>} hash
-     * хеш данных в виде строки Base64, либо ArrayBuffer, Blob или File.
+     * @param {StorageType} storageType тип хранилища который следует использовать для подписания.
+     * @param {Signable|SignableMany} hash хеш данных в виде строки Base64, либо ArrayBuffer, Blob или File.
      * Так же поддерживается массив строк Base64, ArrayBuffer, Blob или File, но это будет работать
      * только с приложениями KAZTOKEN mobile/desktop, NCALayer не умеет подписывать массив
      * хешей.
-     *
-     * @param {String} [keyType = 'SIGNATURE'] каким типом ключа следует подписывать, поддерживаемые
+     * @param {'SIGNATURE'|'AUTHENTICATION'|string} [keyType='SIGNATURE'] каким типом ключа следует подписывать, поддерживаемые
      * варианты 'SIGNATURE' и 'AUTHENTICATION', иное значение позволит пользователю выбрать
      * любой доступный в хранилище ключа.
-     *
-     * @returns {Promise<String>} CMS подпись в виде Base64 строки.
-     *
-     * @throws NCALayerError
+     * @returns {Promise<Base64String>} CMS подпись в виде Base64 строки.
+     * @throws {NCALayerError}
      */
     async createCAdESFromBase64Hash(storageType, hash, keyType = 'SIGNATURE') {
       const request = {
@@ -885,23 +942,17 @@
      * Подписать блок данных и сформировать CMS (CAdES) подпись с интегрированной меткой времени
      * TSP. **Не рекомендуется использовать, разработчики NCALayer пометили как DEPRECATED (https://forum.pki.gov.kz/t/podpis-s-metkoj-vremeni-na-js/704/7)!**
      *
-     * @param {String} storageType тип хранилища который следует использовать для подписания.
-     *
-     * @param {String | ArrayBuffer | Blob | File | Array<String | ArrayBuffer | Blob | File>} data
-     * данные, которые нужно подписать, в виде строки Base64, либо ArrayBuffer, Blob или File.
+     * @param {StorageType} storageType тип хранилища который следует использовать для подписания.
+     * @param {Signable|SignableMany} data данные, которые нужно подписать, в виде строки Base64, либо ArrayBuffer, Blob или File.
      * Так же поддерживается массив строк Base64, ArrayBuffer, Blob или File, но это будет работать
      * только с приложениями KAZTOKEN mobile/desktop, NCALayer не умеет подписывать массив
      * документов.
-     *
-     * @param {String} [keyType = 'SIGNATURE'] каким типом ключа следует подписывать, поддерживаемые
+     * @param {'SIGNATURE'|'AUTHENTICATION'|string} [keyType='SIGNATURE'] каким типом ключа следует подписывать, поддерживаемые
      * варианты 'SIGNATURE' и 'AUTHENTICATION', иное значение позволит пользователю выбрать
      * любой доступный в хранилище ключа.
-     *
-     * @param {Boolean} [attach = false] следует ли включить в подпись подписываемые данные.
-     *
-     * @returns {Promise<String>} CMS подпись в виде Base64 строки.
-     *
-     * @throws NCALayerError
+     * @param {boolean} [attach=false] следует ли включить в подпись подписываемые данные.
+     * @returns {Promise<Base64String>} CMS подпись в виде Base64 строки.
+     * @throws {NCALayerError}
      */
     async createCMSSignatureFromBase64(storageType, data, keyType = 'SIGNATURE', attach = false) {
       const request = {
@@ -923,22 +974,16 @@
     /**
      * Вычислить подпись под документом в формате XML.
      *
-     * @param {String} storageType тип хранилища который следует использовать для подписания.
-     *
-     * @param {String} xml XML данные которые нужно подписать.
-     *
-     * @param {String} [keyType = 'SIGNATURE'] каким типом ключа следует подписывать, поддерживаемые
+     * @param {StorageType} storageType тип хранилища который следует использовать для подписания.
+     * @param {string} xml XML данные которые нужно подписать.
+     * @param {'SIGNATURE'|'AUTHENTICATION'|string} [keyType='SIGNATURE'] каким типом ключа следует подписывать, поддерживаемые
      * варианты 'SIGNATURE' и 'AUTHENTICATION', иное значение позволит пользователю выбрать
      * любой доступный в хранилище ключа.
-     *
-     * @param {String} [tbsElementXPath = ''] путь к подписываемому узлу XML.
-     *
-     * @param {String} [signatureParentElementXPath = ''] путь к узлу в который необходимо добавить
+     * @param {string} [tbsElementXPath=''] путь к подписываемому узлу XML.
+     * @param {string} [signatureParentElementXPath=''] путь к узлу в который необходимо добавить
      * сформированную подпись.
-     *
-     * @returns {Promise<String>} XML документ содержащий XMLDSIG подпись.
-     *
-     * @throws NCALayerError
+     * @returns {Promise<string>} XML документ содержащий XMLDSIG подпись.
+     * @throws {NCALayerError}
      */
     async signXml(storageType, xml, keyType = 'SIGNATURE', tbsElementXPath = '', signatureParentElementXPath = '') {
       const request = {
@@ -961,22 +1006,16 @@
     /**
      * Вычислить подпись под каждым из массива документов в формате XML.
      *
-     * @param {String} storageType тип хранилища который следует использовать для подписания.
-     *
-     * @param {String[]} xmls массив XML данных которые нужно подписать.
-     *
-     * @param {String} [keyType = 'SIGNATURE'] каким типом ключа следует подписывать, поддерживаемые
+     * @param {StorageType} storageType тип хранилища который следует использовать для подписания.
+     * @param {ReadonlyArray<string>} xmls массив XML данных которые нужно подписать.
+     * @param {'SIGNATURE'|'AUTHENTICATION'|string} [keyType='SIGNATURE'] каким типом ключа следует подписывать, поддерживаемые
      * варианты 'SIGNATURE' и 'AUTHENTICATION', иное значение позволит пользователю выбрать
      * любой доступный в хранилище ключа.
-     *
-     * @param {String} [tbsElementXPath = ''] путь к подписываемому узлу XML.
-     *
-     * @param {String} [signatureParentElementXPath = ''] путь к узлу в который необходимо добавить
+     * @param {string} [tbsElementXPath=''] путь к подписываемому узлу XML.
+     * @param {string} [signatureParentElementXPath=''] путь к узлу в который необходимо добавить
      * сформированную подпись.
-     *
-     * @returns {Promise<String[]>} массив XML документов содержащих XMLDSIG подписи.
-     *
-     * @throws NCALayerError
+     * @returns {Promise<ReadonlyArray<string>>} массив XML документов содержащих XMLDSIG подписи.
+     * @throws {NCALayerError}
      */
     async signXmls(storageType, xmls, keyType = 'SIGNATURE', tbsElementXPath = '', signatureParentElementXPath = '') {
       const request = {
@@ -999,9 +1038,9 @@
     /**
      * Изменить язык интерфейса NCALayer.
      *
-     * @param {String} localeId новый идентификатор языка.
-     *
-     * @throws NCALayerError
+     * @param {string} localeId новый идентификатор языка.
+     * @returns {Promise<void>}
+     * @throws {NCALayerError}
      */
     async changeLocale(localeId) {
       const request = {
@@ -1019,11 +1058,16 @@
 
     /**
      * Константа определяющая имя файлового хранилища.
+     * @returns {string}
      */
     static get fileStorageType() {
       return 'PKCS12';
     }
 
+    /**
+     * @param {Record<string, unknown>} request
+     * @throws {NCALayerError}
+     */
     sendRequest(request) {
       if (!this.wsConnection) {
         throw new NCALayerError('Подключение к NCALayer не установлено.');
@@ -1037,6 +1081,11 @@
       this.wsConnection.send(jsonRequest);
     }
 
+    /**
+     * @param {(value: unknown) => void} resolve
+     * @param {(reason: unknown) => void} reject
+     * @param {boolean} [forceSingleSignature]
+     */
     setHandlers(resolve, reject, forceSingleSignature) {
       this.responseProcessed = false;
 
@@ -1100,6 +1149,10 @@
       };
     }
 
+    /**
+     * @param {ArrayBuffer} arrayBuffer
+     * @returns {string}
+     */
     static arrayBufferToB64(arrayBuffer) {
       let binary = '';
       const bytes = new Uint8Array(arrayBuffer);
@@ -1110,6 +1163,10 @@
       return window.btoa(binary);
     }
 
+    /**
+     * @param {Signable|SignableMany} data
+     * @returns {Promise<Base64String|ReadonlyArray<Base64String>>}
+     */
     static async normalizeDataToSign(data) {
       const normalizeDataBlock = async (dataBlock) => {
         if (typeof dataBlock === 'string') {
@@ -1135,6 +1192,7 @@
   exports.NCALayerClient = NCALayerClient; // eslint-disable-line no-param-reassign
 })(
   typeof exports === 'undefined' ? this : exports,
+  // @ts-ignore
   typeof WebSocket === 'undefined' ? require('ws') : WebSocket,
   typeof window === 'undefined' ? { btoa(x) { return x; } } : window // eslint-disable-line comma-dangle
 ); // Заглушка для NodeJS

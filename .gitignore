@@ -102,3 +102,6 @@ dist
 
 # TernJS port file
 .tern-port
+
+# TypesScript
+/ncalayer-client.d.ts
