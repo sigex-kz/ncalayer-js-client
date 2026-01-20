@@ -18,6 +18,12 @@
   },
   "homepage": "https://github.com/sigex-kz/ncalayer-js-client#readme",
   "main": "ncalayer-client.js",
+  "types": "ncalayer-client.d.ts",
+  "exports": {
+    ".": {
+      "types": "./ncalayer-client.d.ts"
+    }
+  },
   "devDependencies": {
     "eslint": "^8.7.0",
     "eslint-config-airbnb-base": "^15.0.0",
@@ -39,6 +45,7 @@
     "build-docs": "jsdoc ncalayer-client.js -t ./node_modules/docdash/ -d docs/api && cp ncalayer-client.js docs/js/",
     "lint": "eslint --ignore-pattern 'docs' --ignore-pattern 'test/test-data-builder/js/vue.min.js' '**/*.js'",
     "ts-check": "tsc --allowJs --checkJs --noEmit --target es6 --moduleResolution node ncalayer-client.js",
+    "ts-build": "tsc --allowJs --checkJs --declaration --emitDeclarationOnly --skipLibCheck --target es6 --moduleResolution node ncalayer-client.js",
     "test-data-builder": "http-server ./test/test-data-builder"
   }
 }
