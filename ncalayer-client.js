@@ -1055,36 +1055,34 @@
     setHandlers(resolve, reject, forceSingleSignature) {
       this.responseProcessed = false;
 
-      this.wsConnection.onerror = () => {
+      this.wsConnection.onerror = async () => {
         if (this.responseProcessed) {
           return;
         }
         this.responseProcessed = true;
 
         // Проверка разрешения LNA в браузере
-        (async () => {
+        try {
+          const ln = await navigator.permissions.query({
+            // @ts-ignore 'loopback-network' is not widespread
+            name: 'loopback-network',
+          });
+          if (ln.state === 'prompt' || ln.state === 'denied') {
+            this.isBrowserLNAPermissionPendingOrDenied = true;
+          }
+        } catch (errLN) {
           try {
-            const ln = await navigator.permissions.query({
-              // @ts-ignore 'loopback-network' is not widespread
-              name: 'loopback-network',
+            const lna = await navigator.permissions.query({
+              // @ts-ignore 'local-network-access' is not widespread
+              name: 'local-network-access',
             });
-            if (ln.state === 'prompt' || ln.state === 'denied') {
+            if (lna.state === 'prompt' || lna.state === 'denied') {
               this.isBrowserLNAPermissionPendingOrDenied = true;
             }
-          } catch (errLN) {
-            try {
-              const lna = await navigator.permissions.query({
-                // @ts-ignore 'local-network-access' is not widespread
-                name: 'local-network-access',
-              });
-              if (lna.state === 'prompt' || lna.state === 'denied') {
-                this.isBrowserLNAPermissionPendingOrDenied = true;
-              }
-            } catch (errLNA) {
-              /* игнорируем */
-            }
+          } catch (errLNA) {
+            /* игнорируем */
           }
-        })();
+        }
 
         reject(new NCALayerError('Ошибка взаимодействия с NCALayer. В том случае, если на вашем компьютере не установлен NCALayer, пожалуйста установите его c портала НУЦ РК (https://ncl.pki.gov.kz/). Если же NCALayer установлен, но портал выдает ошибку, свяжитесь, пожалуйста, с нашей технической поддержкой.'));
       };
