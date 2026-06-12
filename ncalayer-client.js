@@ -5,6 +5,12 @@
    * Класс ошибок NCALayerError.
    */
   class NCALayerError extends Error {
+    /**
+     * Конструктор.
+     *
+     * @param {String} message описание ошибки.
+     * @param {Boolean} [canceledByUser] была ли операция отменена пользователем.
+     */
     constructor(message, canceledByUser) {
       super(message);
       this.name = 'NCALayerError';
@@ -28,6 +34,7 @@
      */
     constructor(url = 'wss://127.0.0.1:13579', allowKmdHttpApi = true) {
       this.url = url;
+      /** @type {WebSocket | null} */
       this.wsConnection = null;
       this.responseProcessed = false;
       this.isKmd = false; // Работаем с KAZTOKEN mobile/desktop?
@@ -38,13 +45,16 @@
       this.KmdHTTPAPIOperationInBase64 = false;
       this.KmdHTTPAPIOperationTotal = 0;
       this.KmdHTTPAPIOperationProcessed = 0;
+      /** @type {String} */
       this.basicsLogo = '';
 
       // Нужно ли просить пользователя разрешить Local Network Access?
       this.isBrowserLNAPermissionPendingOrDenied = false;
 
       // Используются для упрощения тестирования
+      /** @type {?function(String): void} */
       this.onRequestReady = null;
+      /** @type {?function(String): void} */
       this.onResponseReady = null;
     }
 
@@ -82,13 +92,14 @@
         }
       }
 
-      this.wsConnection = new WebSocket(this.url);
+      const wsConnection = new WebSocket(this.url);
+      this.wsConnection = wsConnection;
 
       return new Promise((resolve, reject) => {
         this.responseProcessed = false;
         this.setHandlers(resolve, reject);
 
-        this.wsConnection.onmessage = async (msg) => {
+        wsConnection.onmessage = async (msg) => {
           if (this.responseProcessed) {
             return;
           }
@@ -247,6 +258,17 @@
     //
     // Параметры подписания
     //
+
+    /**
+     * Параметры подписания CMS.
+     *
+     * @typedef {Object} BasicsCMSSigningParams
+     * @property {Boolean} [decode] следует ли декодировать подписываемые данные из Base64.
+     * @property {Boolean} [encapsulate] следует ли встраивать подписываемые данные в подпись.
+     * @property {Boolean} [digested] являются ли подписываемые данные хешем.
+     * @property {Object} [tsaProfile] профиль метки времени, пустой объект для значений
+     * по умолчанию.
+     */
 
     /**
      * Параметры подписания для формирования CMS по умолчанию.
@@ -449,8 +471,22 @@
      * в виде строки Base64, либо ArrayBuffer, Blob или File.
      */
     async setLogoForBasicsSign(logo) {
-      this.basicsLogo = await NCALayerClient.normalizeDataToSign(logo);
+      this.basicsLogo = /** @type {String} */ (await NCALayerClient.normalizeDataToSign(logo));
     }
+
+    /**
+     * Аргументы функции sign модуля kz.gov.pki.knca.basics.
+     *
+     * @typedef {Object} BasicsSignArgs
+     * @property {Array<String> | null} allowedStorages массив строк с константами допустимых
+     * для использования типов хранилищ.
+     * @property {String} format тип вычисляемой подписи: 'xml', либо 'cms'.
+     * @property {String | Array<String>} data подписываемые данные.
+     * @property {Object} signingParams параметры подписания.
+     * @property {Object} signerParams параметры выбора сертификата для подписания.
+     * @property {String} locale язык пользовательского интерфейса.
+     * @property {String} [logo] логотип для отображения NCALayer в виде строки Base64.
+     */
 
     /**
      * Вычислить подпись под данными с указанными параметрами. **Новая функция sign 2022 года из
@@ -458,12 +494,12 @@
      * Сигнатура функции сложная, поэтому рекомендуем пользоваться функциями помощниками
      * basicsSignXLM и basicsSignCMS.
      *
-     * @param {Array | null} allowedStorages массив строк с константами допустимых для использования
-     * типов хранилищ (см. константы basicsStorage*).
+     * @param {Array<String> | null} allowedStorages массив строк с константами допустимых
+     * для использования типов хранилищ (см. константы basicsStorage*).
      *
      * @param {String} format тип вычисляемой подписи: 'xml', либо 'cms'.
      *
-     * @param {String | Array} data подписываемые данные.
+     * @param {String | Array<String>} data подписываемые данные.
      *
      * @param {Object} signingParams параметры подписания (см. basicsCMSParams* и basicsXMLParams*).
      *
@@ -491,14 +527,14 @@
       const request = {
         module: 'kz.gov.pki.knca.basics',
         method: 'sign',
-        args: {
+        args: /** @type {BasicsSignArgs} */ ({
           allowedStorages,
           format,
           data,
           signingParams,
           signerParams,
           locale,
-        },
+        }),
       };
 
       if (this.basicsLogo) {
@@ -520,14 +556,14 @@
      * компьютере, она будет пробовать использовать его для подписания в том случае, если это
      * не было запрещено при вызове конструктора (параметр `allowKmdHttpApi`).
      *
-     * @param {Array | null} allowedStorages массив строк с константами допустимых для использования
-     * типов хранилищ (см. константы basicsStorage*).
+     * @param {Array<String> | null} allowedStorages массив строк с константами допустимых
+     * для использования типов хранилищ (см. константы basicsStorage*).
      *
      * @param {String | ArrayBuffer | Blob | File | Array<String | ArrayBuffer | Blob | File>} data
      * данные, которые нужно подписать, в виде строки Base64, либо ArrayBuffer, Blob или File.
      * Так же поддерживается массив документов.
      *
-     * @param {Object} signingParams параметры подписания (см basicsCMSParams*).
+     * @param {BasicsCMSSigningParams} signingParams параметры подписания (см basicsCMSParams*).
      *
      * @param {Object} signerParams параметры выбора сертификата для подписания (см. константы
      * basicsSigner*).
@@ -635,8 +671,8 @@
      * Вычислить XML подпись под данными с указанными параметрами, это функция-помощник для
      * упрощения работы с функцией basicsSign.
      *
-     * @param {Array | null} allowedStorages массив строк с константами допустимых для использования
-     * типов хранилищ (см. константы basicsStorage*).
+     * @param {Array<String> | null} allowedStorages массив строк с константами допустимых
+     * для использования типов хранилищ (см. константы basicsStorage*).
      *
      * @param {String | Array<String>} data подписываемые данные - строка (либо массив строк) XML.
      *
@@ -1061,23 +1097,38 @@
       return 'PKCS12';
     }
 
+    /**
+     * @param {Object} request запрос для отправки в NCALayer.
+     */
     sendRequest(request) {
       if (!this.wsConnection) {
         throw new NCALayerError('Подключение к NCALayer не установлено.');
       }
+      const { wsConnection } = this;
 
       const jsonRequest = JSON.stringify(request);
       if (this.onRequestReady) {
         this.onRequestReady(jsonRequest);
       }
 
-      this.wsConnection.send(jsonRequest);
+      wsConnection.send(jsonRequest);
     }
 
+    /**
+     * @param {function(any): void} resolve функция для возврата результата операции.
+     * @param {function(any): void} reject функция для возврата ошибки.
+     * @param {Boolean} [forceSingleSignature] возвращать только одну подпись даже если получили
+     * массив.
+     */
     setHandlers(resolve, reject, forceSingleSignature) {
+      if (!this.wsConnection) {
+        throw new NCALayerError('Подключение к NCALayer не установлено.');
+      }
+      const { wsConnection } = this;
+
       this.responseProcessed = false;
 
-      this.wsConnection.onerror = async () => {
+      wsConnection.onerror = async () => {
         if (this.responseProcessed) {
           return;
         }
@@ -1088,7 +1139,7 @@
         reject(new NCALayerError('Ошибка взаимодействия с NCALayer. В том случае, если на вашем компьютере не установлен NCALayer, пожалуйста установите его c портала НУЦ РК (https://ncl.pki.gov.kz/). Если же NCALayer установлен, но портал выдает ошибку, свяжитесь, пожалуйста, с нашей технической поддержкой.'));
       };
 
-      this.wsConnection.onclose = () => {
+      wsConnection.onclose = () => {
         if (this.responseProcessed) {
           return;
         }
@@ -1097,7 +1148,7 @@
         reject(new NCALayerError('NCALayer закрыл соединение.'));
       };
 
-      this.wsConnection.onmessage = (msg) => {
+      wsConnection.onmessage = (msg) => {
         if (this.responseProcessed) {
           return;
         }
@@ -1164,6 +1215,10 @@
       }
     }
 
+    /**
+     * @param {ArrayBuffer} arrayBuffer данные для кодирования.
+     * @returns {String} данные закодированные в Base64.
+     */
     static arrayBufferToB64(arrayBuffer) {
       let binary = '';
       const bytes = new Uint8Array(arrayBuffer);
@@ -1174,18 +1229,23 @@
       return window.btoa(binary);
     }
 
+    /**
+     * @param {String | ArrayBuffer | Blob | File | Array<String | ArrayBuffer | Blob | File>} data
+     * данные для подписания.
+     * @returns {Promise<String | Array<String>>} данные в виде строки Base64 (или массива строк).
+     */
     static async normalizeDataToSign(data) {
+      /** @param {String | ArrayBuffer | Blob | File} dataBlock */
       const normalizeDataBlock = async (dataBlock) => {
         if (typeof dataBlock === 'string') {
           return dataBlock;
         }
 
-        let dataBlockArrayBuffer = dataBlock;
         if (dataBlock instanceof Blob) {
-          dataBlockArrayBuffer = await dataBlock.arrayBuffer();
+          return NCALayerClient.arrayBufferToB64(await dataBlock.arrayBuffer());
         }
 
-        return NCALayerClient.arrayBufferToB64(dataBlockArrayBuffer);
+        return NCALayerClient.arrayBufferToB64(dataBlock);
       };
 
       if (Array.isArray(data)) {
@@ -1200,5 +1260,5 @@
 })(
   typeof exports === 'undefined' ? this : exports,
   typeof WebSocket === 'undefined' ? require('ws') : WebSocket,
-  typeof window === 'undefined' ? { btoa(x) { return x; } } : window // eslint-disable-line comma-dangle
+  typeof window === 'undefined' ? { btoa: /** @type {function(String): String} */ ((x) => x) } : window // eslint-disable-line comma-dangle
 ); // Заглушка для NodeJS
