@@ -51,13 +51,35 @@
     /**
      * Подключиться к NCALayer.
      *
+     * @param {Boolean} [useHttpFetchForNCALayerDetection = false] позволяет активировать режим
+     * определения наличия NCALayer с помощью предвариетльного HTTP запроса и таким образом
+     * избежать принудительных задержек вводимых браузерами в том случае, если JS пытается
+     * обратиться к недоступному WebSocket серверу. Иначе говоря этот режим полезен тогда,
+     * когда у пользователя отсутствует NCALayer и `connect()` вызывается с фронтенда часто,
+     * без этого режима `connect()` может подвисать на секунды и даже минуты.
+     *
      * @returns {Promise<String>} версию NCALayer.
      *
      * @throws NCALayerError
      */
-    async connect() {
+    async connect(useHttpFetchForNCALayerDetection = false) {
       if (this.wsConnection) {
         throw new NCALayerError('Подключение уже выполнено.');
+      }
+
+      if (useHttpFetchForNCALayerDetection) {
+        try {
+          const probeUrl = this.url.replace(/^ws(s?):/, 'http$1:');
+          await fetch(probeUrl, {
+            mode: 'no-cors',
+            cache: 'no-store',
+            credentials: 'omit',
+            signal: AbortSignal.timeout(1000),
+          });
+        } catch (err) {
+          await this.checkBrowserLNAPermissionState();
+          throw new NCALayerError('Ошибка взаимодействия с NCALayer. В том случае, если на вашем компьютере не установлен NCALayer, пожалуйста установите его c портала НУЦ РК (https://ncl.pki.gov.kz/). Если же NCALayer установлен, но портал выдает ошибку, свяжитесь, пожалуйста, с нашей технической поддержкой.');
+        }
       }
 
       this.wsConnection = new WebSocket(this.url);
@@ -1061,28 +1083,7 @@
         }
         this.responseProcessed = true;
 
-        // Проверка разрешения LNA в браузере
-        try {
-          const ln = await navigator.permissions.query({
-            // @ts-ignore 'loopback-network' is not widespread
-            name: 'loopback-network',
-          });
-          if (ln.state === 'prompt' || ln.state === 'denied') {
-            this.isBrowserLNAPermissionPendingOrDenied = true;
-          }
-        } catch (errLN) {
-          try {
-            const lna = await navigator.permissions.query({
-              // @ts-ignore 'local-network-access' is not widespread
-              name: 'local-network-access',
-            });
-            if (lna.state === 'prompt' || lna.state === 'denied') {
-              this.isBrowserLNAPermissionPendingOrDenied = true;
-            }
-          } catch (errLNA) {
-            /* игнорируем */
-          }
-        }
+        await this.checkBrowserLNAPermissionState();
 
         reject(new NCALayerError('Ошибка взаимодействия с NCALayer. В том случае, если на вашем компьютере не установлен NCALayer, пожалуйста установите его c портала НУЦ РК (https://ncl.pki.gov.kz/). Если же NCALayer установлен, но портал выдает ошибку, свяжитесь, пожалуйста, с нашей технической поддержкой.'));
       };
@@ -1136,6 +1137,31 @@
 
         resolve(response.responseObject);
       };
+    }
+
+    async checkBrowserLNAPermissionState() {
+      // Проверка разрешения LNA в браузере
+      try {
+        const ln = await navigator.permissions.query({
+          // @ts-ignore 'loopback-network' is not widespread
+          name: 'loopback-network',
+        });
+        if (ln.state === 'prompt' || ln.state === 'denied') {
+          this.isBrowserLNAPermissionPendingOrDenied = true;
+        }
+      } catch (errLN) {
+        try {
+          const lna = await navigator.permissions.query({
+            // @ts-ignore 'local-network-access' is not widespread
+            name: 'local-network-access',
+          });
+          if (lna.state === 'prompt' || lna.state === 'denied') {
+            this.isBrowserLNAPermissionPendingOrDenied = true;
+          }
+        } catch (errLNA) {
+          /* игнорируем */
+        }
+      }
     }
 
     static arrayBufferToB64(arrayBuffer) {
