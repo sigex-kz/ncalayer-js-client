@@ -52,9 +52,9 @@
       this.isBrowserLNAPermissionPendingOrDenied = false;
 
       // Используются для упрощения тестирования
-      /** @type {?function(String): void} */
+      /** @type {((s: string) => void) | null} */
       this.onRequestReady = null;
-      /** @type {?function(String): void} */
+      /** @type {((s: string) => void) | null} */
       this.onResponseReady = null;
     }
 
@@ -1115,8 +1115,8 @@
     }
 
     /**
-     * @param {function(any): void} resolve функция для возврата результата операции.
-     * @param {function(any): void} reject функция для возврата ошибки.
+     * @param {(v: any) => void} resolve функция для возврата результата операции.
+     * @param {(v: any) => void} reject функция для возврата ошибки.
      * @param {Boolean} [forceSingleSignature] возвращать только одну подпись даже если получили
      * массив.
      */
@@ -1258,7 +1258,7 @@
 
   exports.NCALayerClient = NCALayerClient; // eslint-disable-line no-param-reassign
 })(
-  typeof exports === 'undefined' ? this : exports,
+  /** @type {any} */ (typeof exports === 'undefined' ? this : exports),
   typeof WebSocket === 'undefined' ? require('ws') : WebSocket,
-  typeof window === 'undefined' ? { btoa: /** @type {function(String): String} */ ((x) => x) } : window // eslint-disable-line comma-dangle
+  typeof window === 'undefined' ? { btoa: /** @type {(s: string) => string} */ ((x) => x) } : window // eslint-disable-line comma-dangle
 ); // Заглушка для NodeJS
