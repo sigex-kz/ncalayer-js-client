@@ -37,7 +37,7 @@ wss.on('connection', (ws) => {
       const params = task.params.map((param) => {
         if (typeof param === 'string' && param.startsWith('!!')) {
           const attrName = param.replace('!!', '');
-          return NCALayerClient[attrName]; // eslint-disable-line no-undef
+          return NCALayerClient[attrName];
         }
 
         return param;

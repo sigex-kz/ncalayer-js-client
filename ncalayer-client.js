@@ -1260,5 +1260,5 @@
 })(
   /** @type {any} */ (typeof exports === 'undefined' ? this : exports),
   typeof WebSocket === 'undefined' ? require('ws') : WebSocket,
-  typeof window === 'undefined' ? { btoa: /** @type {(s: string) => string} */ ((x) => x) } : window // eslint-disable-line comma-dangle
+  typeof window === 'undefined' ? { btoa: /** @type {(s: string) => string} */ ((x) => x) } : window // eslint-disable-line @stylistic/comma-dangle
 ); // Заглушка для NodeJS
