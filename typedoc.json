@@ -1,0 +1,8 @@
+{
+  "$schema": "https://typedoc.org/schema.json",
+  "entryPoints": ["ncalayer-client.js"],
+  "tsconfig": "tsconfig.json",
+  "out": "docs/api",
+  "gitRevision": "master",
+  "sourceLinkTemplate": "https://github.com/sigex-kz/ncalayer-js-client/blob/{gitRevision}/{path}#L{line}"
+}

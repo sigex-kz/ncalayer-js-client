@@ -1,5 +1,30 @@
 // @ts-check
 
+/**
+ * Параметры подписания CMS.
+ *
+ * @typedef {Object} BasicsCMSSigningParams
+ * @property {Boolean} [decode] следует ли декодировать подписываемые данные из Base64.
+ * @property {Boolean} [encapsulate] следует ли встраивать подписываемые данные в подпись.
+ * @property {Boolean} [digested] являются ли подписываемые данные хешем.
+ * @property {Object} [tsaProfile] профиль метки времени, пустой объект для значений
+ * по умолчанию.
+ */
+
+/**
+ * Аргументы функции sign модуля kz.gov.pki.knca.basics.
+ *
+ * @typedef {Object} BasicsSignArgs
+ * @property {Array<String> | null} allowedStorages массив строк с константами допустимых
+ * для использования типов хранилищ.
+ * @property {String} format тип вычисляемой подписи: 'xml', либо 'cms'.
+ * @property {String | Array<String>} data подписываемые данные.
+ * @property {Object} signingParams параметры подписания.
+ * @property {Object} signerParams параметры выбора сертификата для подписания.
+ * @property {String} locale язык пользовательского интерфейса.
+ * @property {String} [logo] логотип для отображения NCALayer в виде строки Base64.
+ */
+
 ((exports, WebSocket, window) => { // eslint-disable-line max-classes-per-file
   /**
    * Класс ошибок NCALayerError.
@@ -260,17 +285,6 @@
     //
 
     /**
-     * Параметры подписания CMS.
-     *
-     * @typedef {Object} BasicsCMSSigningParams
-     * @property {Boolean} [decode] следует ли декодировать подписываемые данные из Base64.
-     * @property {Boolean} [encapsulate] следует ли встраивать подписываемые данные в подпись.
-     * @property {Boolean} [digested] являются ли подписываемые данные хешем.
-     * @property {Object} [tsaProfile] профиль метки времени, пустой объект для значений
-     * по умолчанию.
-     */
-
-    /**
      * Параметры подписания для формирования CMS по умолчанию.
      */
     static get basicsCMSParams() {
@@ -473,20 +487,6 @@
     async setLogoForBasicsSign(logo) {
       this.basicsLogo = /** @type {String} */ (await NCALayerClient.normalizeDataToSign(logo));
     }
-
-    /**
-     * Аргументы функции sign модуля kz.gov.pki.knca.basics.
-     *
-     * @typedef {Object} BasicsSignArgs
-     * @property {Array<String> | null} allowedStorages массив строк с константами допустимых
-     * для использования типов хранилищ.
-     * @property {String} format тип вычисляемой подписи: 'xml', либо 'cms'.
-     * @property {String | Array<String>} data подписываемые данные.
-     * @property {Object} signingParams параметры подписания.
-     * @property {Object} signerParams параметры выбора сертификата для подписания.
-     * @property {String} locale язык пользовательского интерфейса.
-     * @property {String} [logo] логотип для отображения NCALayer в виде строки Base64.
-     */
 
     /**
      * Вычислить подпись под данными с указанными параметрами. **Новая функция sign 2022 года из
@@ -1257,6 +1257,7 @@
   }
 
   exports.NCALayerClient = NCALayerClient; // eslint-disable-line no-param-reassign
+  exports.NCALayerError = NCALayerError; // eslint-disable-line no-param-reassign
 })(
   /** @type {any} */ (typeof exports === 'undefined' ? this : exports),
   typeof WebSocket === 'undefined' ? require('ws') : WebSocket,

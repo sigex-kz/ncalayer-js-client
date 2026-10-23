@@ -20,14 +20,14 @@
   "main": "ncalayer-client.js",
   "devDependencies": {
     "@stylistic/eslint-plugin": "^5.10.0",
+    "@typescript/native": "npm:typescript@^7.0.2",
     "confusing-browser-globals": "^1.0.11",
-    "docdash": "^2.0.2",
     "eslint": "^10.13.0",
     "eslint-plugin-import-x": "^4.17.1",
     "globals": "^17.13.0",
     "http-server": "^14.1.0",
-    "jsdoc": "^4.0.2",
-    "typescript": "^7.0.0"
+    "typedoc": "^0.28.20",
+    "typescript": "npm:@typescript/typescript6@^6.0.2"
   },
   "dependencies": {
     "ws": "^8.4.2"
@@ -38,9 +38,9 @@
   "scripts": {
     "build": "npm run test && npm run lint && npm run ts-check && npm run build-docs",
     "test": "node test/index.js",
-    "build-docs": "jsdoc ncalayer-client.js -t ./node_modules/docdash/ -d docs/api && cp ncalayer-client.js docs/js/",
+    "build-docs": "typedoc && cp ncalayer-client.js docs/js/",
     "lint": "eslint .",
-    "ts-check": "tsc --allowJs --checkJs --noEmit --strict --target es6 --moduleResolution nodenext --module nodenext ncalayer-client.js types/ws.d.ts",
+    "ts-check": "tsc -p tsconfig.json",
     "test-data-builder": "http-server ./test/test-data-builder"
   }
 }

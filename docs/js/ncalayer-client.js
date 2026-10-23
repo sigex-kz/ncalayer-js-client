@@ -1,5 +1,30 @@
 // @ts-check
 
+/**
+ * Параметры подписания CMS.
+ *
+ * @typedef {Object} BasicsCMSSigningParams
+ * @property {Boolean} [decode] следует ли декодировать подписываемые данные из Base64.
+ * @property {Boolean} [encapsulate] следует ли встраивать подписываемые данные в подпись.
+ * @property {Boolean} [digested] являются ли подписываемые данные хешем.
+ * @property {Object} [tsaProfile] профиль метки времени, пустой объект для значений
+ * по умолчанию.
+ */
+
+/**
+ * Аргументы функции sign модуля kz.gov.pki.knca.basics.
+ *
+ * @typedef {Object} BasicsSignArgs
+ * @property {Array<String> | null} allowedStorages массив строк с константами допустимых
+ * для использования типов хранилищ.
+ * @property {String} format тип вычисляемой подписи: 'xml', либо 'cms'.
+ * @property {String | Array<String>} data подписываемые данные.
+ * @property {Object} signingParams параметры подписания.
+ * @property {Object} signerParams параметры выбора сертификата для подписания.
+ * @property {String} locale язык пользовательского интерфейса.
+ * @property {String} [logo] логотип для отображения NCALayer в виде строки Base64.
+ */
+
 ((exports, WebSocket, window) => { // eslint-disable-line max-classes-per-file
   /**
    * Класс ошибок NCALayerError.
@@ -52,9 +77,9 @@
       this.isBrowserLNAPermissionPendingOrDenied = false;
 
       // Используются для упрощения тестирования
-      /** @type {?function(String): void} */
+      /** @type {((s: string) => void) | null} */
       this.onRequestReady = null;
-      /** @type {?function(String): void} */
+      /** @type {((s: string) => void) | null} */
       this.onResponseReady = null;
     }
 
@@ -260,17 +285,6 @@
     //
 
     /**
-     * Параметры подписания CMS.
-     *
-     * @typedef {Object} BasicsCMSSigningParams
-     * @property {Boolean} [decode] следует ли декодировать подписываемые данные из Base64.
-     * @property {Boolean} [encapsulate] следует ли встраивать подписываемые данные в подпись.
-     * @property {Boolean} [digested] являются ли подписываемые данные хешем.
-     * @property {Object} [tsaProfile] профиль метки времени, пустой объект для значений
-     * по умолчанию.
-     */
-
-    /**
      * Параметры подписания для формирования CMS по умолчанию.
      */
     static get basicsCMSParams() {
@@ -473,20 +487,6 @@
     async setLogoForBasicsSign(logo) {
       this.basicsLogo = /** @type {String} */ (await NCALayerClient.normalizeDataToSign(logo));
     }
-
-    /**
-     * Аргументы функции sign модуля kz.gov.pki.knca.basics.
-     *
-     * @typedef {Object} BasicsSignArgs
-     * @property {Array<String> | null} allowedStorages массив строк с константами допустимых
-     * для использования типов хранилищ.
-     * @property {String} format тип вычисляемой подписи: 'xml', либо 'cms'.
-     * @property {String | Array<String>} data подписываемые данные.
-     * @property {Object} signingParams параметры подписания.
-     * @property {Object} signerParams параметры выбора сертификата для подписания.
-     * @property {String} locale язык пользовательского интерфейса.
-     * @property {String} [logo] логотип для отображения NCALayer в виде строки Base64.
-     */
 
     /**
      * Вычислить подпись под данными с указанными параметрами. **Новая функция sign 2022 года из
@@ -1115,8 +1115,8 @@
     }
 
     /**
-     * @param {function(any): void} resolve функция для возврата результата операции.
-     * @param {function(any): void} reject функция для возврата ошибки.
+     * @param {(v: any) => void} resolve функция для возврата результата операции.
+     * @param {(v: any) => void} reject функция для возврата ошибки.
      * @param {Boolean} [forceSingleSignature] возвращать только одну подпись даже если получили
      * массив.
      */
@@ -1257,8 +1257,9 @@
   }
 
   exports.NCALayerClient = NCALayerClient; // eslint-disable-line no-param-reassign
+  exports.NCALayerError = NCALayerError; // eslint-disable-line no-param-reassign
 })(
-  typeof exports === 'undefined' ? this : exports,
+  /** @type {any} */ (typeof exports === 'undefined' ? this : exports),
   typeof WebSocket === 'undefined' ? require('ws') : WebSocket,
-  typeof window === 'undefined' ? { btoa: /** @type {function(String): String} */ ((x) => x) } : window // eslint-disable-line comma-dangle
+  typeof window === 'undefined' ? { btoa: /** @type {(s: string) => string} */ ((x) => x) } : window // eslint-disable-line @stylistic/comma-dangle
 ); // Заглушка для NodeJS
